@@ -2,97 +2,8 @@ import sys
 
 from pyparsing import *
 
+import tokens
 
-class Label(object):
-	def __init__(self, tokens):
-		self.name = tokens[0]
-		self.direction = tokens[1] if len(tokens) == 2 else None
-		self.pos = -1
-	
-	def __str__(self):
-		if self.direction:
-			return "<Label %s %s>" % (repr(self.name), self.direction)
-		elif self.pos >= 0:
-			return "<Label %s @%d>" % (repr(self.name), self.pos)
-		return "<Label %s>" % repr(self.name)
-	__repr__ = __str__
-
-
-class Inst(object):
-	def __init__(self, tokens):
-		self.name = tokens[0]
-		self.args = tokens[1:]
-
-		# internal translations
-		is_reg = lambda i: isinstance(self.args[i], Register)
-		if self.name in ("ldw", "ldb") and is_reg(1):
-			self.name += ".b"
-		elif self.name in ("stw", "stb") and is_reg(0):
-			self.name += ".b"
-		elif self.name == "jmp" and is_reg(0):
-			self.name += ".r"
-	
-	def __str__(self):
-		return "<Inst %s %s>" % (self.name, ", ".join(map(repr, self.args)))
-	__repr__ = __str__
-
-
-class Number(object):
-	def __init__(self, n, base, bits, signed):
-		self.n = n
-		self.base = base
-		self.bits = bits
-		self.signed = signed
-	
-	def binary(self):
-		if self.signed and self.n < 0:
-			# two's complement by subtracting from 2^n
-			m = 2 ** self.bits
-			return m + self.n
-		return self.n
-	
-	def __str__(self):
-		signed = "s" if self.signed else "u"
-		return "<Number %d %s>" % (self.n, signed)
-	__repr__ = __str__
-
-
-class Register(object):
-	def __init__(self, tokens):
-		self.name = int(tokens[0])
-	
-	def binary(self):
-		return self.name
-	
-	def __str__(self):
-		return "<Reg %s>" % repr(self.name)
-	__repr__ = __str__
-
-
-class Immediate(object):
-	def __init__(self, tokens):
-		self.value = int("".join(tokens))
-	
-	def binary(self):
-		m = {8: 0, 4: 1, 2: 2, 1: 3, -1: 4, -2: 5, -4: 6, -8: 7}
-		return m[self.value]
-
-	def __str__(self):
-		return "<Imm %d>" % self.value
-	__repr__ = __str__
-
-
-class Condition(object):
-	def __init__(self, tokens):
-		self.type = tokens[0]
-	
-	def binary(self):
-		m = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
-		return m[self.type]
-
-	def __str__(self):
-		return "<Cond %s>" % self.type
-	__repr__ = __str__
 
 
 def bin_str(n, bits=0):
@@ -111,9 +22,9 @@ def grammer():
 			n = int(val, base)
 			if base == 10:
 				if -2**(bits-1) <= n and n <= 2**(bits-1)-1:
-					return [Number(n, base, bits, signed=True)]
+					return [tokens.Number(n, base, bits, signed=True)]
 			elif n < 2**bits:
-				return [Number(n, base, bits, signed=True)]
+				return [tokens.Number(n, base, bits, signed=True)]
 			raise ParseFatalException(s, loc,
 				"%s out of bounds for a %d bit signed number in base %d" % (val, bits, base))
 		return convert
@@ -122,7 +33,7 @@ def grammer():
 		def convert(s, loc, toks):
 			n = int("".join(toks), base)
 			if 0 <= n and n < 2**bits:
-				return [Number(n, base, bits, signed=False)]
+				return [tokens.Number(n, base, bits, signed=False)]
 			raise ParseFatalException(s, loc,
 				"%s out of bounds for a %d bit unsigned number in base %d" % (val, bits, base))
 		return convert
@@ -140,21 +51,21 @@ def grammer():
 	# values
 	reg = Literal("$").suppress() + Word("01234567")
 	reg.setName("register")
-	reg.setParseAction(Register)
+	reg.setParseAction(tokens.Register)
 	num = Word(nums).setParseAction(to_int)
 	label_name = (num + Optional(Word("fb", exact=1))) | Word(alphanums)
 	label_name.setName("label")
-	label_name.setParseAction(Label)
+	label_name.setParseAction(tokens.Label)
 	label = label_name + colon
 	sign = Optional(Word("-+", exact=1))
 	spec_imm = sign + Word("1248", exact=1)
-	spec_imm.setParseAction(Immediate)
+	spec_imm.setParseAction(tokens.Immediate)
 	reg_imm = reg | spec_imm
 	reg3_imm = reg + comma + reg + comma + reg_imm
 	reg3 = reg + comma + reg + comma + reg
 	comment = ";" + restOfLine
 	condition = oneOf("eq ne gt gte lt lte ult ulte")
-	condition.setParseAction(Condition)
+	condition.setParseAction(tokens.Condition)
 
 	def signed_num(bits):
 		bin = Suppress("b") + Word("01")
@@ -192,31 +103,6 @@ def grammer():
 
 	jmp = Literal("jmp") + (s13 ^ label_name ^ reg)
 	
-#	ldw1 = Literal("ldw") + reg + comma + s7 + lparen + reg + rparen
-#	ldw2 = Literal("ldw") + reg + comma + reg + lparen + reg + rparen
-#	ldw2.setParseAction(replace("ldw.b"))
-#	ldw = ldw1 | ldw2
-#
-#	ldb1 = Literal("ldb") + reg + comma + s7 + lparen + reg + rparen
-#	ldb2 = Literal("ldb") + reg + comma + reg + lparen + reg + rparen
-#	ldb2.setParseAction(replace("ldb.b"))
-#	ldb = ldb1 | ldb2
-#
-#	stw1 = Literal("stw") + s7 + lparen + reg + rparen + comma + reg
-#	stw2 = Literal("stw") + reg + lparen + reg + rparen + comma + reg
-#	stw2.setParseAction(replace("stw.b"))
-#	stw = stw1 | stw2
-#
-#	stb1 = Literal("stb") + s7 + lparen + reg + rparen + comma + reg
-#	stb2 = Literal("stb") + reg + lparen + reg + rparen + comma + reg
-#	stb2.setParseAction(replace("stb.b"))
-#	stb = stb1 | stb2
-#
-#	jmp1 = Literal("jmp") + (s13 ^ label_name)
-#	jmp2 = Literal("jmp") + reg
-#	jmp2.setParseAction(replace("jmp.r"))
-#	jmp = jmp1 | jmp2
-	
 	add = Literal("add") + reg3_imm
 	sub = Literal("sub") + reg3_imm
 	and_i = Literal("and") + reg3_imm
@@ -241,7 +127,7 @@ def grammer():
 
 	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
 	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
-	instruction.setParseAction(Inst)
+	instruction.setParseAction(tokens.Instruction)
 	line = Optional(label) + instruction
 	g = OneOrMore(line)
 	g.ignore(comment)
@@ -249,18 +135,18 @@ def grammer():
 
 
 def parse(filename):
-	tokens = None
+	toks = None
 	g = grammer()
 	try:
-		tokens = g.parseFile(filename, parseAll=True)
+		toks = g.parseFile(filename, parseAll=True)
 	except (ParseException, ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"
 		print err
-	return tokens
+	return toks
 
 
-def expand_labels(tokens):
+def expand_labels(toks):
 	labels = {}
 
 	def add_label(label, pos):
@@ -282,28 +168,28 @@ def expand_labels(tokens):
 				found = [l for l in search if l.pos <= pos][-1]
 		# TODO check that delta is in bounds for a 13 bit signed number
 		delta = found.pos - pos
-		return Number(delta, base=10, bits=13, signed=True)
+		return tokens.Number(delta, base=10, bits=13, signed=True)
 
 
 	i = 0
-	while i < len(tokens):
-		tok = tokens[i]
-		if isinstance(tok, Label):
+	while i < len(toks):
+		tok = toks[i]
+		if isinstance(tok, tokens.Label):
 			add_label(tok, i*2)
-			del tokens[i]
+			del toks[i]
 			continue
 		i += 1
 	
-	for i, tok in enumerate(tokens):
+	for i, tok in enumerate(toks):
 		for j, arg in enumerate(tok.args):
-			if isinstance(arg, Label):
+			if isinstance(arg, tokens.Label):
 				tok.args[j] = lookup_label(arg, i*2)
 
-	return tokens
+	return toks
 
 
 def set_imm(inst, byte):
-	if isinstance(inst.args[2], Immediate):
+	if isinstance(inst.args[2], tokens.Immediate):
 		byte |= 1 << 9
 	return byte
 
@@ -346,9 +232,9 @@ extra = {
 	"as.nz": set_imm,
 }
 
-def translate(tokens):
+def translate(toks):
 	bytes = []
-	for token in tokens:
+	for token in toks:
 		inst = instructions[token.name]
 		byte = inst[0]
 		for i, n in enumerate(inst[1:]):
@@ -365,12 +251,12 @@ def main(args):
 		return 2
 	in_filename  = args[0]
 	out_filename = args[1]
-	tokens = parse(in_filename)
-	if not tokens:
+	toks = parse(in_filename)
+	if not toks:
 		return 1
-	tokens = expand_labels(tokens)
-	bytes = translate(tokens)
-	#for tok in tokens:
+	toks = expand_labels(toks)
+	bytes = translate(toks)
+	#for tok in toks:
 	#	print tok
 	#return 1
 	#print map(lambda b: bin_str(b, 16), bytes)
