@@ -17,7 +17,8 @@ def convert_signed(base, bits):
 
 def convert_unsigned(base, bits):
 	def convert(s, loc, toks):
-		n = int("".join(toks), base)
+		val = "".join(toks)
+		n = int(val, base)
 		if 0 <= n and n < 2**bits:
 			return [tokens.Number(n, base, bits, signed=False)]
 		raise ParseFatalException(s, loc,

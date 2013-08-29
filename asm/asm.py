@@ -1,6 +1,7 @@
 import sys
 
 import tokens
+import directives
 from grammer import *
 
 
@@ -13,11 +14,11 @@ def bin_str(n, bits=0):
 
 
 def grammer():
-	# instructions
-	ldw = Literal("ldw") + reg + comma + (s7 | reg) + lparen + reg + rparen
-	ldb = Literal("ldb") + reg + comma + (s7 | reg) + lparen + reg + rparen
-	stw = Literal("stw") + (s7 | reg) + lparen + reg + rparen + comma + reg
-	stb = Literal("stb") + (s7 | reg) + lparen + reg + rparen + comma + reg
+	base = (s7 | reg)
+	ldw = Literal("ldw") + reg + comma + base + lparen + reg + rparen
+	ldb = Literal("ldb") + reg + comma + base + lparen + reg + rparen
+	stw = Literal("stw") + base + lparen + reg + rparen + comma + reg
+	stb = Literal("stb") + base + lparen + reg + rparen + comma + reg
 
 	jmp = Literal("jmp") + (s13 ^ label_name ^ reg)
 	
@@ -46,22 +47,11 @@ def grammer():
 	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
 	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
 	instruction.setParseAction(tokens.Instruction)
-	line = Optional(label) + instruction
+	macro = directives.grammer()
+	line = Optional(label) + (instruction | macro)
 	g = OneOrMore(line)
 	g.ignore(comment)
 	return g
-
-
-def parse(filename):
-	toks = None
-	g = grammer()
-	try:
-		toks = g.parseFile(filename, parseAll=True)
-	except (ParseException, ParseFatalException), err:
-		print err.line
-		print " "*(err.column-1) + "^"
-		print err
-	return toks
 
 
 def expand_labels(toks):
@@ -73,7 +63,7 @@ def expand_labels(toks):
 			labels[label.name] = []
 		labels[label.name].append(label)
 
-	def lookup_label(label, pos):
+	def lookup_label(label, pos, bits, pc_relative):
 		if label.name not in labels:
 			raise Exception("Unknown label %s" % repr(label.name))
 		search = labels[label.name]
@@ -84,24 +74,78 @@ def expand_labels(toks):
 				found = [l for l in search if l.pos > pos][0]
 			elif label.direction == "b":
 				found = [l for l in search if l.pos <= pos][-1]
-		# TODO check that delta is in bounds for a 13 bit signed number
-		delta = found.pos - pos
-		return tokens.Number(delta, base=10, bits=13, signed=True)
+		addr = found.pos
+		if pc_relative:
+			addr -= pos
+		# TODO check that number is in bounds for a N bit signed number
+		return tokens.Number(addr, base=10, bits=bits, signed=True)
 
 	i = 0
+	pos = 0
 	while i < len(toks):
 		tok = toks[i]
 		if isinstance(tok, tokens.Label):
-			add_label(tok, i*2)
+			add_label(tok, pos)
 			del toks[i]
 			continue
+		pos += tok.size
 		i += 1
 	
+	pos = 0
 	for i, tok in enumerate(toks):
 		for j, arg in enumerate(tok.args):
 			if isinstance(arg, tokens.Label):
-				tok.args[j] = lookup_label(arg, i*2)
+				pc_relative = False
+				if tok.name == "jmp":
+					pc_relative = True
+					bits = 13
+				elif tok.name in ("ldw", "ldb", "stw", "stb"):
+					bits = 7
+				elif tok.name in ("lui", "addi"):
+					bits = 8
+				tok.args[j] = lookup_label(arg, pos, bits, pc_relative)
+		pos += tok.size
 
+	return toks
+
+
+def apply_text_data(toks):
+	text = []
+	data = []
+	current = data
+	for tok in toks:
+		if isinstance(tok, tokens.Macro):
+			if tok.name == "text":
+				current = text
+				continue
+			elif tok.name == "data":
+				current = data
+				continue
+		current.append(tok)
+	return text + data
+
+
+def apply_macros(toks):
+	g = grammer()
+	pos = 0
+	i = 0
+	while i < len(toks):
+		tok = toks[i]
+		if isinstance(tok, tokens.Macro):
+			result = tok.callback(pos, *tok.args)
+			if result is not None:
+				del toks[i]
+				if isinstance(result, str):
+					new_toks = g.parseString(result, parseAll=True)
+				else:
+					new_toks = result
+				for tok in reversed(new_toks):
+					pos += tok.size
+					toks.insert(i, tok)
+				i += len(new_toks)
+				continue
+		pos += toks[i].size
+		i += 1
 	return toks
 
 
@@ -152,13 +196,23 @@ extra = {
 def translate(toks):
 	bytes = []
 	for token in toks:
-		inst = instructions[token.name]
-		byte = inst[0]
-		for i, n in enumerate(inst[1:]):
-			byte |= token.args[i].binary() << n
-		if token.name in extra:
-			byte = extra[token.name](token, byte)
-		bytes.append(byte)
+		if isinstance(token, tokens.Number):
+			value = token.binary()
+		else:
+			inst = instructions[token.name]
+			value = inst[0]
+			for i, n in enumerate(inst[1:]):
+				value |= token.args[i].binary() << n
+			if token.name in extra:
+				value = extra[token.name](token, value)
+		size = token.size
+		data = []
+		while size > 0:
+			data.append(value & 0xFF)
+			value >>= 1
+			size -= 1
+		data.reverse()
+		bytes.extend(data)
 	return bytes
 
 
@@ -168,18 +222,26 @@ def main(args):
 		return 2
 	in_filename  = args[0]
 	out_filename = args[1]
-	toks = parse(in_filename)
-	if not toks:
-		return 1
-	toks = expand_labels(toks)
-	bytes = translate(toks)
-	#for tok in toks:
-	#	print tok
-	#return 1
-	#print map(lambda b: bin_str(b, 16), bytes)
-	fout = open(out_filename, "w")
-	for byte in bytes:
-		fout.write(bin_str(byte, 16) + "\n")
+	try:
+		g = grammer()
+		toks = g.parseFile(in_filename, parseAll=True)
+		if not toks:
+			return 1
+		toks = apply_text_data(toks)
+		toks = apply_macros(toks)
+		toks = expand_labels(toks)
+		for tok in toks:
+			print tok.size, tok
+		#return 1
+		bytes = translate(toks)
+		fout = open(out_filename, "wb")
+		for byte in bytes:
+			#fout.write(bin_str(byte, 8) + "\n")
+			fout.write(chr(byte))
+	except (ParseException, ParseFatalException), err:
+		print err.line
+		print " "*(err.column-1) + "^"
+		print err
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
