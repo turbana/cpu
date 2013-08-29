@@ -77,6 +77,7 @@ def expand_labels(toks):
 		addr = found.pos
 		if pc_relative:
 			addr -= pos
+		addr /= 2
 		# TODO check that number is in bounds for a N bit signed number
 		return tokens.Number(addr, base=10, bits=bits, signed=True)
 
