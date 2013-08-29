@@ -209,7 +209,7 @@ def translate(toks):
 		data = []
 		while size > 0:
 			data.append(value & 0xFF)
-			value >>= 1
+			value >>= 8
 			size -= 1
 		data.reverse()
 		bytes.extend(data)
