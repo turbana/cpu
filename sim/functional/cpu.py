@@ -1,12 +1,16 @@
 import sys
 import isa
 
-TRACE = True
+class globals(object):
+	trace = True
+	step  = False
+	mem_range = [0x00, 0x20]
+	breakpoints = [0x0B]
 
-def sbin(n):
-	return bin(n)[2:]
-def shex(n):
-	return hex(n)[2:].upper()
+def sbin(n, x=0):
+	return bin(n)[2:].zfill(z)
+def shex(n, x=0):
+	return hex(n)[2:].upper().zfill(x)
 def num(s):
 	return int(s.replace(" ", ""), 2)
 
@@ -23,7 +27,7 @@ condition_func = {
 }
 
 def trace(name, args, kwargs):
-	if TRACE:
+	if globals.trace:
 		items = [key+"="+str(val) for key, val in kwargs.items()]
 		print "%-8s %s" % (name, " ".join(items))
 
@@ -45,22 +49,22 @@ def op(func):
 @op
 def ldw(cpu, tgt, base, offset):
 	# TODO handle reg ldw
-	cpu.rset(tgt, cpu.mget(base + offset))
+	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset))
 
 @op
 def ldb(cpu, tgt, base, offset):
 	# TODO handle reg ldb
-	cpu.rset(tgt, cpu.mget(base + offset) >> 8)
+	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset) >> 8)
 
 @op
 def stw(cpu, offset, base, src):
 	# TODO handle reg stw
-	cpu.mset(offset + base, cpu.rget(src))
+	cpu.mset(offset + cpu.rget(base), cpu.rget(src))
 
 @op
 def stb(cpu, offset, base, src):
 	# TODO handle reg stb
-	cpu.mset(offset + base, cpu.rget(src) & 0xFF, byte=True)
+	cpu.mset(offset + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
 
 @op
 def jmp(cpu, offset):
@@ -71,13 +75,17 @@ def jmp(cpu, offset):
 def add(cpu, tgt, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	cpu.rset(tgt, op1 + op2)
+	res = op1 + op2
+	# TODO check for overflow
+	cpu.rset(tgt, res & 0xFFFF)
 
 @op
 def sub(cpu, tgt, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	cpu.rset(tgt, op1 - op2)
+	res = op1 - op2
+	# TODO check for underflow
+	cpu.rset(tgt, res)
 
 @op
 def and_(cpu, tgt, op1, op2, ir):
@@ -103,7 +111,8 @@ def s(cpu, cond, op1, op2, ir):
 def as_z(cpu, ir, op1, op2, tgt):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	res = op1 + op2
+	# TODO check for overflow
+	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res == 0:
 		cpu.reg[7] += 1
@@ -119,10 +128,12 @@ def as_nz(cpu, ir, op1, op2, tgt):
 
 @op
 def lui(cpu, imm, tgt):
+	imm = ((2**8) + imm) if imm < 0 else imm
 	cpu.rset(tgt, imm << 8)
 
 @op
 def addi(cpu, imm, tgt):
+	imm = ((2**8) + imm) if imm < 0 else imm
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op
@@ -169,7 +180,8 @@ class CPU(object):
 	def dump(self, mstart=None, mend=None):
 		def hex_word(n):
 			h = hex(n)[2:].upper().zfill(4)
-			return "%s %s" % (h[0:2], h[2:4])
+			return h
+			#return "%s %s" % (h[0:2], h[2:4])
 		def hex_byte(n):
 			return hex(n)[2:].upper().zfill(2)
 		def bin_word(n):
@@ -177,25 +189,35 @@ class CPU(object):
 			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
 		for r in xrange(1, 8):
 			v = self.reg[r]
-			print "reg %d:  %s | %s = %5s" % (r, bin_word(v), hex_word(v), v)
+			print "$%d:  %s  |  %s  =  %5s" % (r, bin_word(v), hex_word(v), v)
 		if mstart is not None and mend is not None:
 			count = 0
-			for addr in xrange(mstart, mend+1):
+			for addr in xrange(mstart*2, mend*2, 2):
 				if not count:
-					print "\n%s | " % hex_word(addr),
-				print hex_byte(self.mem[addr]),
-				count = (count + 1) % 16
+					print "\n%s | " % hex_word(addr/2),
+				word = (self.mem[addr] << 8) | self.mem[addr+1]
+				print hex_word(word),
+				#print hex_byte(self.mem[addr]),
+				count = (count + 1) % 8
 			print
 			print
 	
 	def run(self):
 		self.halt = False
 		while not self.halt:
+			if self.reg[7] in globals.breakpoints:
+				globals.trace = False
+				globals.step = True
 			opcode = self.fetch()
 			# XXX
-			if self.reg[7] > 0x13:
+			if self.reg[7] > 0x80:
 				return
 			tok = isa.decode(opcode)
+			if globals.step:
+				self.dump(*globals.mem_range)
+				print ">", str(tok),
+				raw_input()
+				print
 			operations[tok.name](self, **tok.arguments())
 	
 	def fetch(self):
@@ -214,6 +236,7 @@ class CPU(object):
 	def mset(self, addr, val, byte=False):
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
+		#print "setting", shex(addr, 2), shex(high, 2), shex(low, 2)
 		self.mem[addr*2]   = high
 		self.mem[addr*2+1] = low
 	
@@ -233,9 +256,10 @@ def main(args):
 	data = map(ord, open(args[0], "rb").read())
 	cpu = CPU()
 	cpu.load(data)
-	cpu.dump(0, 47)
+	globals.mem_range[1] = len(data)/2
+	cpu.dump(*globals.mem_range)
 	cpu.run()
-	cpu.dump(0, 47)
+	cpu.dump(*globals.mem_range)
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
