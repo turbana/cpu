@@ -215,6 +215,15 @@ def encoding(token):
 
 
 def encode(token):
+	if isinstance(token, Number):
+		words = []
+		size = token.size
+		num = token.binary()
+		while size > 0:
+			words.append(num & 0xFF)
+			num >>= 8
+			size -= 1
+		return reversed(words)
 	code = encoding(token)
 	if code:
 		opname, prelude, prelude_end, args = code
