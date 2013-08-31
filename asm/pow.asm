@@ -16,11 +16,9 @@ start:	ldw	$1, 1($0)
 outter:	sub	$3, $1, 1
 	add	$5, $4, $0
 inner:	add	$4, $4, $5
-	sub	$3, $3, 1
-	s.eq	$3, $0
+	as.z	$3, $3, -1
 	jmp	inner
-	sub	$2, $2, 1
-	s.eq	$2, $0
+	as.z	$2, $2, -1
 	jmp	outter
 	stw	3($0), $4
 	halt
