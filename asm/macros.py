@@ -1,8 +1,8 @@
 from directives import macro
+import isa
 
-@macro(1, "foobar")
-def foobar(z):
-	print z**2
 
-import directives
-print directives.macros
+@macro("u8")
+def zero(pos, count):
+	words = count.value
+	return [isa.Number(n=0, base=10, bits=16*words, signed=False)]

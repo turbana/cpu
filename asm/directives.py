@@ -1,7 +1,7 @@
 import isa
 import grammer as g
 
-macros = []
+_macros = []
 
 
 def macro(arg):
@@ -10,7 +10,7 @@ def macro(arg):
 		def build_macro(s, l, t):
 			return isa.Macro(name, func, t[1:])
 		grammer.setParseAction(build_macro)
-		macros.append(grammer)
+		_macros.append(grammer)
 	if hasattr(arg, "__call__"):
 		add_macro(arg, arg.func_name, None)
 		return arg
@@ -21,8 +21,8 @@ def macro(arg):
 
 
 def grammer():
-	gram = macros[0]
-	for m in macros[1:]:
+	gram = _macros[0]
+	for m in _macros[1:]:
 		gram |= m
 	return gram
 
@@ -56,7 +56,7 @@ def dw(pos, w):
 
 @macro("u16")
 def align(pos, n):
-	offset = n.value - (pos % n.calue)
+	offset = n.value - (pos % n.value)
 	if offset != n.value:
 		return [isa.Number(n=0, base=10, bits=8*offset, signed=False)]
 	return []
@@ -83,6 +83,3 @@ def test(pos, x):
 		lui $6, {imm}
 		lui $7, {imm}
 	""".format(imm=x.value)
-
-
-#print macros
