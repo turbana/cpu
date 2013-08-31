@@ -1,55 +1,40 @@
 from pyparsing import *
 import tokens
 
-def convert_signed(base, bits):
-	def convert(s, loc, toks):
-		val = "".join(toks)
-		#if val == "-": return -1
-		n = int(val, base)
-		if base == 10:
-			if -2**(bits-1) <= n and n <= 2**(bits-1)-1:
-				return [tokens.Number(n, base, bits, signed=True)]
-		elif n < 2**bits:
-			return [tokens.Number(n, base, bits, signed=True)]
-		raise ParseFatalException(s, loc,
-			"%s out of bounds for a %d bit signed number in base %d" % (val, bits, base))
-	return convert
 
-def convert_unsigned(base, bits):
-	def convert(s, loc, toks):
-		val = "".join(toks)
-		n = int(val, base)
-		if 0 <= n and n < 2**bits:
-			return [tokens.Number(n, base, bits, signed=False)]
-		raise ParseFatalException(s, loc,
-			"%s out of bounds for a %d bit unsigned number in base %d" % (val, bits, base))
-	return convert
+sign = Optional(Word("-+", exact=1))
 
-def signed_num(bits):
-	bin = Suppress("b") + Word("01")
-	oct = sign + Word("0", nums)
-	dec = sign + Word("123456789", nums)
-	hex = Suppress("0x") + Word(srange("[0-9a-fA-F]"))
-	bin.setParseAction(convert_signed(2, bits))
-	oct.setParseAction(convert_signed(8, bits))
-	dec.setParseAction(convert_signed(10, bits))
-	hex.setParseAction(convert_signed(16, bits))
-	return NoMatch().setName("%d-bit signed number" % bits) | (bin ^ oct ^ dec ^ hex)
+to_base = lambda b: lambda s,l,t: (int(t[0], b), b)
+num_bin = Suppress("b") + Word("01")
+num_oct = Combine(sign + Word("0", nums))
+num_dec = Combine(sign + Word("123456789", nums))
+num_hex = Suppress("0x") + Word(srange("[0-9a-fA-F]"))
+num_bin.setParseAction(to_base(2))
+num_oct.setParseAction(to_base(8))
+num_dec.setParseAction(to_base(10))
+num_hex.setParseAction(to_base(16))
+num = (num_hex | num_bin | num_oct | num_dec)
 
-def unsigned_num(bits):
-	bin = Suppress("b") + Word("01")
-	oct = Word("0", nums)
-	dec = Word("123456789", nums)
-	hex = Suppress("0x") + Word(srange("[0-9a-fA-F]"))
-	bin.setParseAction(convert_unsigned(2, bits))
-	oct.setParseAction(convert_unsigned(8, bits))
-	dec.setParseAction(convert_unsigned(10, bits))
-	hex.setParseAction(convert_unsigned(16, bits))
-	return NoMatch().setName("%d-bit signed number" % bits) | (bin ^ oct ^ dec ^ hex)
+def number(bits, signed):
+	def _parse_action(s, l, toks):
+		name = toks.keys()[0] if toks.keys() else ""
+		value, base = toks[0]
+		try:
+			return tokens.Number(value, base, bits, signed, name)
+		except ValueError, e:
+			raise ParseFatalException(s, l, str(e))
+	return num.copy().setParseAction(_parse_action)
 
 to_int = lambda s,l,t: int("".join(t))
 def replace(what):
 	return lambda s,l,t: [what] + t[1:]
+
+def _build(type):
+	def _parse_action(s, l, toks):
+		name = toks.keys()[0] if toks.keys() else ""
+		return type(*toks, name=name)
+	return _parse_action
+
 
 # puncuation
 comma = Suppress(",")
@@ -57,28 +42,36 @@ colon = Suppress(":")
 lparen = Suppress("(")
 rparen = Suppress(")")
 
+# numbers
+s7 = number(7, True)
+s8 = number(8, True)
+s13 = number(13, True)
+u4 = number(4, False)
+
 # values
-sign = Optional(Word("-+", exact=1))
-reg = Literal("$").suppress() + Word("01234567")
+reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 reg.setName("register")
-reg.setParseAction(tokens.Register)
+reg.setParseAction(_build(tokens.Register))
 num = Word(nums).setParseAction(to_int)
 label_name = (num + Optional(Word("fb", exact=1))) | Word(alphanums)
 label_name.setName("label")
 label_name.setParseAction(tokens.Label)
 label = label_name + colon
-spec_imm = sign + Word("1248", exact=1)
-spec_imm.setParseAction(tokens.Immediate)
-reg_imm = reg | spec_imm
-reg3_imm = reg + comma + reg + comma + reg_imm
-reg3 = reg + comma + reg + comma + reg
+spec_imm = Combine(sign + Word("1248", exact=1))
+spec_imm.setParseAction(to_int)
+spec_imm.addParseAction(_build(tokens.Immediate))
+
+offset = (s7("offset") | reg("index"))
+tgt = reg("tgt")
+src = reg("src")
+base = reg("base")
+op1 = reg("op1")
+op2 = reg("op2")
+
+reg_imm = op2 | spec_imm("op2")
+reg3_imm = tgt + comma + op1 + comma + reg_imm
+
+condition = oneOf("eq ne gt gte lt lte ult ulte")("cond")
+condition.setParseAction(_build(tokens.Condition))
+
 comment = ";" + restOfLine
-condition = oneOf("eq ne gt gte lt lte ult ulte")
-condition.setParseAction(tokens.Condition)
-
-# numbers
-s7 = signed_num(7)
-s8 = signed_num(8)
-s13 = signed_num(13)
-u4 = unsigned_num(4)
-

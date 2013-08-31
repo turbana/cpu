@@ -14,13 +14,12 @@ def bin_str(n, bits=0):
 
 
 def grammer():
-	base = (s7 | reg)
-	ldw = Literal("ldw") + reg + comma + base + lparen + reg + rparen
-	ldb = Literal("ldb") + reg + comma + base + lparen + reg + rparen
-	stw = Literal("stw") + base + lparen + reg + rparen + comma + reg
-	stb = Literal("stb") + base + lparen + reg + rparen + comma + reg
+	ldw = Literal("ldw") + tgt + comma + offset + lparen + base + rparen
+	ldb = Literal("ldb") + tgt + comma + offset + lparen + base + rparen
+	stw = Literal("stw") + offset + lparen + base + rparen + comma + src
+	stb = Literal("stb") + offset + lparen + base + rparen + comma + src
 
-	jmp = Literal("jmp") + (s13 ^ label_name ^ reg)
+	jmp = Literal("jmp") + (s13 ^ label_name ^ reg("tgt"))
 	
 	add = Literal("add") + reg3_imm
 	sub = Literal("sub") + reg3_imm
@@ -29,24 +28,24 @@ def grammer():
 	addskipz = Literal("as.z") + reg3_imm
 	addskipnz = Literal("as.nz") + reg3_imm
 
-	skip = Literal("s") + Suppress(".") + condition + reg + comma + reg_imm
+	skip = Literal("s") + Suppress(".") + condition + op1 + comma + reg_imm
 
-	lui = Literal("lui") + reg + comma + s8
-	addi = Literal("addi") + reg + comma + s8
+	lui = Literal("lui")   + tgt + comma + s8("imm")
+	addi = Literal("addi") + tgt + comma + s8("imm")
 
-	shl = Literal("shl") + reg + comma + reg + comma + u4
-	shr = Literal("shr") + reg + comma + reg + comma + u4
+	shl = Literal("shl") + tgt + comma + src + comma + u4("count")
+	shr = Literal("shr") + tgt + comma + src + comma + u4("count")
 
-	xor = Literal("xor") + reg + comma + reg
-	not_i = Literal("not") + reg + comma + reg
+	xor = Literal("xor")   + tgt + comma + src
+	not_i = Literal("not") + tgt + comma + src
 
 	halt = Literal("halt")
-	trap = Literal("trap") + u4
-	sext = Literal("sext") + reg
+	trap = Literal("trap") + u4("sysnum")
+	sext = Literal("sext") + tgt
 
 	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
 	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
-	instruction.setParseAction(tokens.Instruction)
+	instruction.setParseAction(lambda s,l,t: tokens.Instruction(t[0], t[1:]))
 	macro = directives.grammer()
 	line = Optional(label) + (instruction | macro)
 	g = OneOrMore(line)
@@ -79,7 +78,7 @@ def expand_labels(toks):
 			addr -= pos
 		addr /= 2
 		# TODO check that number is in bounds for a N bit signed number
-		return tokens.Number(addr, base=10, bits=bits, signed=True)
+		return tokens.Number(addr, base=10, bits=bits, signed=True, name="offset")
 
 	i = 0
 	pos = 0
@@ -150,70 +149,9 @@ def apply_macros(toks):
 	return toks
 
 
-def set_imm(inst, byte):
-	if isinstance(inst.args[2], tokens.Immediate):
-		byte |= 1 << 9
-	return byte
-
-instructions = {
-	"ldw":		(  0 << 13, 0, 6, 3),
-	"ldb":		(  1 << 13, 0, 6, 3),
-	"stw":		(  2 << 13, 6, 3, 0),
-	"stb":		(  3 << 13, 6, 3, 0),
-	"jmp":		(  4 << 13, 0),
-	"add":		( 40 << 10, 0, 6, 3),
-	"sub":		( 41 << 10, 0, 6, 3),
-	"and":		( 42 << 10, 0, 6, 3),
-	"or":		( 43 << 10, 0, 6, 3),
-	"s":		( 44 << 10, 0, 6, 3),
-	"as.z":		( 45 << 10, 0, 6, 3),
-	"as.nz":	( 46 << 10, 0, 6, 3),
-	"lui":		( 24 << 11, 0, 3),
-	"addi":		( 25 << 11, 0, 3),
-	"ldw.b":	(104 <<  9, 0, 3, 6),
-	"ldb.b":	(105 <<  9, 0, 3, 6),
-	"stw.b":	(106 <<  9, 3, 6, 0),
-	"stb.b":	(107 <<  9, 3, 6, 0),
-	"shl":		( 54 << 10, 0, 3, 6),
-	"shr":		( 55 << 10, 0, 3, 6),
-	"xor":		(896 <<  6, 0, 3),
-	"not":		(897 <<  6, 0, 3),
-	"halt":		(65246, ),
-	"trap":		(4078 << 4, 0),
-	"sext":		(4079 << 4, 0),
-	"jmp.r":	(8159 << 3, 0),
-}
-
-extra = {
-	"add":   set_imm,
-	"sub":   set_imm,
-	"and":   set_imm,
-	"or":    set_imm,
-	"s":     set_imm,
-	"as.z":  set_imm,
-	"as.nz": set_imm,
-}
-
 def translate(toks):
 	bytes = []
-	for token in toks:
-		if isinstance(token, tokens.Number):
-			value = token.binary()
-		else:
-			inst = instructions[token.name]
-			value = inst[0]
-			for i, n in enumerate(inst[1:]):
-				value |= token.args[i].binary() << n
-			if token.name in extra:
-				value = extra[token.name](token, value)
-		size = token.size
-		data = []
-		while size > 0:
-			data.append(value & 0xFF)
-			value >>= 8
-			size -= 1
-		data.reverse()
-		bytes.extend(data)
+	map(bytes.extend, map(tokens.encode, toks))
 	return bytes
 
 
@@ -231,14 +169,13 @@ def main(args):
 		toks = apply_text_data(toks)
 		toks = apply_macros(toks)
 		toks = expand_labels(toks)
-		for tok in toks:
-			print tok.size, tok
+		#for tok in toks: print str(tok)
 		#return 1
 		bytes = translate(toks)
 		fout = open(out_filename, "wb")
 		for byte in bytes:
-			#fout.write(bin_str(byte, 8) + "\n")
-			fout.write(chr(byte))
+			fout.write(bin_str(byte, 8) + "\n")
+			#fout.write(chr(byte))
 	except (ParseException, ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"

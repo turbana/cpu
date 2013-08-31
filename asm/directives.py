@@ -33,8 +33,8 @@ def _build_grammer(name, format):
 		return name
 	unumber = g.Suppress("u") + g.num
 	snumber = g.Suppress("s") + g.num
-	unumber.setParseAction(lambda s,l,t: g.unsigned_num(t[0]))
-	snumber.setParseAction(lambda s,l,t: g.signed_num(t[0]))
+	unumber.setParseAction(lambda s,l,t: g.number(t[0], False))
+	snumber.setParseAction(lambda s,l,t: g.number(t[0], True))
 	types = unumber | snumber
 
 	toks = g.OneOrMore(types).parseString(format, parseAll=True)
@@ -56,8 +56,8 @@ def dw(pos, w):
 
 @macro("u16")
 def align(pos, n):
-	offset = n.n - (pos % n.n)
-	if offset != n.n:
+	offset = n.value - (pos % n.calue)
+	if offset != n.value:
 		return [tokens.Number(n=0, base=10, bits=8*offset, signed=False)]
 	return []
 
@@ -82,7 +82,7 @@ def test(pos, x):
 		lui $5, {imm}
 		lui $6, {imm}
 		lui $7, {imm}
-	""".format(imm=x.n)
+	""".format(imm=x.value)
 
 
 #print macros
