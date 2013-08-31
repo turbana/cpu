@@ -1,6 +1,6 @@
 import sys
 
-import tokens
+import isa
 import directives
 from grammer import *
 
@@ -45,7 +45,7 @@ def grammer():
 
 	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
 	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
-	instruction.setParseAction(lambda s,l,t: tokens.Instruction(t[0], t[1:]))
+	instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
 	macro = directives.grammer()
 	line = Optional(label) + (instruction | macro)
 	g = OneOrMore(line)
@@ -78,13 +78,13 @@ def expand_labels(toks):
 			addr -= pos
 		addr /= 2
 		# TODO check that number is in bounds for a N bit signed number
-		return tokens.Number(addr, base=10, bits=bits, signed=True, name="offset")
+		return isa.Number(addr, base=10, bits=bits, signed=True, name="offset")
 
 	i = 0
 	pos = 0
 	while i < len(toks):
 		tok = toks[i]
-		if isinstance(tok, tokens.Label):
+		if isinstance(tok, isa.Label):
 			add_label(tok, pos)
 			del toks[i]
 			continue
@@ -94,7 +94,7 @@ def expand_labels(toks):
 	pos = 0
 	for i, tok in enumerate(toks):
 		for j, arg in enumerate(tok.args):
-			if isinstance(arg, tokens.Label):
+			if isinstance(arg, isa.Label):
 				pc_relative = False
 				if tok.name == "jmp":
 					pc_relative = True
@@ -114,7 +114,7 @@ def apply_text_data(toks):
 	data = []
 	current = data
 	for tok in toks:
-		if isinstance(tok, tokens.Macro):
+		if isinstance(tok, isa.Macro):
 			if tok.name == "text":
 				current = text
 				continue
@@ -131,7 +131,7 @@ def apply_macros(toks):
 	i = 0
 	while i < len(toks):
 		tok = toks[i]
-		if isinstance(tok, tokens.Macro):
+		if isinstance(tok, isa.Macro):
 			result = tok.callback(pos, *tok.args)
 			if result is not None:
 				del toks[i]
@@ -151,7 +151,7 @@ def apply_macros(toks):
 
 def translate(toks):
 	bytes = []
-	map(bytes.extend, map(tokens.encode, toks))
+	map(bytes.extend, map(isa.encode, toks))
 	return bytes
 
 

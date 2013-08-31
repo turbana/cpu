@@ -1,5 +1,5 @@
 from pyparsing import *
-import tokens
+import isa
 
 
 sign = Optional(Word("-+", exact=1))
@@ -20,7 +20,7 @@ def number(bits, signed):
 		name = toks.keys()[0] if toks.keys() else ""
 		value, base = toks[0]
 		try:
-			return tokens.Number(value, base, bits, signed, name)
+			return isa.Number(value, base, bits, signed, name)
 		except ValueError, e:
 			raise ParseFatalException(s, l, str(e))
 	return num.copy().setParseAction(_parse_action)
@@ -51,15 +51,15 @@ u4 = number(4, False)
 # values
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 reg.setName("register")
-reg.setParseAction(_build(tokens.Register))
+reg.setParseAction(_build(isa.Register))
 num = Word(nums).setParseAction(to_int)
 label_name = (num + Optional(Word("fb", exact=1))) | Word(alphanums)
 label_name.setName("label")
-label_name.setParseAction(tokens.Label)
+label_name.setParseAction(isa.Label)
 label = label_name + colon
 spec_imm = Combine(sign + Word("1248", exact=1))
 spec_imm.setParseAction(to_int)
-spec_imm.addParseAction(_build(tokens.Immediate))
+spec_imm.addParseAction(_build(isa.Immediate))
 
 offset = (s7("offset") | reg("index"))
 tgt = reg("tgt")
@@ -72,6 +72,6 @@ reg_imm = op2 | spec_imm("op2")
 reg3_imm = tgt + comma + op1 + comma + reg_imm
 
 condition = oneOf("eq ne gt gte lt lte ult ulte")("cond")
-condition.setParseAction(_build(tokens.Condition))
+condition.setParseAction(_build(isa.Condition))
 
 comment = ";" + restOfLine

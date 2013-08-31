@@ -1,4 +1,4 @@
-import tokens
+import isa
 import grammer as g
 
 macros = []
@@ -8,7 +8,7 @@ def macro(arg):
 	def add_macro(func, name, format):
 		grammer = _build_grammer(name, format)
 		def build_macro(s, l, t):
-			return tokens.Macro(name, func, t[1:])
+			return isa.Macro(name, func, t[1:])
 		grammer.setParseAction(build_macro)
 		macros.append(grammer)
 	if hasattr(arg, "__call__"):
@@ -58,7 +58,7 @@ def dw(pos, w):
 def align(pos, n):
 	offset = n.value - (pos % n.calue)
 	if offset != n.value:
-		return [tokens.Number(n=0, base=10, bits=8*offset, signed=False)]
+		return [isa.Number(n=0, base=10, bits=8*offset, signed=False)]
 	return []
 
 
