@@ -30,6 +30,12 @@ class Instruction(Token):
 			ir = not isinstance(self.op2, Register)
 			self.args.insert(0, IR(ir, "ir"))
 
+	def arguments(self):
+		d = {}
+		for arg in self.args:
+			d[arg.name] = arg.value
+		return d
+
 	def __getattr__(self, name):
 		for arg in self.args:
 			if arg.name == name:
@@ -119,15 +125,15 @@ class Immediate(Token):
 
 
 class Condition(Token):
-	def __init__(self, type, name):
-		self.type = type
+	def __init__(self, value, name):
+		self.value = value
 		self.name = name
 	
 	def binary(self):
-		return conditions[self.type]
+		return conditions[self.value]
 
 	def __str__(self):
-		return "<Cond %s>" % self.type
+		return "<Cond %s>" % self.value
 	__repr__ = __str__
 
 

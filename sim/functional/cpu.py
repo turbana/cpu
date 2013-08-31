@@ -1,4 +1,7 @@
 import sys
+import isa
+
+TRACE = True
 
 def sbin(n):
 	return bin(n)[2:]
@@ -8,117 +11,75 @@ def num(s):
 	return int(s.replace(" ", ""), 2)
 
 
-def bits(n, h, l):
-	mask = (2**(h-l+1) - 1) << l
-	return (n & mask) >> l
+condition_func = {
+	"eq":	lambda x, y: x == y,
+	"ne":	lambda x, y: x != y,
+	"lt":	lambda x, y: y <  y,
+	"lte":	lambda x, y: y <= x,
+	"gt":	lambda x, y: y >  x,
+	"gte":	lambda x, y: y >= x,
+	"ult":	lambda x, y: UnimplmentedError(),
+	"ulte":	lambda x, y: UnimplmentedError(),
+}
 
-def signed(n, bits):
-	# two's complement
-	if n & (1 << bits - 1):
-		return n - (2**bits)
-	return n
-
-def unsigned(n, bits):
-	# two's complement
-	return (2**bits) + n
-
-
-
-def imm(n):
-	return (8, 4, 2, 1, -1, -2, -4, 8)[n]
-
-def cond(n):
-	map = (lambda x, y: x == y,
-		   lambda x, y: x != y,
-		   lambda x, y: x  > y,
-		   lambda x, y: x >= y,
-		   lambda x, y: x  < y,
-		   lambda x, y: x <= y,
-		   lambda x, y: unsigned(x, 16)  < unsigned(y, 16),
-		   lambda x, y: unsigned(x, 16) <= unsigned(y, 16))
-	return map[n]
+def trace(name, args, kwargs):
+	if TRACE:
+		items = [key+"="+str(val) for key, val in kwargs.items()]
+		print "%-8s %s" % (name, " ".join(items))
 
 
-#
-# instructions
-#
+operations = {}
 
-def jmp(cpu, opcode):
-	addr = signed(bits(opcode, 12, 0), 13)
-	print "jmp", addr
-	cpu.reg[7] += addr - 1
-	#cpu.dump()
+def op(func):
+	def wrap(*args, **kwargs):
+		trace(func.func_name, args, kwargs)
+		return func(*args, **kwargs)
+	operations[func.func_name] = wrap
+	return wrap
 
-def ldw(cpu, opcode):
-	offset = signed(bits(opcode, 12, 6), 7)
-	base = bits(opcode, 5, 3)
-	tgt = bits(opcode, 2, 0)
-	print "ldw", offset, base, tgt
-	base = cpu.reg[base]
-	value = cpu.fetch(base + offset)
-	cpu.reg[tgt] = value
 
-def stw(cpu, opcode):
-	offset = signed(bits(opcode, 12, 6), 7)
-	base = bits(opcode, 5, 3)
-	src = bits(opcode, 2, 0)
-	print "stw", offset, base, src
-	base = cpu.reg[base]
-	value = cpu.reg[src]
-	cpu.set(base + offset, value)
+@op
+def ldw(cpu, tgt, base, offset):
+	# TODO handle reg ldw
+	cpu.rset(tgt, cpu.mget(base + offset))
 
-def add(cpu, opcode):
-	ir = bits(opcode, 9, 9)
-	op1 = bits(opcode, 8, 6)
-	op2 = bits(opcode, 5, 3)
-	tgt = bits(opcode, 2, 0)
-	print "add", ir, op1, op2, tgt
-	op1 = cpu.reg[op1]
-	op2 = imm(op2) if ir else cpu.reg[op2]
-	cpu.reg[tgt] = op1 + op2
+@op
+def stw(cpu, offset, base, src):
+	# TODO handle reg stw
+	cpu.mset(offset + base, cpu.rget(src))
 
-def sub(cpu, opcode):
-	ir = bits(opcode, 9, 9)
-	op1 = bits(opcode, 8, 6)
-	op2 = bits(opcode, 5, 3)
-	tgt = bits(opcode, 2, 0)
-	print "sub", ir, op1, op2, tgt
-	op1 = cpu.reg[op1]
-	op2 = imm(op2) if ir else cpu.reg[op2]
-	cpu.reg[tgt] = op1 - op2
+@op
+def jmp(cpu, offset):
+	cpu.reg[7] += offset - 1
 
-def skip(cpu, opcode):
-	ir = bits(opcode, 9, 9)
-	op1 = bits(opcode, 8, 6)
-	op2 = bits(opcode, 5, 3)
-	c = bits(opcode, 2, 0)
-	print "skip", ir, op1, op2, c
-	op1 = cpu.reg[op1]
-	op2 = imm(op2) if ir else cpu.reg[op2]
-	if cond(c)(op1, op2):
+@op
+def add(cpu, tgt, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	cpu.rset(tgt, op1 + op2)
+
+@op
+def sub(cpu, tgt, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	cpu.rset(tgt, op1 - op2)
+
+@op
+def s(cpu, cond, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	func = condition_func[cond]
+	if func(op1, op2):
 		cpu.reg[7] += 1
 
-def halt(cpu, opcode):
-	print "halt"
+@op
+def halt(cpu):
 	cpu.halt = True
-
-
-
-class Registers(object):
-	def __init__(self):
-		self.values = [0 for _ in xrange(8)]
-	
-	def __setitem__(self, i, v):
-		if i != 0:
-			self.values[i] = v
-	
-	def __getitem__(self, i):
-		return self.values[i]
 
 
 class CPU(object):
 	def __init__(self):
-		self.reg  = Registers()
+		self.reg  = [0 for _ in xrange(8)]
 		self.mem  = [0 for _ in xrange(2**16)]
 		self.halt = True
 	
@@ -151,51 +112,38 @@ class CPU(object):
 	def run(self):
 		self.halt = False
 		while not self.halt:
-			opcode = self.fetch_inst()
-			inst = self.decode(opcode)
-			inst(self, opcode)
+			opcode = self.fetch()
+			# XXX
+			if self.reg[7] > 0x13:
+				return
+			tok = isa.decode(opcode)
+			operations[tok.name](self, **tok.arguments())
 	
-	def fetch_inst(self):
+	def fetch(self):
 		pc = self.reg[7]
 		self.reg[7] = pc + 1
 		# XXX
 		#if pc >= 16: raise ValueError("all done")
-		return self.fetch(pc)
+		return self.mget(pc)
 	
-	def fetch(self, addr):
+	def mget(self, addr):
 		high = self.mem[addr*2]
 		low = self.mem[addr*2+1]
 		byte = (high << 8) | low
 		return byte
 
-	def set(self, addr, val):
+	def mset(self, addr, val):
 		high = (val >> 8)
 		low = val & 0xFF
 		self.mem[addr*2] = high
 		self.mem[addr*2+1] = low
 	
-	def decode(self, opcode):
-		if   bits(opcode, 15, 13) == int("000", 2):
-			return ldw
-		# ...
-		elif bits(opcode, 15, 13) == int("010", 2):
-			return stw
-		# ...
-		elif bits(opcode, 15, 13) == int("100", 2):
-			return jmp
-		# ...
-		elif bits(opcode, 15, 10) == int("101000", 2):
-			return add
-		elif bits(opcode, 15, 10) == int("101001", 2):
-			return sub
-		# ...
-		elif bits(opcode, 15, 10) == int("101100", 2):
-			return skip
-		# ...
-		elif bits(opcode, 15,  0) == int("1111111011011110", 2):
-			return halt
-		print "decode", bin(opcode)
-		return lambda *args: None
+	def rget(self, reg):
+		return self.reg[reg]
+
+	def rset(self, reg, value):
+		if reg not in (0, 7):
+			self.reg[reg] = value
 
 
 
@@ -209,15 +157,6 @@ def main(args):
 	cpu.dump(0, 47)
 	cpu.run()
 	cpu.dump(0, 47)
-
-#	def sbin(n):
-#		print bin(n)[2:].zfill(16)
-#	def num(s):
-#		return int(s.replace(" ", ""), 2)
-#	
-#	n = num("0001 0011 0101 1101")
-#	sbin(n)
-#	sbin(bits(n, 15, 12))
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
