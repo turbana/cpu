@@ -1,4 +1,3 @@
-
 class Token(object):
 	size = 0
 	args = []
@@ -27,8 +26,7 @@ class Instruction(Token):
 		self.size = 2
 
 		# construct I/R token
-		is_reg = lambda i: isinstance(self.args[i], Register)
-		if name in ("add", "sub", "and", "or", "s", "as.nz", "as.z"):
+		if name in ("add", "sub", "and", "or", "s", "as.nz", "as.z") and not isinstance(args[0], IR):
 			ir = not isinstance(self.op2, Register)
 			self.args.insert(0, IR(ir, "ir"))
 
@@ -42,9 +40,9 @@ class Instruction(Token):
 		name = self.name
 		args = self.args
 		if name == "s":
-			name += "." + args[0].type
-			args = args[1:]
-		return name + "\t" + ", ".join(str(arg) for arg in args)
+			name += "." + self.cond.type
+			args = [arg for arg in args if not isinstance(arg, Condition)]
+		return name + "\t" + ", ".join(str(arg) for arg in args if not isinstance(arg, IR))
 
 	def __repr__(self):
 		s = ""
@@ -111,8 +109,7 @@ class Immediate(Token):
 		self.name = name
 	
 	def binary(self):
-		m = {8: 0, 4: 1, 2: 2, 1: 3, -1: 4, -2: 5, -4: 6, -8: 7}
-		return m[self.value]
+		return immediates[self.value]
 
 	def __str__(self):
 		return str(self.value)
@@ -127,8 +124,7 @@ class Condition(Token):
 		self.name = name
 	
 	def binary(self):
-		m = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
-		return m[self.type]
+		return conditions[self.type]
 
 	def __str__(self):
 		return "<Cond %s>" % self.type
@@ -152,7 +148,7 @@ class Macro(Token):
 
 class IR(Token):
 	def __init__(self, value, name=""):
-		self.value = value
+		self.value = True if value else False
 		self.name = name
 
 	def binary(self):
@@ -203,6 +199,11 @@ add("sext", 0x1FDE, 3, ("tgt", "reg", 2, 0))
 add("jmp",  0x1FDF, 3, ("tgt", "reg", 2, 0))
 
 
+conditions = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
+conditions_rev = dict(zip(conditions.values(), conditions.keys()))
+immediates = {8: 0, 4: 1, 2: 2, 1: 3, -1: 4, -2: 5, -4: 6, -8: 7}
+immediates_rev = dict(zip(immediates.values(), immediates.keys()))
+
 
 def encoding(token):
 	for code in encodings:
@@ -211,7 +212,6 @@ def encoding(token):
 			token_args_names = [arg.name for arg in token.args]
 			if sorted(token_args_names) == sorted(code_args_names):
 				return code
-
 
 
 def encode(token):
@@ -231,19 +231,46 @@ def encode(token):
 		for name, type, start, end in args:
 			value = getattr(token, name).binary()
 			word |= value << end
-		#print "%s %s | %s" % (bin(word)[2:].zfill(16), hex(word), repr(token))
 		return [(word & 0xFF00) >> 8, word & 0xFF]
 
 
 def decode(opcode):
-	pass
+	for code in encodings:
+		name, prelude_val, prelude_end, args = code
+		prelude = prelude_val << prelude_end
+		prelude_mask = (2**(16 - prelude_end) - 1) << prelude_end
+		if (opcode & prelude_mask) == prelude:
+			tok_args = []
+			for arg in args:
+				aname, type, start, end = arg
+				mask = (1 << end) if start == end else ((2**(start - end + 1) - 1) << end)
+				value = (opcode & mask) >> end
+				def twoc(n, bits):
+					if n & (1 << (bits-1)):
+						return n - 2**bits
+					return n
 
-
-def ldw(cpu, opcode):
-	offset = signed(bits(opcode, 12, 6), 7)
-	base = bits(opcode, 5, 3)
-	tgt = bits(opcode, 2, 0)
-	print "ldw", offset, base, tgt
-	base = cpu.reg[base]
-	value = cpu.fetch(base + offset)
-	cpu.reg[tgt] = value
+				if   type == "reg":
+					arg = Register(value, aname)
+				elif type == "ir":
+					arg = IR(value, aname)
+				elif type == "cond":
+					arg = Condition(conditions_rev[value], aname)
+				elif type == "ireg":
+					if tok_args[0].value:
+						arg = Immediate(immediates_rev[value], aname)
+					else:
+						arg = Register(value, aname)
+				elif type == "s7":
+					arg = Number(twoc(value, 7), 10, 7, True, aname)
+				elif type == "s8":
+					arg = Number(twoc(value, 8), 10, 8, True, aname)
+				elif type == "s13":
+					arg = Number(twoc(value, 13), 10, 13, True, aname)
+				elif type == "u4":
+					arg = Number(value, 10, 4, False, aname)
+				else:
+					raise ValueError("Unknown opcode argument type: " + type)
+				tok_args.append(arg)
+			return Instruction(name, tok_args)
+	raise ValueError("Unknown opcode: " + hex(opcode))
