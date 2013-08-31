@@ -31,10 +31,14 @@ def trace(name, args, kwargs):
 operations = {}
 
 def op(func):
+	name = func.func_name
+	if name.endswith("_"):
+		name = name[:-1]
+	name = name.replace("_", ".")
 	def wrap(*args, **kwargs):
-		trace(func.func_name, args, kwargs)
+		trace(name, args, kwargs)
 		return func(*args, **kwargs)
-	operations[func.func_name] = wrap
+	operations[name] = wrap
 	return wrap
 
 
@@ -44,12 +48,23 @@ def ldw(cpu, tgt, base, offset):
 	cpu.rset(tgt, cpu.mget(base + offset))
 
 @op
+def ldb(cpu, tgt, base, offset):
+	# TODO handle reg ldb
+	cpu.rset(tgt, cpu.mget(base + offset) >> 8)
+
+@op
 def stw(cpu, offset, base, src):
 	# TODO handle reg stw
 	cpu.mset(offset + base, cpu.rget(src))
 
 @op
+def stb(cpu, offset, base, src):
+	# TODO handle reg stb
+	cpu.mset(offset + base, cpu.rget(src) & 0xFF, byte=True)
+
+@op
 def jmp(cpu, offset):
+	# TODO jmp reg
 	cpu.reg[7] += offset - 1
 
 @op
@@ -65,6 +80,18 @@ def sub(cpu, tgt, op1, op2, ir):
 	cpu.rset(tgt, op1 - op2)
 
 @op
+def and_(cpu, tgt, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	cpu.rset(tgt, op1 & op2)
+
+@op
+def or_(cpu, tgt, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	cpu.rset(tgt, op1 | op2)
+
+@op
 def s(cpu, cond, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
@@ -73,8 +100,60 @@ def s(cpu, cond, op1, op2, ir):
 		cpu.reg[7] += 1
 
 @op
+def as_z(cpu, ir, op1, op2, tgt):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	res = op1 + op2
+	cpu.rset(tgt, res)
+	if res == 0:
+		cpu.reg[7] += 1
+
+@op
+def as_nz(cpu, ir, op1, op2, tgt):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	res = op1 + op2
+	cpu.rset(tgt, res)
+	if res != 0:
+		cpu.reg[7] += 1
+
+@op
+def lui(cpu, imm, tgt):
+	cpu.rset(tgt, imm << 8)
+
+@op
+def addi(cpu, imm, tgt):
+	cpu.rset(tgt, cpu.rget(tgt) + imm)
+
+@op
+def shl(cpu, count, src, tgt):
+	cpu.rset(tgt, cpu.rget(src) >> count)
+
+@op
+def shr(cpu, count, src, tgt):
+	cpu.rset(tgt, cpu.rget(src) << count)
+
+@op
+def xor(cpu, tgt, src):
+	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
+
+@op
+def not_(cpu, tgt, src):
+	cpu.rset(tgt, cpu.rget(src) ^ 0xFFFF)
+
+@op
 def halt(cpu):
 	cpu.halt = True
+
+@op
+def trap(cpu, int):
+	raise NotImplementedError()
+
+@op
+def sext(cpu, tgt):
+	val = cpu.rget(tgt)
+	if val & (2**7):
+		cpu.rset(tgt, val | 0xFF00)
 
 
 class CPU(object):
@@ -132,10 +211,10 @@ class CPU(object):
 		byte = (high << 8) | low
 		return byte
 
-	def mset(self, addr, val):
-		high = (val >> 8)
-		low = val & 0xFF
-		self.mem[addr*2] = high
+	def mset(self, addr, val, byte=False):
+		high = (val & 0xFF) if byte else (val >> 8)
+		low  = 0            if byte else (val & 0xFF)
+		self.mem[addr*2]   = high
 		self.mem[addr*2+1] = low
 	
 	def rget(self, reg):
