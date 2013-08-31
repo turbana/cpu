@@ -31,10 +31,10 @@ def _build_grammer(name, format):
 	name = g.Suppress(".") + g.Literal(name)
 	if not format:
 		return name
-	unumber = g.Suppress("u") + g.num
-	snumber = g.Suppress("s") + g.num
-	unumber.setParseAction(lambda s,l,t: g.number(t[0], False))
-	snumber.setParseAction(lambda s,l,t: g.number(t[0], True))
+	unumber = g.Suppress("u") + g.num_dec
+	snumber = g.Suppress("s") + g.num_dec
+	unumber.setParseAction(lambda s,l,t: g.number(t[0][0], False))
+	snumber.setParseAction(lambda s,l,t: g.number(t[0][0], True))
 	types = unumber | snumber
 
 	toks = g.OneOrMore(types).parseString(format, parseAll=True)
