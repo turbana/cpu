@@ -5,17 +5,18 @@ class Token(object):
 
 
 class Label(Token):
-	def __init__(self, tokens):
-		self.name = tokens[0]
-		self.direction = tokens[1] if len(tokens) == 2 else None
+	def __init__(self, value, direction=None, name=""):
+		self.value = value
+		self.name = name
+		self.direction = direction
 		self.pos = -1
 	
 	def __str__(self):
 		if self.direction:
-			return "<Label %s %s>" % (repr(self.name), self.direction)
+			return "<Label %s %s>" % (repr(self.value), self.direction)
 		elif self.pos >= 0:
-			return "<Label %s @%d>" % (repr(self.name), self.pos)
-		return "<Label %s>" % repr(self.name)
+			return "<Label %s @%d>" % (repr(self.value), self.pos)
+		return "<Label %s>" % repr(self.value)
 	__repr__ = __str__
 
 
@@ -46,7 +47,7 @@ class Instruction(Token):
 		name = self.name
 		args = self.args
 		if name == "s":
-			name += "." + self.cond.type
+			name += "." + self.cond.value
 			args = [arg for arg in args if not isinstance(arg, Condition)]
 		return name + "\t" + ", ".join(str(arg) for arg in args if not isinstance(arg, IR))
 
@@ -87,7 +88,16 @@ class Number(Token):
 		return self.value
 
 	def __str__(self):
-		return "0x" + hex(self.binary())[2:].upper()
+		#return "0x" + hex(self.binary())[2:].upper()
+		n = self.binary()
+		bytes = []
+		size = self.size
+		while size > 0:
+			byte = hex(n & 0xFF)[2:].upper().zfill(2)
+			bytes.append("0x" + byte)
+			n >>= 8
+			size -= 1
+		return " ".join(reversed(bytes))
 
 	def __repr__(self):
 		signed = "s" if self.signed else "u"
@@ -237,7 +247,10 @@ def encode(token):
 		for name, type, start, end in args:
 			value = getattr(token, name).binary()
 			word |= value << end
+			if word < 0:
+				raise Error("cannot encode negative word: " + hex(word))
 		return [(word & 0xFF00) >> 8, word & 0xFF]
+	raise ValueError("unknown token: " + repr(token))
 
 
 def decode(opcode):

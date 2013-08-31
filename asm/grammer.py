@@ -55,7 +55,7 @@ reg.setParseAction(_build(isa.Register))
 lnum = Word(nums).setParseAction(to_int)
 label_name = (lnum + Optional(Word("fb", exact=1))) | Word(alphanums)
 label_name.setName("label")
-label_name.setParseAction(isa.Label)
+label_name.setParseAction(_build(isa.Label))
 label = label_name + colon
 spec_imm = Combine(sign + Word("1248", exact=1))
 spec_imm.setParseAction(to_int)

@@ -2,6 +2,7 @@ import sys
 
 import isa
 import directives
+import macros
 from grammer import *
 
 
@@ -19,7 +20,7 @@ def grammer():
 	stw = Literal("stw") + offset + lparen + base + rparen + comma + src
 	stb = Literal("stb") + offset + lparen + base + rparen + comma + src
 
-	jmp = Literal("jmp") + (s13 ^ label_name ^ reg("tgt"))
+	jmp = Literal("jmp") + (s13 ^ label_name("offset") ^ reg("tgt"))
 	
 	add = Literal("add") + reg3_imm
 	sub = Literal("sub") + reg3_imm
@@ -30,8 +31,8 @@ def grammer():
 
 	skip = Literal("s") + Suppress(".") + condition + op1 + comma + reg_imm
 
-	lui = Literal("lui")   + tgt + comma + s8("imm")
-	addi = Literal("addi") + tgt + comma + s8("imm")
+	lui = Literal("lui")   + tgt + comma + (s8("imm") | label_name("imm"))
+	addi = Literal("addi") + tgt + comma + (s8("imm") | label_name("imm"))
 
 	shl = Literal("shl") + tgt + comma + src + comma + u4("count")
 	shr = Literal("shr") + tgt + comma + src + comma + u4("count")
@@ -58,14 +59,14 @@ def expand_labels(toks):
 
 	def add_label(label, pos):
 		label.pos = pos
-		if label.name not in labels:
-			labels[label.name] = []
-		labels[label.name].append(label)
+		if label.value not in labels:
+			labels[label.value] = []
+		labels[label.value].append(label)
 
 	def lookup_label(label, pos, bits, pc_relative):
-		if label.name not in labels:
-			raise Exception("Unknown label %s" % repr(label.name))
-		search = labels[label.name]
+		if label.value not in labels:
+			raise Exception("Unknown label %s" % repr(label.value))
+		search = labels[label.value]
 		if len(search) == 1:
 			found = search[0]
 		else:
@@ -78,7 +79,7 @@ def expand_labels(toks):
 			addr -= pos
 		addr /= 2
 		# TODO check that number is in bounds for a N bit signed number
-		return isa.Number(addr, base=10, bits=bits, signed=True, name="offset")
+		return isa.Number(addr, base=10, bits=bits, signed=True, name=label.name)
 
 	i = 0
 	pos = 0
@@ -169,13 +170,13 @@ def main(args):
 		toks = apply_text_data(toks)
 		toks = apply_macros(toks)
 		toks = expand_labels(toks)
-		#for tok in toks: print str(tok)
+		#for tok in toks: print repr(tok)
 		#return 1
 		bytes = translate(toks)
 		fout = open(out_filename, "wb")
 		for byte in bytes:
-			fout.write(bin_str(byte, 8) + "\n")
-			#fout.write(chr(byte))
+			#fout.write(bin_str(byte, 8) + "\n")
+			fout.write(chr(byte))
 	except (ParseException, ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"
