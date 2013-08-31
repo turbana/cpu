@@ -61,7 +61,7 @@ spec_imm = Combine(sign + Word("1248", exact=1))
 spec_imm.setParseAction(to_int)
 spec_imm.addParseAction(_build(isa.Immediate))
 
-offset = (s7("offset") | reg("index"))
+offset = (s7("offset") | reg("index") | label_name("offset"))
 tgt = reg("tgt")
 src = reg("src")
 base = reg("base")
