@@ -1,6 +1,15 @@
 from pyparsing import *
 import isa
 
+# pyparsing does magic when calling parse actions that I do not want happening.
+# It tries to guess how many parameters a function has by calling it again with
+# a different number of parameters when an exception is raised. Unforunatly this
+# masks any exception the function would otherwise raise. This disables that.
+def _no_trim_arity(func, maxargs=None):
+	return func
+import pyparsing
+pyparsing._trim_arity = _no_trim_arity
+
 
 sign = Optional(Word("-+", exact=1))
 
