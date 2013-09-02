@@ -32,6 +32,7 @@ comma = Suppress(",")
 colon = Suppress(":")
 lparen = Suppress("(")
 rparen = Suppress(")")
+dot = Suppress(".")
 
 # values
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
@@ -107,3 +108,91 @@ condition = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 condition.setParseAction(_build(isa.Condition))
 
 comment = ";" + restOfLine
+
+ldw = Literal("ldw") + tgt + comma + offset + lparen + base + rparen
+ldb = Literal("ldb") + tgt + comma + offset + lparen + base + rparen
+stw = Literal("stw") + offset + lparen + base + rparen + comma + src
+stb = Literal("stb") + offset + lparen + base + rparen + comma + src
+
+jmp = Literal("jmp") + jmp_target
+
+add = Literal("add") + reg3_imm
+sub = Literal("sub") + reg3_imm
+and_i = Literal("and") + reg3_imm
+or_i = Literal("or") + reg3_imm
+addskipz = Literal("as.z") + reg3_imm
+addskipnz = Literal("as.nz") + reg3_imm
+
+skip = Literal("s") + dot + condition + op1 + comma + reg_imm
+
+lui = Literal("lui")   + tgt + comma + imm8
+addi = Literal("addi") + tgt + comma + imm8
+
+shl = Literal("shl") + tgt + comma + src + comma + count
+shr = Literal("shr") + tgt + comma + src + comma + count
+
+xor = Literal("xor")   + tgt + comma + src
+not_i = Literal("not") + tgt + comma + src
+
+halt = Literal("halt")
+trap = Literal("trap") + sysnum
+sext = Literal("sext") + tgt
+
+instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
+instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
+instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
+
+
+def grammer():
+	macro = _macros_grammer()
+	line = Optional(label) + (instruction | macro)
+	g = OneOrMore(line)
+	g.ignore(comment)
+	return g
+
+
+#
+# Macros
+#
+
+_macros = []
+
+def macro(arg):
+	def add_macro(func, name, format):
+		grammer = _build_macro_grammer(name, format)
+		def build_macro(s, l, t):
+			print "!!!", type(t), t
+			return isa.Macro(name, func, t[1:])
+		grammer.setParseAction(build_macro)
+		_macros.append(grammer)
+	if hasattr(arg, "__call__"):
+		add_macro(arg, arg.func_name, None)
+		return arg
+	def _decorator(func):
+		add_macro(func, func.func_name, arg)
+		return func
+	return _decorator
+
+
+def _macros_grammer():
+	gram = _macros[0]
+	for m in _macros[1:]:
+		gram |= m
+	return gram
+
+
+def _build_macro_grammer(name, format):
+	name = dot + Literal(name)
+	if not format:
+		return name
+	unumber = Suppress("u") + num_dec
+	snumber = Suppress("s") + num_dec
+	unumber.setParseAction(lambda s,l,t: number(t[0][0], False))
+	snumber.setParseAction(lambda s,l,t: number(t[0][0], True))
+	types = unumber | snumber
+
+	toks = OneOrMore(types).parseString(format, parseAll=True)
+	grammer = toks[0]
+	for tok in toks[1:]:
+		grammer |= tok
+	return name - grammer

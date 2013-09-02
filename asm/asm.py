@@ -14,46 +14,6 @@ def bin_str(n, bits=0):
 	return s.zfill(bits)
 
 
-def grammer():
-	ldw = Literal("ldw") + tgt + comma + offset + lparen + base + rparen
-	ldb = Literal("ldb") + tgt + comma + offset + lparen + base + rparen
-	stw = Literal("stw") + offset + lparen + base + rparen + comma + src
-	stb = Literal("stb") + offset + lparen + base + rparen + comma + src
-
-	jmp = Literal("jmp") + jmp_target
-	
-	add = Literal("add") + reg3_imm
-	sub = Literal("sub") + reg3_imm
-	and_i = Literal("and") + reg3_imm
-	or_i = Literal("or") + reg3_imm
-	addskipz = Literal("as.z") + reg3_imm
-	addskipnz = Literal("as.nz") + reg3_imm
-
-	skip = Literal("s") + Suppress(".") + condition + op1 + comma + reg_imm
-
-	lui = Literal("lui")   + tgt + comma + imm8
-	addi = Literal("addi") + tgt + comma + imm8
-
-	shl = Literal("shl") + tgt + comma + src + comma + count
-	shr = Literal("shr") + tgt + comma + src + comma + count
-
-	xor = Literal("xor")   + tgt + comma + src
-	not_i = Literal("not") + tgt + comma + src
-
-	halt = Literal("halt")
-	trap = Literal("trap") + sysnum
-	sext = Literal("sext") + tgt
-
-	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
-	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
-	instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
-	macro = directives.grammer()
-	line = Optional(label) + (instruction | macro)
-	g = OneOrMore(line)
-	g.ignore(comment)
-	return g
-
-
 def expand_labels(toks):
 	labels = {}
 
