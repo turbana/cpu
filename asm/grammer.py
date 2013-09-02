@@ -15,24 +15,15 @@ num_dec.setParseAction(to_base(10))
 num_hex.setParseAction(to_base(16))
 num = (num_hex | num_bin | num_oct | num_dec)
 
-def number(bits, signed):
-	def _parse_action(s, l, toks):
-		name = toks.keys()[0] if toks.keys() else ""
-		value, base = toks[0]
-		try:
-			return isa.Number(value, base, bits, signed, name)
-		except ValueError, e:
-			raise ParseFatalException(s, l, str(e))
-	return num.copy().setParseAction(_parse_action)
-
 to_int = lambda s,l,t: int("".join(t))
 def replace(what):
 	return lambda s,l,t: [what] + t[1:]
 
-def _build(type):
+def _build(typ, **kwargs):
 	def _parse_action(s, l, toks):
 		name = toks.keys()[0] if toks.keys() else ""
-		return type(*toks, name=name)
+		kwargs["name"] = name
+		return typ(*toks, **kwargs)
 	return _parse_action
 
 
@@ -41,12 +32,6 @@ comma = Suppress(",")
 colon = Suppress(":")
 lparen = Suppress("(")
 rparen = Suppress(")")
-
-# numbers
-s7 = number(7, True)
-s8 = number(8, True)
-s13 = number(13, True)
-u4 = number(4, False)
 
 # values
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
@@ -61,15 +46,62 @@ spec_imm = Combine(sign + Word("1248", exact=1))
 spec_imm.setParseAction(to_int)
 spec_imm.addParseAction(_build(isa.Immediate))
 
-offset = (s7("offset") | reg("index") | label_name("offset"))
-tgt = reg("tgt")
-src = reg("src")
-base = reg("base")
-op1 = reg("op1")
-op2 = reg("op2")
+# expressions
+bin_op = oneOf("<< >> **") | Word("+-*/%&^|", exact=1)
+unary_op = Word("~", exact=1)
+_just_int_value = lambda s,l,t: t[0][0]
+expr_num = num.copy().addParseAction(_just_int_value)
 
-reg_imm = op2 | spec_imm("op2")
+expr = Forward()
+operand = expr_num | label_name | expr
+
+bin_expr_val = Group(operand + bin_op + operand)
+bin_expr = (lparen + bin_expr_val + rparen) | bin_expr_val
+
+unary_expr_val = Group(unary_op + operand)
+unary_expr = (lparen + unary_expr_val + rparen) | unary_expr_val
+
+expr <<= unary_expr | bin_expr
+
+def to_lists(s, l, t):
+	if isinstance(t, ParseResults):
+		return [to_lists(s, l, tok) for tok in t]
+	return t
+expr.setParseAction(to_lists)
+
+def number(bits, signed):
+	n = num.copy().setParseAction(_build(isa.Number, bits=bits, signed=signed))
+	e = expr.copy().addParseAction(_build(isa.Expression, bits=bits, signed=signed))
+	return n | e
+
+def name(grammer, name):
+	grammer = grammer.setResultsName(name)
+	def set_name(s, l, toks):
+		name = toks.keys()[0] if toks.keys() else ""
+		toks[0].name = name
+	return grammer.addParseAction(set_name)
+
+
+# numbers
+s7  = number( 7,  True)
+s8  = number( 8,  True)
+s13 = number(13,  True)
+u4  = number( 4, False)
+
+#
+offset = (name(s7, "offset") | name(reg, "index") | name(label_name, "offset"))
+tgt = name(reg, "tgt")
+src = name(reg, "src")
+base = name(reg, "base")
+op1 = name(reg, "op1")
+op2 = name(reg, "op2")
+
+reg_imm = op2 | name(spec_imm, "op2")
 reg3_imm = tgt + comma + op1 + comma + reg_imm
+jmp_target = (name(s13, "offset") ^ name(label_name, "offset") ^ name(reg, "tgt"))
+imm8 = (name(s8, "imm") | name(label_name, "imm"))
+count = name(u4, "count")
+sysnum = name(u4, "sysnum")
 
 condition = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 condition.setParseAction(_build(isa.Condition))

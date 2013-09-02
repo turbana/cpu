@@ -20,7 +20,7 @@ def grammer():
 	stw = Literal("stw") + offset + lparen + base + rparen + comma + src
 	stb = Literal("stb") + offset + lparen + base + rparen + comma + src
 
-	jmp = Literal("jmp") + (s13 ^ label_name("offset") ^ reg("tgt"))
+	jmp = Literal("jmp") + jmp_target
 	
 	add = Literal("add") + reg3_imm
 	sub = Literal("sub") + reg3_imm
@@ -31,17 +31,17 @@ def grammer():
 
 	skip = Literal("s") + Suppress(".") + condition + op1 + comma + reg_imm
 
-	lui = Literal("lui")   + tgt + comma + (s8("imm") | label_name("imm"))
-	addi = Literal("addi") + tgt + comma + (s8("imm") | label_name("imm"))
+	lui = Literal("lui")   + tgt + comma + imm8
+	addi = Literal("addi") + tgt + comma + imm8
 
-	shl = Literal("shl") + tgt + comma + src + comma + u4("count")
-	shr = Literal("shr") + tgt + comma + src + comma + u4("count")
+	shl = Literal("shl") + tgt + comma + src + comma + count
+	shr = Literal("shr") + tgt + comma + src + comma + count
 
 	xor = Literal("xor")   + tgt + comma + src
 	not_i = Literal("not") + tgt + comma + src
 
 	halt = Literal("halt")
-	trap = Literal("trap") + u4("sysnum")
+	trap = Literal("trap") + sysnum
 	sext = Literal("sext") + tgt
 
 	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
@@ -78,8 +78,24 @@ def expand_labels(toks):
 		if pc_relative:
 			addr -= pos
 		addr /= 2
-		# TODO check that number is in bounds for a N bit signed number
-		return isa.Number(addr, base=10, bits=bits, signed=True, name=label.name)
+		return isa.Number((addr, 10), bits=bits, signed=True, name=label.name)
+
+	def apply_labels(tok, pos, pc_relative=False):
+		for j, arg in enumerate(tok.args):
+			if tok.name == "jmp":
+				pc_relative = True
+			if isinstance(arg, isa.Expression):
+				apply_labels(arg, pos, pc_relative)
+			elif isinstance(arg, isa.Label):
+				if tok.name == "jmp":
+					bits = 13
+				elif tok.name in ("ldw", "ldb", "stw", "stb"):
+					bits = 7
+				elif tok.name in ("lui", "addi"):
+					bits = 8
+				elif isinstance(tok, isa.Expression):
+					bits = tok.bits
+				tok.args[j] = lookup_label(arg, pos, bits, pc_relative)
 
 	i = 0
 	pos = 0
@@ -94,17 +110,7 @@ def expand_labels(toks):
 	
 	pos = 0
 	for i, tok in enumerate(toks):
-		for j, arg in enumerate(tok.args):
-			if isinstance(arg, isa.Label):
-				pc_relative = False
-				if tok.name == "jmp":
-					pc_relative = True
-					bits = 13
-				elif tok.name in ("ldw", "ldb", "stw", "stb"):
-					bits = 7
-				elif tok.name in ("lui", "addi"):
-					bits = 8
-				tok.args[j] = lookup_label(arg, pos, bits, pc_relative)
+		apply_labels(tok, pos)
 		pos += tok.size
 
 	return toks

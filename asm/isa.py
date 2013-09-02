@@ -62,7 +62,7 @@ class Instruction(Token):
 
 
 class Number(Token):
-	def __init__(self, n, base, bits, signed, name=""):
+	def __init__(self, (n, base), bits, signed, name=""):
 		self.value = n
 		self.base = base
 		self.bits = bits
@@ -88,12 +88,12 @@ class Number(Token):
 		return self.value
 
 	def __str__(self):
-		#return "0x" + hex(self.binary())[2:].upper()
 		n = self.binary()
 		bytes = []
 		size = self.size
 		while size > 0:
-			byte = hex(n & 0xFF)[2:].upper().zfill(2)
+			# when self.binary() returns a python long: hex() prints an L
+			byte = hex(n & 0xFF).replace("L", "")[2:].upper().zfill(2)
 			bytes.append("0x" + byte)
 			n >>= 8
 			size -= 1
@@ -172,6 +172,71 @@ class IR(Token):
 
 	def __str__(self):
 		return "<IR %d>" % self.value
+	__repr__ = __str__
+
+
+class Expression(Token):
+	def __init__(self, args, **kwargs):
+		if len(args) == 3:
+			possible_expr = (0, 2)
+		elif len(args) == 2:
+			possible_expr = (1, )
+		for i in possible_expr:
+			if isinstance(args[i], list):
+				args[i] = Expression(args[i], name="", bits=64, signed=False)
+		self.args = args
+		self.name = kwargs["name"]
+		self.bits = kwargs["bits"]
+		self.signed = kwargs["signed"]
+		self._value = None
+
+	def binary(self):
+		return self.value.binary()
+
+	def _evaluate(self):
+		if self._value is not None:
+			return self._value
+		if len(self.args) == 1:
+			self._value = self.args[0].value
+			return self._value
+		elif len(self.args) == 2:
+			op, op1 = self.args
+			op2 = 0
+		elif len(self.args) == 3:
+			op1, op, op2 = self.args
+		op1 = op1.value if isinstance(op1, Expression) else op1
+		op1 = op1.value if isinstance(op1, Number)     else op1
+		op1 = None      if isinstance(op1, Label)      else op1
+		op2 = op2.value if isinstance(op2, Expression) else op2
+		op2 = op2.value if isinstance(op2, Number)     else op2
+		op2 = None      if isinstance(op2, Label)      else op2
+		if op1 is None or op2 is None:
+			# either op's are a Label or an Expression that can't be evaluated yet
+			return None
+		# evaluate
+		if op == "~": res = ~op1
+		elif op == "+": res = op1 + op2
+		elif op == "-": res = op1 - op2
+		elif op == "*": res = op1 * op2
+		elif op == "/": res = op1 / op2
+		elif op == "%": res = op1 % op2
+		elif op == "&": res = op1 & op2
+		elif op == "|": res = op1 | op2
+		elif op == "^": res = op1 ^ op2
+		elif op == "<<": res = op1 << op2
+		elif op == ">>": res = op1 >> op2
+		elif op == "**": res = op1 ** op2
+		res &= (2 ** self.bits) - 1
+		# Number() is unsigned as the result already has the bit pattern we want
+		# and is in bounds, so no checking or conversion is neccesary.
+		self._value = Number((res, 10), bits=self.bits, signed=False)
+		return self._value
+	value = property(_evaluate)
+
+	def __str__(self):
+		if self._value is not None:
+			return "<Expr %s>" % repr(self._value)
+		return "<Expr %s>" % str(self.args)
 	__repr__ = __str__
 
 
@@ -281,13 +346,13 @@ def decode(opcode):
 					else:
 						arg = Register(value, aname)
 				elif type == "s7":
-					arg = Number(twoc(value, 7), 10, 7, True, aname)
+					arg = Number((twoc(value, 7), 10), 7, True, aname)
 				elif type == "s8":
-					arg = Number(twoc(value, 8), 10, 8, True, aname)
+					arg = Number((twoc(value, 8), 10), 8, True, aname)
 				elif type == "s13":
-					arg = Number(twoc(value, 13), 10, 13, True, aname)
+					arg = Number((twoc(value, 13), 10), 13, True, aname)
 				elif type == "u4":
-					arg = Number(value, 10, 4, False, aname)
+					arg = Number((value, 10, 4), False, aname)
 				else:
 					raise ValueError("Unknown opcode argument type: " + type)
 				tok_args.append(arg)
