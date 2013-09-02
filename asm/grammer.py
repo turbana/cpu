@@ -89,7 +89,7 @@ s13 = number(13,  True)
 u4  = number( 4, False)
 
 #
-offset = (name(s7, "offset") | name(reg, "index") | name(label_name, "offset"))
+offset = (name(reg, "index") | name(s7, "offset") | name(label_name, "offset"))
 tgt = name(reg, "tgt")
 src = name(reg, "src")
 base = name(reg, "base")
@@ -98,7 +98,7 @@ op2 = name(reg, "op2")
 
 reg_imm = op2 | name(spec_imm, "op2")
 reg3_imm = tgt + comma + op1 + comma + reg_imm
-jmp_target = (name(s13, "offset") ^ name(label_name, "offset") ^ name(reg, "tgt"))
+jmp_target = (name(reg, "tgt") | name(s13, "offset") | name(label_name, "offset"))
 imm8 = (name(s8, "imm") | name(label_name, "imm"))
 count = name(u4, "count")
 sysnum = name(u4, "sysnum")
