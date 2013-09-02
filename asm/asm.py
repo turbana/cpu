@@ -15,40 +15,52 @@ def bin_str(n, bits=0):
 
 
 def grammer():
-	ldw = Literal("ldw") + tgt + comma + offset + lparen + base + rparen
-	ldb = Literal("ldb") + tgt + comma + offset + lparen + base + rparen
-	stw = Literal("stw") + offset + lparen + base + rparen + comma + src
-	stb = Literal("stb") + offset + lparen + base + rparen + comma + src
-
-	jmp = Literal("jmp") + jmp_target
+	tmp = [NoMatch()]
+	def inst(name, gram=Empty()):
+		#print ">", name, gram
+		gram = Literal(name) + gram
+		#print "<", name, gram
+		gram.setName(name)
+		#print ">>", tmp[0]
+		tmp[0] = tmp[0] | gram
+		#print "<<", tmp[0]
 	
-	add = Literal("add") + reg3_imm
-	sub = Literal("sub") + reg3_imm
-	and_i = Literal("and") + reg3_imm
-	or_i = Literal("or") + reg3_imm
-	addskipz = Literal("as.z") + reg3_imm
-	addskipnz = Literal("as.nz") + reg3_imm
+	inst("ldw", tgt + comma + offset + lparen + base + rparen)
+	inst("ldb", tgt + comma + offset + lparen + base + rparen)
+	inst("stw", offset + lparen + base + rparen + comma + src)
+	inst("stb", offset + lparen + base + rparen + comma + src)
 
-	skip = Literal("s") + Suppress(".") + condition + op1 + comma + reg_imm
+	inst("jmp", jmp_target)
 
-	lui = Literal("lui")   + tgt + comma + imm8
-	addi = Literal("addi") + tgt + comma + imm8
+	inst("add", reg3_imm)
+	inst("sub", reg3_imm)
+	inst("and", reg3_imm)
+	inst("or", reg3_imm)
+	inst("as.z", reg3_imm)
+	inst("as.nz", reg3_imm)
 
-	shl = Literal("shl") + tgt + comma + src + comma + count
-	shr = Literal("shr") + tgt + comma + src + comma + count
+	inst("s", dot + condition + op1 + comma + reg_imm)
 
-	xor = Literal("xor")   + tgt + comma + src
-	not_i = Literal("not") + tgt + comma + src
+	inst("lui", tgt + comma + imm8)
+	inst("addi", tgt + comma + imm8)
 
-	halt = Literal("halt")
-	trap = Literal("trap") + sysnum
-	sext = Literal("sext") + tgt
+	inst("shl", tgt + comma + src + comma + count)
+	inst("shr", tgt + comma + src + comma + count)
 
-	instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
-	instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
+	inst("xor", tgt + comma + src)
+	inst("not", tgt + comma + src)
+
+	inst("halt")
+	inst("trap", sysnum)
+	inst("sext", tgt)
+
+	instruction = tmp[0]
 	instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
+	instruction.setName("instruction")
 	macro = directives.grammer()
+	macro.setName("macro")
 	line = Optional(label) + (instruction | macro)
+	line.setName("line")
 	g = OneOrMore(line)
 	g.ignore(comment)
 	return g
@@ -162,6 +174,15 @@ def translate(toks):
 	return bytes
 
 
+def set_debug(g):
+	if not g.debug:
+		g.setDebug()
+		if hasattr(g, "expr"):
+			set_debug(g.expr)
+		elif hasattr(g, "exprs"):
+			map(set_debug, g.exprs)
+
+
 def main(args):
 	if len(args) != 2:
 		print "USAGE: asm source.asm output.o"
@@ -170,14 +191,15 @@ def main(args):
 	out_filename = args[1]
 	try:
 		g = grammer()
+		set_debug(g)
 		toks = g.parseFile(in_filename, parseAll=True)
 		if not toks:
 			return 1
 		toks = apply_text_data(toks)
 		toks = apply_macros(toks)
 		toks = expand_labels(toks)
-		#for tok in toks: print repr(tok)
-		#return 1
+		for tok in toks: print repr(tok)
+		return 1
 		bytes = translate(toks)
 		fout = open(out_filename, "wb")
 		for byte in bytes:

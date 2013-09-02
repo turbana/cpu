@@ -10,6 +10,7 @@ def macro(arg):
 		def build_macro(s, l, t):
 			return isa.Macro(name, func, t[1:])
 		grammer.setParseAction(build_macro)
+		grammer.setName("." + name)
 		_macros.append(grammer)
 	if hasattr(arg, "__call__"):
 		add_macro(arg, arg.func_name, None)
@@ -28,7 +29,7 @@ def grammer():
 
 
 def _build_grammer(name, format):
-	name = g.Suppress(".") + g.Literal(name)
+	name = g.dot + g.Literal(name)
 	if not format:
 		return name
 	unumber = g.Suppress("u") + g.num_dec
