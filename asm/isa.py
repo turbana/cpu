@@ -234,6 +234,7 @@ class Expression(Token):
 	value = property(_evaluate)
 
 	def __str__(self):
+		self._evaluate()
 		if self._value is not None:
 			return "<Expr %s>" % repr(self._value)
 		return "<Expr %s>" % str(self.args)
