@@ -258,7 +258,7 @@ def main(args):
 	data = map(ord, open(args[0], "rb").read())
 	cpu = CPU()
 	cpu.load(data)
-	globals.mem_range[1] = len(data)/2
+	globals.mem_range[1] = (len(data)/2) + (len(data)%2)
 	cpu.dump(*globals.mem_range)
 	cpu.run()
 	cpu.dump(*globals.mem_range)
