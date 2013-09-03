@@ -20,6 +20,9 @@ def align(pos, n):
 	return []
 
 
+# the following macros don't have a body as the Macro object itself is used as
+# a placeholder during expansion
+
 @macro
 def text(pos):
 	pass
@@ -28,16 +31,3 @@ def text(pos):
 @macro
 def data(pos):
 	pass
-
-
-@macro("s8")
-def test(pos, x):
-	return """
-		lui $1, {imm}
-		lui $2, {imm}
-		lui $3, {imm}
-		lui $4, {imm}
-		lui $5, {imm}
-		lui $6, {imm}
-		lui $7, {imm}
-	""".format(imm=x.value)

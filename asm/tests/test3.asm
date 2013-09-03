@@ -5,6 +5,7 @@
 sbp:
 
 	.text
+	.ldi	$3, 0xABCD
 start:	jmp	exit + 1
 exit:	jmp	((end * 2) / 2)
 	ldw	$6, sbp($0)
