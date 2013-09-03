@@ -5,7 +5,7 @@ class globals(object):
 	trace = True
 	step  = False
 	mem_range = [0x00, 0x20]
-	breakpoints = [0x0B]
+	breakpoints = []
 
 def sbin(n, x=0):
 	return bin(n)[2:].zfill(z)
@@ -67,9 +67,11 @@ def stb(cpu, offset, base, src):
 	cpu.mset(offset + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
 
 @op
-def jmp(cpu, offset):
-	# TODO jmp reg
-	cpu.reg[7] += offset - 1
+def jmp(cpu, offset=None, tgt=None):
+	if offset is not None:
+		cpu.reg[7] += offset - 1
+	elif tgt is not None:
+		cpu.reg[7] = cpu.rget(tgt)
 
 @op
 def add(cpu, tgt, op1, op2, ir):
@@ -215,7 +217,7 @@ class CPU(object):
 			tok = isa.decode(opcode)
 			if globals.step:
 				self.dump(*globals.mem_range)
-				print ">", str(tok),
+				print "%s> %s" % (shex(self.reg[7]-1, 4), str(tok)),
 				raw_input()
 				print
 			operations[tok.name](self, **tok.arguments())
