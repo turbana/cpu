@@ -96,11 +96,13 @@ def apply_macros(toks):
 	g = grammer()
 	pos = 0
 	i = 0
+	had_macros = False
 	while i < len(toks):
 		tok = toks[i]
 		if isinstance(tok, isa.Macro):
 			result = tok.callback(pos, *tok.args)
 			if result is not None:
+				had_macros = True
 				del toks[i]
 				if isinstance(result, str):
 					try:
@@ -118,6 +120,8 @@ def apply_macros(toks):
 				continue
 		pos += toks[i].size
 		i += 1
+	if had_macros:
+		return apply_macros(toks)
 	return toks
 
 
