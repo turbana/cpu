@@ -23,7 +23,7 @@ def expand_labels(toks):
 			labels[label.value] = []
 		labels[label.value].append(label)
 
-	def lookup_label(label, pos, bits, pc_relative):
+	def lookup_label(label, pos, bits, signed, pc_relative):
 		if label.value not in labels:
 			raise Exception("Unknown label %s" % repr(label.value))
 		search = labels[label.value]
@@ -38,14 +38,14 @@ def expand_labels(toks):
 		if pc_relative:
 			addr -= pos
 		addr /= 2
-		return isa.Number((addr, 10), bits=bits, signed=True, name=label.name)
+		return isa.Number((addr, 10), bits=bits, signed=signed, name=label.name)
 
-	def apply_labels(tok, pos, pc_relative=False):
+	def apply_labels(tok, pos, signed=True, pc_relative=False):
 		for j, arg in enumerate(tok.args):
 			if tok.name == "jmp":
 				pc_relative = True
 			if isinstance(arg, isa.Expression):
-				apply_labels(arg, pos, pc_relative)
+				apply_labels(arg, pos, False, pc_relative)
 			elif isinstance(arg, isa.Label):
 				if tok.name == "jmp":
 					bits = 13
@@ -55,7 +55,7 @@ def expand_labels(toks):
 					bits = 8
 				elif isinstance(tok, isa.Expression):
 					bits = tok.bits
-				tok.args[j] = lookup_label(arg, pos, bits, pc_relative)
+				tok.args[j] = lookup_label(arg, pos, bits, signed, pc_relative)
 
 	i = 0
 	pos = 0
@@ -152,6 +152,7 @@ def main(args):
 		print err.line
 		print " "*(err.column-1) + "^"
 		print err
+		return 1
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
