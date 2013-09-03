@@ -203,8 +203,8 @@ def _build_macro_grammer(name, format):
 		return name
 	unumber = Suppress("u") + num_dec
 	snumber = Suppress("s") + num_dec
-	unumber.setParseAction(lambda s,l,t: number(t[0][0], False))
-	snumber.setParseAction(lambda s,l,t: number(t[0][0], True))
+	unumber.setParseAction(lambda s,l,t: number(t[0][0], False) | label_name)
+	snumber.setParseAction(lambda s,l,t: number(t[0][0], True) | label_name)
 	reg_macro = Literal("reg").setParseAction(lambda s,l,t: reg)
 	types = unumber | snumber | reg_macro
 
