@@ -103,7 +103,12 @@ def apply_macros(toks):
 			if result is not None:
 				del toks[i]
 				if isinstance(result, str):
-					new_toks = g.parseString(result, parseAll=True)
+					try:
+						new_toks = g.parseString(result, parseAll=True)
+					except RuntimeError, e:
+						print result
+						print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
+						sys.exit(1)
 				else:
 					new_toks = result
 				for tok in reversed(new_toks):

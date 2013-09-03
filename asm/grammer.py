@@ -168,9 +168,16 @@ _macros = []
 
 def macro(arg):
 	def add_macro(func, name, format):
-		grammer = _build_macro_grammer(name, format)
+		try:
+			grammer = _build_macro_grammer(name, format)
+		except (ParseException, ParseFatalException), err:
+			print err.line
+			print " "*(err.column-1) + "^"
+			print err
+			print "Error encountered while parsing macro definition for", name
+			import sys
+			sys.exit(1)
 		def build_macro(s, l, t):
-			print "!!!", type(t), t
 			return isa.Macro(name, func, t[1:])
 		grammer.setParseAction(build_macro)
 		_macros.append(grammer)
@@ -198,10 +205,11 @@ def _build_macro_grammer(name, format):
 	snumber = Suppress("s") + num_dec
 	unumber.setParseAction(lambda s,l,t: number(t[0][0], False))
 	snumber.setParseAction(lambda s,l,t: number(t[0][0], True))
-	types = unumber | snumber
+	reg_macro = Literal("reg").setParseAction(lambda s,l,t: reg)
+	types = unumber | snumber | reg_macro
 
 	toks = OneOrMore(types).parseString(format, parseAll=True)
 	grammer = toks[0]
 	for tok in toks[1:]:
-		grammer |= tok
+		grammer = grammer + comma + tok
 	return name - grammer
