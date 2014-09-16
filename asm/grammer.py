@@ -71,7 +71,7 @@ bin_expr = (lparen + bin_expr_val + rparen) | bin_expr_val
 unary_expr_val = Group(unary_op + operand)
 unary_expr = (lparen + unary_expr_val + rparen) | unary_expr_val
 
-expr <<= unary_expr | bin_expr
+expr << (unary_expr | bin_expr)
 
 def to_lists(s, l, t):
 	if isinstance(t, ParseResults):
