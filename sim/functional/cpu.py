@@ -172,7 +172,7 @@ def sext(cpu, tgt):
 class CPU(object):
 	def __init__(self):
 		self.reg  = [0 for _ in xrange(8)]
-		self.mem  = [0 for _ in xrange(2**16)]
+		self.mem  = [0 for _ in xrange(2**17)]
 		self.halt = True
 	
 	def load(self, data):
