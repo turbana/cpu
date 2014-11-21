@@ -2,7 +2,7 @@ from directives import macro
 import isa
 
 
-@macro("u8")
+@macro("u16")
 def zero(pos, count):
 	words = count.value
 	return [isa.Number((0, 10), bits=16*words, signed=False)]
@@ -34,7 +34,6 @@ def pop(pos, reg):
 
 @macro("u16")
 def call(pos, addr):
-	pos = pos / 2
 	return """
 		.ldi  $5, {pc}
 		.push $5

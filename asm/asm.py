@@ -54,9 +54,12 @@ def expand_labels(toks):
 				elif tok.name in ("lui", "addi"):
 					bits = 8
 				elif isinstance(tok, isa.Expression):
-					bits = tok.bits
+					# expressions will do their own bit checks and we need to ensure
+					# label values aren't truncated
+					bits = 64
 				tok.args[j] = lookup_label(arg, pos, bits, signed, pc_relative)
 
+	toks = list(toks)
 	i = 0
 	pos = 0
 	while i < len(toks):
@@ -92,37 +95,36 @@ def apply_text_data(toks):
 	return text + data
 
 
-def apply_macros(toks):
-	g = grammer()
-	pos = 0
-	i = 0
-	had_macros = False
-	while i < len(toks):
-		tok = toks[i]
+def parse_macro(tok, macro):
+	try:
+		g = grammer()
+		return g.parseString(macro, parseAll=True)
+	except RuntimeError, e:
+		print macro
+		print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
+		sys.exit(1)
+
+
+def expand_macro(tok, byte_pos):
+	result = tok.callback(byte_pos/2, *tok.args)
+	if isinstance(result, str):
+		tokens = apply_macros(parse_macro(tok, result), byte_pos)
+	else:
+		tokens = result
+	for tok in tokens:
+		yield tok
+
+
+def apply_macros(tokens, byte_pos=0):
+	for tok in tokens:
 		if isinstance(tok, isa.Macro):
-			result = tok.callback(pos, *tok.args)
-			if result is not None:
-				had_macros = True
-				del toks[i]
-				if isinstance(result, str):
-					try:
-						new_toks = g.parseString(result, parseAll=True)
-					except RuntimeError, e:
-						print result
-						print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
-						sys.exit(1)
-				else:
-					new_toks = result
-				for tok in reversed(new_toks):
-					pos += tok.size
-					toks.insert(i, tok)
-				i += len(new_toks)
-				continue
-		pos += toks[i].size
-		i += 1
-	if had_macros:
-		return apply_macros(toks)
-	return toks
+			for mtok in expand_macro(tok, byte_pos):
+				print ">", mtok
+				yield mtok
+				byte_pos += mtok.size
+		else:
+			yield tok
+			byte_pos += tok.size
 
 
 def translate(toks):
