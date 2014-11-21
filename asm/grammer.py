@@ -48,7 +48,7 @@ reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 reg.setName("register")
 reg.setParseAction(_build(isa.Register))
 lnum = Word(nums).setParseAction(to_int)
-label_name = (lnum + Optional(Word("fb", exact=1))) | Word(alphanums)
+label_name = (lnum + Word("fb", exact=1)) | Word(alphas, alphanums)
 label_name.setName("label")
 label_name.setParseAction(_build(isa.Label))
 label = label_name + colon
@@ -56,28 +56,25 @@ spec_imm = Combine(sign + Word("1248", exact=1))
 spec_imm.setParseAction(to_int)
 spec_imm.addParseAction(_build(isa.Immediate))
 
-# expressions
-bin_op = oneOf("<< >> **") | Word("+-*/%&^|", exact=1)
-unary_op = Word("~", exact=1)
+
 _just_int_value = lambda s,l,t: t[0][0]
 expr_num = num.copy().addParseAction(_just_int_value)
+operand = expr_num | label_name
 
-expr = Forward()
-operand = expr_num | label_name | expr
-
-bin_expr_val = Group(operand + bin_op + operand)
-bin_expr = (lparen + bin_expr_val + rparen) | bin_expr_val
-
-unary_expr_val = Group(unary_op + operand)
-unary_expr = (lparen + unary_expr_val + rparen) | unary_expr_val
-
-expr << (unary_expr | bin_expr)
+expr = operatorPrecedence(operand, [
+	(oneOf("~"), 1, opAssoc.RIGHT),
+	(oneOf("* /"), 2, opAssoc.LEFT),
+	(oneOf("<< >> **"), 2, opAssoc.LEFT),
+	(oneOf("+ -"), 2, opAssoc.LEFT),
+	(oneOf("% & ^ |"), 2, opAssoc.LEFT),
+])
 
 def to_lists(s, l, t):
 	if isinstance(t, ParseResults):
 		return [to_lists(s, l, tok) for tok in t]
 	return t
 expr.setParseAction(to_lists)
+
 
 def number(bits, signed):
 	n = num.copy().setParseAction(_build(isa.Number, bits=bits, signed=signed))
@@ -99,7 +96,7 @@ s13 = number(13,  True)
 u4  = number( 4, False)
 
 #
-offset = (name(reg, "index") | name(s7, "offset") | name(label_name, "offset"))
+offset = (name(label_name, "offset") ^ name(reg, "index") ^ name(s7, "offset"))
 tgt = name(reg, "tgt")
 src = name(reg, "src")
 base = name(reg, "base")
@@ -108,8 +105,8 @@ op2 = name(reg, "op2")
 
 reg_imm = op2 | name(spec_imm, "op2")
 reg3_imm = tgt + comma + op1 + comma + reg_imm
-jmp_target = (name(reg, "tgt") | name(s13, "offset") | name(label_name, "offset"))
-imm8 = (name(s8, "imm") | name(label_name, "imm"))
+jmp_target = (name(label_name, "offset") | name(reg, "tgt") | name(s13, "offset"))
+imm8 = (name(label_name, "imm") | name(s8, "imm"))
 count = name(u4, "count")
 sysnum = name(u4, "sysnum")
 
@@ -152,11 +149,14 @@ instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | 
 instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
 
 
-def grammer():
+def grammer(_cache=[None]):
+	if _cache[0]:
+		return _cache[0]
 	macro = _macros_grammer()
 	line = Optional(label) + (instruction | macro)
 	g = OneOrMore(line)
 	g.ignore(comment)
+	_cache[0] = g
 	return g
 
 
@@ -203,8 +203,8 @@ def _build_macro_grammer(name, format):
 		return name
 	unumber = Suppress("u") + num_dec
 	snumber = Suppress("s") + num_dec
-	unumber.setParseAction(lambda s,l,t: number(t[0][0], False) | label_name)
-	snumber.setParseAction(lambda s,l,t: number(t[0][0], True) | label_name)
+	unumber.setParseAction(lambda s,l,t: label_name ^ number(t[0][0], False))
+	snumber.setParseAction(lambda s,l,t: label_name ^ number(t[0][0], True))
 	reg_macro = Literal("reg").setParseAction(lambda s,l,t: reg)
 	types = unumber | snumber | reg_macro
 
