@@ -1,13 +1,13 @@
 ; calculates the Nth fibonacci number
 
 	.data
-n:	.dw	0x0002			; n-th fibonacci number
+n:	.dw	0x000C			; n-th fibonacci number
 x:	.dw	0x0000			; store result in x
-	.zero	32			; stack
+	.zero	64			; stack
 sbp:
 
 	.text
-	addi	$6, sbp			; setup stack
+	.ldi	$6, sbp			; setup stack
 	ldw	$1, n($0)		; load and push n
 	.push	$1
 	.call	fib			; call fib(n)
@@ -25,7 +25,7 @@ fib:	ldw	$1, 1($6)		; load parameter into $1
 	.call	fib
 	.pop	$2			; result of fib(n-1)
 	.pop	$1			; n-1
-	addi	$1, $1, -1		; n-2
+	add	$1, $1, -1		; n-2
 	.push	$2			; save fib(n-1)
 	.push	$1			; call fib(n-2)
 	.call	fib
