@@ -235,9 +235,9 @@ class Expression(Token):
 
 	def __str__(self):
 		self._evaluate()
-		if self._value is not None:
-			return "<Expr %s>" % repr(self._value)
-		return "<Expr %s>" % str(self.args)
+		sign = "s" if self.signed else "u"
+		val = self._value if self._value is not None else self.args
+		return "<Expr %s%s %s>" % (sign, self.bits, val)
 	__repr__ = __str__
 
 
