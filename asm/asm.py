@@ -79,16 +79,16 @@ def expand_labels(toks):
 def apply_text_data(toks):
 	text = []
 	data = []
-	current = data
+	section = data
 	for tok in toks:
 		if isinstance(tok, isa.Macro):
 			if tok.name == "text":
-				current = text
+				section = text
 				continue
 			elif tok.name == "data":
-				current = data
+				section = data
 				continue
-		current.append(tok)
+		section.append(tok)
 	return text + data
 
 
