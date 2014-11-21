@@ -4,7 +4,7 @@ import isa
 class globals(object):
 	trace = True
 	step  = False
-	mem_range = [0x00, 0x20]
+	mem_range = [0x00, 0x40]
 	breakpoints = []
 
 def sbin(n, x=0):
@@ -26,10 +26,14 @@ condition_func = {
 	"ulte":	lambda x, y: UnimplmentedError(),
 }
 
-def trace(name, args, kwargs):
+def traceop(name, args, kwargs):
 	if globals.trace:
 		items = [key+"="+str(val) for key, val in kwargs.items()]
 		print "%-8s %s" % (name, " ".join(items))
+
+def trace(*msg):
+	if globals.trace:
+		print " ".join(map(str, msg))
 
 
 operations = {}
@@ -40,7 +44,7 @@ def op(func):
 		name = name[:-1]
 	name = name.replace("_", ".")
 	def wrap(*args, **kwargs):
-		trace(name, args, kwargs)
+		traceop(name, args, kwargs)
 		return func(*args, **kwargs)
 	operations[name] = wrap
 	return wrap
@@ -136,6 +140,7 @@ def lui(cpu, imm, tgt):
 @op
 def addi(cpu, imm, tgt):
 	imm = ((2**8) + imm) if imm < 0 else imm
+	# TODO check overflow
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op
@@ -183,7 +188,6 @@ class CPU(object):
 		def hex_word(n):
 			h = hex(n)[2:].upper().zfill(4)
 			return h
-			#return "%s %s" % (h[0:2], h[2:4])
 		def hex_byte(n):
 			return hex(n)[2:].upper().zfill(2)
 		def bin_word(n):
@@ -199,7 +203,6 @@ class CPU(object):
 					print "\n%s | " % hex_word(addr/2),
 				word = (self.mem[addr] << 8) | self.mem[addr+1]
 				print hex_word(word),
-				#print hex_byte(self.mem[addr]),
 				count = (count + 1) % 8
 			print
 			print
@@ -211,9 +214,6 @@ class CPU(object):
 				globals.trace = False
 				globals.step = True
 			opcode = self.fetch()
-			# XXX
-			if self.reg[7] > 0x80:
-				return
 			tok = isa.decode(opcode)
 			if globals.step:
 				self.dump(*globals.mem_range)
@@ -225,20 +225,19 @@ class CPU(object):
 	def fetch(self):
 		pc = self.reg[7]
 		self.reg[7] = pc + 1
-		# XXX
-		#if pc >= 16: raise ValueError("all done")
 		return self.mget(pc)
 	
 	def mget(self, addr):
 		high = self.mem[addr*2]
 		low = self.mem[addr*2+1]
 		byte = (high << 8) | low
+		trace("  read  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
 
 	def mset(self, addr, val, byte=False):
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
-		#print "setting", shex(addr, 2), shex(high, 2), shex(low, 2)
+		trace("  write (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
 		self.mem[addr*2]   = high
 		self.mem[addr*2+1] = low
 	
