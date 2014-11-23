@@ -70,9 +70,13 @@ expr = operatorPrecedence(operand, [
 ])
 
 def to_lists(s, l, t):
-	if isinstance(t, ParseResults):
-		return [to_lists(s, l, tok) for tok in t]
-	return t
+	if isinstance(t, ParseResults) and len(t) == 1 and isinstance(t[0], isa.Label):
+		raise ParseException(s, l, "Don't allow single labels as expressions")
+	def inner(s, l, t):
+		if isinstance(t, ParseResults):
+			return [to_lists(s, l, tok) for tok in t]
+		return t
+	return inner(s, l, t)
 expr.setParseAction(to_lists)
 
 
