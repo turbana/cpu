@@ -308,16 +308,16 @@ def encode(token):
 			size -= 1
 		return reversed(words)
 	code = encoding(token)
-	if code:
-		opname, prelude, prelude_end, args = code
-		word = prelude << prelude_end
-		for name, type, start, end in args:
-			value = getattr(token, name).binary()
-			word |= value << end
-			if word < 0:
-				raise Error("cannot encode negative word: " + hex(word))
-		return [(word & 0xFF00) >> 8, word & 0xFF]
-	raise ValueError("unknown token: " + repr(token))
+	if not code:
+		raise ValueError("unknown token: " + repr(token))
+	opname, prelude, prelude_end, args = code
+	word = prelude << prelude_end
+	for name, type, start, end in args:
+		value = getattr(token, name).binary()
+		word |= value << end
+		if word < 0:
+			raise Error("cannot encode negative word: " + hex(word))
+	return [(word & 0xFF00) >> 8, word & 0xFF]
 
 
 def decode(opcode):
