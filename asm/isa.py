@@ -356,8 +356,9 @@ def decode(opcode):
 				elif type == "cond":
 					arg = Condition(conditions_rev[value], aname)
 				elif type == "ireg":
-					if tok_args[0].value:
-						arg = Immediate(immediates_rev[value], aname)
+					if tok_args[0].value == 1:
+						n = Number((immediates_rev[value], 10), 5, True)
+						arg = Immediate(n, aname)
 					else:
 						arg = Register(value, aname)
 				elif type == "s7":
