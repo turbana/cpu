@@ -52,9 +52,6 @@ label_name = (lnum + Word("fb", exact=1)) | Word(alphas, alphanums)
 label_name.setName("label")
 label_name.setParseAction(_build(isa.Label))
 label = label_name + colon
-spec_imm = Combine(sign + Word("1248", exact=1))
-spec_imm.setParseAction(to_int)
-spec_imm.addParseAction(_build(isa.Immediate))
 
 
 _just_int_value = lambda s,l,t: t[0][0]
@@ -91,6 +88,14 @@ def name(grammer, name):
 		name = toks.keys()[0] if toks.keys() else ""
 		toks[0].name = name
 	return grammer.addParseAction(set_name)
+
+
+def _check_range(s, l, t):
+	obj = t[0].value if isinstance(t[0], isa.Expression) else t[0]
+	if obj.value not in [8,4,2,1,-1,-2,-4,-8]:
+		raise ParseException(s, l, "Invalid value for spec immediate")
+	return isa.Immediate(obj)
+spec_imm = number(5, True).addParseAction(_check_range)
 
 
 # numbers

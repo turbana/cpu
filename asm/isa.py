@@ -27,7 +27,7 @@ class Instruction(Token):
 		self.size = 2
 
 		# construct I/R token
-		if name in ("add", "sub", "and", "or", "s", "as.nz", "as.z") and not isinstance(args[0], IR):
+		if name in ir_insts and not isinstance(args[0], IR):
 			ir = not isinstance(self.op2, Register)
 			self.args.insert(0, IR(ir, "ir"))
 
@@ -121,17 +121,17 @@ class Register(Token):
 
 class Immediate(Token):
 	def __init__(self, value, name=""):
-		self.value = value
+		self.number = value
 		self.name = name
 	
 	def binary(self):
-		return immediates[self.value]
+		return immediates[self.number.value]
 
 	def __str__(self):
-		return str(self.value)
+		return str(self.number.value)
 
 	def __repr__(self):
-		return "<Imm %d>" % self.value
+		return "<Imm %d>" % self.number.value
 
 
 class Condition(Token):
@@ -285,6 +285,7 @@ conditions = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "
 conditions_rev = dict(zip(conditions.values(), conditions.keys()))
 immediates = {8: 0, 4: 1, 2: 2, 1: 3, -1: 4, -2: 5, -4: 6, -8: 7}
 immediates_rev = dict(zip(immediates.values(), immediates.keys()))
+ir_insts = [opcode[0] for opcode in encodings for arg in opcode[3] if arg[0] == "ir"]
 
 
 def encoding(token):
