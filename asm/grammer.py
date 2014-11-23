@@ -3,7 +3,7 @@ import isa
 
 # pyparsing does magic when calling parse actions that I do not want happening.
 # It tries to guess how many parameters a function has by calling it again with
-# a different number of parameters when an exception is raised. Unforunatly this
+# a different number of parameters when an exception is raised. Unfortunately this
 # masks any exception the function would otherwise raise. This disables that.
 def _no_trim_arity(func, maxargs=None):
 	return func
@@ -47,6 +47,9 @@ dot = Suppress(".")
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 reg.setName("register")
 reg.setParseAction(_build(isa.Register))
+creg = Suppress("$cr") + Word("01").setParseAction(to_int)
+creg.setName("cregister")
+creg.setParseAction(_build(isa.ControlRegister))
 lnum = Word(nums).setParseAction(to_int)
 label_name = (lnum + Word("fb", exact=1)) | Word(alphas, alphanums)
 label_name.setName("label")
@@ -105,12 +108,13 @@ s13 = number(13,  True)
 u4  = number( 4, False)
 
 #
-offset = (name(label_name, "offset") ^ name(reg, "index") ^ name(s7, "offset"))
+offset = (name(reg, "index") | name(s7, "offset") | name(label_name, "offset"))
 tgt = name(reg, "tgt")
 src = name(reg, "src")
 base = name(reg, "base")
 op1 = name(reg, "op1")
 op2 = name(reg, "op2")
+cr = name(creg, "cr")
 
 reg_imm = op2 | name(spec_imm, "op2")
 reg3_imm = tgt + comma + op1 + comma + reg_imm
@@ -137,24 +141,30 @@ and_i = Literal("and") + reg3_imm
 or_i = Literal("or") + reg3_imm
 addskipz = Literal("as.z") + reg3_imm
 addskipnz = Literal("as.nz") + reg3_imm
+xor = Literal("xor") + reg3_imm
 
 skip = Literal("s") + dot + condition + op1 + comma + reg_imm
 
 lui = Literal("lui")   + tgt + comma + imm8
 addi = Literal("addi") + tgt + comma + imm8
 
-shl = Literal("shl") + tgt + comma + src + comma + count
-shr = Literal("shr") + tgt + comma + src + comma + count
-
-xor = Literal("xor")   + tgt + comma + src
-not_i = Literal("not") + tgt + comma + src
+shl  = Literal("shl")  + tgt + comma + src
+shr  = Literal("shr")  + tgt + comma + src
+sext = Literal("sext") + tgt + comma + src
+sar  = Literal("sar")  + tgt + comma + src
+inw  = Literal("inw")  + tgt + comma + src
+inb  = Literal("inb")  + tgt + comma + src
+outw = Literal("outw") + tgt + comma + src
+outb = Literal("outb") + tgt + comma + src
 
 halt = Literal("halt")
 trap = Literal("trap") + sysnum
-sext = Literal("sext") + tgt
+lcr = Literal("lcr") + tgt + comma + cr
+scr = Literal("scr") + cr + comma + src
 
 instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
-instruction |= addskipnz | lui | addi | shl | shr | xor | not_i | halt | trap | sext
+instruction |= addskipnz | xor | lui | addi | shl | shr | sext | sar | inw | inb | outw
+instruction |= outb | halt | trap | lcr | scr
 instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
 
 

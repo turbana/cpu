@@ -36,7 +36,8 @@ def expand_labels(toks):
 				found = [l for l in search if l.pos <= pos][-1]
 		addr = found.pos
 		if pc_relative:
-			addr -= pos
+			# PC relative values are really PC + 2 words, so add 4 bytes
+			addr -= pos + 4
 		addr /= 2
 		return isa.Number((addr, 10), bits=bits, signed=signed, name=label.name)
 
@@ -119,7 +120,6 @@ def apply_macros(tokens, byte_pos=0):
 	for tok in tokens:
 		if isinstance(tok, isa.Macro):
 			for mtok in expand_macro(tok, byte_pos):
-				print ">", mtok
 				yield mtok
 				byte_pos += mtok.size
 		else:

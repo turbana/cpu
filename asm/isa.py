@@ -119,6 +119,14 @@ class Register(Token):
 		return "<Reg %d>" % self.value
 
 
+class ControlRegister(Register):
+	def __str__(self):
+		return "$cr%d" % self.value
+
+	def __repr__(self):
+		return "<CReg %d>" % self.value
+
+
 class Immediate(Token):
 	def __init__(self, value, name=""):
 		self.number = value
@@ -260,6 +268,7 @@ add("or",    0x2B, 10, ("ir", "ir", 9, 9), ("op1", "reg", 8, 6), ("op2", "ireg",
 add("s",     0x2C, 10, ("ir", "ir", 9, 9), ("op1", "reg", 8, 6), ("op2", "ireg", 5, 3), ("cond", "cond", 2, 0))
 add("as.z",  0x2D, 10, ("ir", "ir", 9, 9), ("op1", "reg", 8, 6), ("op2", "ireg", 5, 3), ("tgt", "reg", 2, 0))
 add("as.nz", 0x2E, 10, ("ir", "ir", 9, 9), ("op1", "reg", 8, 6), ("op2", "ireg", 5, 3), ("tgt", "reg", 2, 0))
+add("xor",   0x2F, 10, ("ir", "ir", 9, 9), ("op1", "reg", 8, 6), ("op2", "ireg", 5, 3), ("tgt", "reg", 2, 0))
 
 add("lui",   0x18, 11, ("imm", "s8", 10, 3), ("tgt", "reg", 2, 0))
 add("addi",  0x19, 11, ("imm", "s8", 10, 3), ("tgt", "reg", 2, 0))
@@ -269,16 +278,20 @@ add("ldb",   0x69,  9, ("index", "reg",  8, 6), ("base", "reg", 5, 3), ("tgt", "
 add("stw",   0x6A,  9, ("index", "reg",  8, 6), ("base", "reg", 5, 3), ("src", "reg", 2, 0))
 add("stb",   0x6B,  9, ("index", "reg",  8, 6), ("base", "reg", 5, 3), ("src", "reg", 2, 0))
 
-add("shl",   0x36, 10, ("count", "u4", 9, 6), ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
-add("shr",   0x37, 10, ("count", "u4", 9, 6), ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
-
-add("xor",  0x380,  6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
-add("not",  0x381,  6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("shl",   0x360, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("shr",   0x361, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("sext",  0x362, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("sar",   0x363, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("inw",   0x364, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("inb",   0x365, 6, ("src", "reg", 5, 3), ("tgt", "reg", 2, 0))
+add("outw",  0x366, 6, ("tgt", "reg", 5, 3), ("src", "reg", 2, 0))
+add("outb",  0x367, 6, ("tgt", "reg", 5, 3), ("src", "reg", 2, 0))
 
 add("halt", 0xFEDE, 0)
 add("trap",  0xFEE, 4, ("sysnum", "u4", 3, 0))
-add("sext", 0x1FDE, 3, ("tgt", "reg", 2, 0))
 add("jmp",  0x1FDF, 3, ("tgt", "reg", 2, 0))
+add("lcr",   0x3FE, 6, ("cr", "creg", 5, 3), ("tgt", "reg", 2, 0))
+add("scr",   0x3FF, 6, ("cr", "creg", 5, 3), ("src", "reg", 2, 0))
 
 
 conditions = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
