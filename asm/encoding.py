@@ -58,6 +58,8 @@ def decode(opcode):
 
 				if   type == "reg":
 					arg = Register(value, aname)
+				elif type == "creg":
+					arg = ControlRegister(value, aname)
 				elif type == "ir":
 					arg = IR(value, aname)
 				elif type == "cond":
@@ -75,7 +77,7 @@ def decode(opcode):
 				elif type == "s13":
 					arg = Number((twoc(value, 13), 10), 13, True, aname)
 				elif type == "u4":
-					arg = Number((value, 10, 4), False, aname)
+					arg = Number((value, 10), 4, False, aname)
 				else:
 					raise ValueError("Unknown opcode argument type: " + type)
 				arg.type = type
