@@ -1,14 +1,12 @@
 import sys
 
 import encoding
-import grammer
 
 
 def main(args):
 	if len(args) != 1:
 		print "USAGE: dis file.o"
 		return 2
-	grammer.grammer() # call to build encoding formats
 	bytes = map(ord, open(args[0], "rb").read())
 	for i in xrange(len(bytes)/2):
 		j = i * 2

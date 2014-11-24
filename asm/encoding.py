@@ -1,5 +1,6 @@
 import isa
 from tokens import *
+import grammer
 
 def encoding(token):
 	for code in isa.encodings:
@@ -11,6 +12,7 @@ def encoding(token):
 
 
 def encode(token):
+	grammer.grammer() # ensure all encodings have been fully loaded
 	if isinstance(token, Number):
 		words = []
 		size = token.size
@@ -37,6 +39,7 @@ def encode(token):
 
 
 def decode(opcode):
+	grammer.grammer() # ensure all encodings have been fully loaded
 	for code in isa.encodings:
 		name = code["name"]
 		prelude_val = code["prelude"]
