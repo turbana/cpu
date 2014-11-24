@@ -80,26 +80,28 @@ def ldi(pos, reg, imm):
 @macro("reg")
 def push(pos, reg):
 	return """
-		sub $6, $6, 1
-		stw 0($6), {reg}
+		sub $7, $7, 1
+		stw 0($7), {reg}
 	""".format(reg=reg)
 
 
 @macro("reg")
 def pop(pos, reg):
 	return """
-		ldw	{reg}, 0($6)
-		add $6, $6, 1
+		ldw	{reg}, 0($7)
+		add $7, $7, 1
 	""".format(reg=reg)
 
 
-@macro("u16")
-def call(pos, addr):
+@macro("u16 reg")
+def call(pos, addr, scratch):
 	return """
-		.ldi  $5, {pc}
-		.push $5
-		jmp   {addr}
-	""".format(addr=addr.value, pc=pos+5)
+		sub $7, $7, 1
+		lcr {reg}, $cr0
+		add {reg}, {reg}, 2
+		stw 0($7), {reg}
+		jmp {addr}
+	""".format(addr=addr.value, reg=scratch)
 
 
 @macro
