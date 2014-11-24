@@ -41,14 +41,8 @@ class Instruction(Token):
 				self.args.insert(0, IR(ir, "ir"))
 				break
 
-		#print "inst", self.name, self.args
-		#print [a.type for a in self.args]
-
-		# construct I/R token
-		# TODO
-		#if self.name in ir_insts and not isinstance(args[0], IR):
-		#	ir = not isinstance(self.op2, Register)
-		#	self.args.insert(0, IR(ir, "ir"))
+	def arguments(self):
+		return dict((a.name, a.value) for a in self.args)
 
 	def __getattr__(self, name):
 		for arg in self.args:
@@ -60,8 +54,6 @@ class Instruction(Token):
 		import encoding # import late to avoid circular imports
 		args = dict((a.name, a) for a in self.args)
 		code = encoding.encoding(self)
-		#print code["format"]
-		#print args
 		return code["format"].format(**args)
 
 	def __repr__(self):
@@ -144,6 +136,7 @@ class Immediate(Token):
 	def __init__(self, value, name=""):
 		self.number = value
 		self.name = name
+		self.value = self.number.value
 	
 	def binary(self):
 		return isa.immediates[self.number.value]
