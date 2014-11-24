@@ -1,9 +1,12 @@
 import sys
 
+import pyparsing
+
 import isa
-import directives
+import encoding
+import tokens
 import macros
-from grammer import *
+import grammer
 
 
 def bin_str(n, bits=0):
@@ -39,22 +42,22 @@ def expand_labels(toks):
 			# PC relative values are really PC + 2 words, so add 4 bytes
 			addr -= pos + 4
 		addr /= 2
-		return isa.Number((addr, 10), bits=bits, signed=signed, name=label.name)
+		return tokens.Number((addr, 10), bits=bits, signed=signed, name=label.name)
 
 	def apply_labels(tok, pos, signed=True, pc_relative=False):
 		for j, arg in enumerate(tok.args):
 			if tok.name == "jmp":
 				pc_relative = True
-			if isinstance(arg, isa.Expression):
+			if isinstance(arg, tokens.Expression):
 				apply_labels(arg, pos, False, pc_relative)
-			elif isinstance(arg, isa.Label):
+			elif isinstance(arg, tokens.Label):
 				if tok.name == "jmp":
 					bits = 13
 				elif tok.name in ("ldw", "ldb", "stw", "stb"):
 					bits = 7
 				elif tok.name in ("lui", "addi"):
 					bits = 8
-				elif isinstance(tok, isa.Expression):
+				elif isinstance(tok, tokens.Expression):
 					# expressions will do their own bit checks and we need to ensure
 					# label values aren't truncated
 					bits = 64
@@ -65,7 +68,7 @@ def expand_labels(toks):
 	pos = 0
 	while i < len(toks):
 		tok = toks[i]
-		if isinstance(tok, isa.Label):
+		if isinstance(tok, tokens.Label):
 			add_label(tok, pos)
 			del toks[i]
 			continue
@@ -85,11 +88,11 @@ def apply_text_data(toks):
 	data = []
 	section = data
 	for tok in toks:
-		if isinstance(tok, isa.Macro):
-			if tok.name == "text":
+		if isinstance(tok, tokens.Macro):
+			if tok.name == ".text":
 				section = text
 				continue
-			elif tok.name == "data":
+			elif tok.name == ".data":
 				section = data
 				continue
 		section.append(tok)
@@ -98,7 +101,7 @@ def apply_text_data(toks):
 
 def parse_macro(tok, macro):
 	try:
-		g = grammer()
+		g = grammer.grammer()
 		return g.parseString(macro, parseAll=True)
 	except RuntimeError, e:
 		print macro
@@ -109,16 +112,16 @@ def parse_macro(tok, macro):
 def expand_macro(tok, byte_pos):
 	result = tok.callback(byte_pos/2, *tok.args)
 	if isinstance(result, str):
-		tokens = apply_macros(parse_macro(tok, result), byte_pos)
+		toks = apply_macros(parse_macro(tok, result), byte_pos)
 	else:
-		tokens = result
-	for tok in tokens:
+		toks = result
+	for tok in toks:
 		yield tok
 
 
-def apply_macros(tokens, byte_pos=0):
-	for tok in tokens:
-		if isinstance(tok, isa.Macro):
+def apply_macros(toks, byte_pos=0):
+	for tok in toks:
+		if isinstance(tok, tokens.Macro):
 			for mtok in expand_macro(tok, byte_pos):
 				yield mtok
 				byte_pos += mtok.size
@@ -129,7 +132,7 @@ def apply_macros(tokens, byte_pos=0):
 
 def translate(toks):
 	bytes = []
-	map(bytes.extend, map(isa.encode, toks))
+	map(bytes.extend, map(encoding.encode, toks))
 	return bytes
 
 
@@ -140,21 +143,19 @@ def main(args):
 	in_filename  = args[0]
 	out_filename = args[1]
 	try:
-		g = grammer()
+		g = grammer.grammer()
 		toks = g.parseFile(in_filename, parseAll=True)
 		if not toks:
 			return 1
 		toks = apply_text_data(toks)
 		toks = apply_macros(toks)
 		toks = expand_labels(toks)
-		#for tok in toks: print repr(tok)
-		#return 1
 		bytes = translate(toks)
 		fout = open(out_filename, "wb")
 		for byte in bytes:
 			#fout.write(bin_str(byte, 8) + "\n")
 			fout.write(chr(byte))
-	except (ParseException, ParseFatalException), err:
+	except (pyparsing.ParseException, pyparsing.ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"
 		print err

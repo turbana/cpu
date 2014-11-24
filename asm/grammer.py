@@ -1,5 +1,9 @@
 from pyparsing import *
+
+import tokens
+import macros
 import isa
+
 
 # pyparsing does magic when calling parse actions that I do not want happening.
 # It tries to guess how many parameters a function has by calling it again with
@@ -11,11 +15,42 @@ import pyparsing
 pyparsing._trim_arity = _no_trim_arity
 
 
+#
+# ISA Grammer
+#
+
+colon = Literal(":")
+dot = Literal(".")
+lparen = Literal("(")
+rparen = Literal(")")
+comma = Literal(",")
+
+unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
+signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
+atoms = (signed + unsigned + "reg ireg creg cond z nz").split()
+
+name = Word(alphas, alphanums)
+inst_name = Combine(Optional(dot) + name + Optional(dot + oneOf(["z", "nz"])))
+boundry = lparen | rparen | comma
+arg_type = oneOf(atoms)
+arg = Group(name + Suppress(colon) + arg_type)
+args = OneOrMore(Optional(boundry) + arg + Optional(boundry))
+modifier = dot + arg
+inst = (inst_name + modifier) | inst_name
+
+instruction = inst + Optional(args)
+
+
+
+#
+# Assembler Grammer
+#
+
 sign = Optional(Word("-+", exact=1))
 
 to_base = lambda b: lambda s,l,t: (int(t[0], b), b)
 num_bin = Suppress("b") + Word("01")
-num_oct = Combine(sign + Word("0", nums))
+num_oct = Combine(sign + Word("0", "0123456"))
 num_dec = Combine(sign + Word("123456789", nums))
 num_hex = Suppress("0x") + Word(srange("[0-9a-fA-F]"))
 num_bin.setParseAction(to_base(2))
@@ -25,8 +60,6 @@ num_hex.setParseAction(to_base(16))
 num = (num_hex | num_bin | num_oct | num_dec)
 
 to_int = lambda s,l,t: int("".join(t))
-def replace(what):
-	return lambda s,l,t: [what] + t[1:]
 
 def _build(typ, **kwargs):
 	def _parse_action(s, l, toks):
@@ -43,19 +76,9 @@ lparen = Suppress("(")
 rparen = Suppress(")")
 dot = Suppress(".")
 
-# values
-reg = Suppress("$") + Word("01234567").setParseAction(to_int)
-reg.setName("register")
-reg.setParseAction(_build(isa.Register))
-creg = Suppress("$cr") + Word("01").setParseAction(to_int)
-creg.setName("cregister")
-creg.setParseAction(_build(isa.ControlRegister))
-lnum = Word(nums).setParseAction(to_int)
-label_name = (lnum + Word("fb", exact=1)) | Word(alphas, alphanums)
+lnum = Word(nums)
+label_name = Word(alphas, alphanums) | (lnum + Word("fb", exact=1))
 label_name.setName("label")
-label_name.setParseAction(_build(isa.Label))
-label = label_name + colon
-
 
 _just_int_value = lambda s,l,t: t[0][0]
 expr_num = num.copy().addParseAction(_just_int_value)
@@ -70,165 +93,161 @@ expr = operatorPrecedence(operand, [
 ])
 
 def to_lists(s, l, t):
-	if isinstance(t, ParseResults) and len(t) == 1 and isinstance(t[0], isa.Label):
-		raise ParseException(s, l, "Don't allow single labels as expressions")
 	def inner(s, l, t):
 		if isinstance(t, ParseResults):
 			return [to_lists(s, l, tok) for tok in t]
 		return t
 	return inner(s, l, t)
 expr.setParseAction(to_lists)
+expr.setName("expr")
 
 
 def number(bits, signed):
-	n = num.copy().setParseAction(_build(isa.Number, bits=bits, signed=signed))
-	e = expr.copy().addParseAction(_build(isa.Expression, bits=bits, signed=signed))
-	return n | e
-
-def name(grammer, name):
-	grammer = grammer.setResultsName(name)
-	def set_name(s, l, toks):
-		name = toks.keys()[0] if toks.keys() else ""
-		toks[0].name = name
-	return grammer.addParseAction(set_name)
-
+	n = num.copy().addParseAction(_build(tokens.Number, bits=bits, signed=signed))
+	e = expr.copy().addParseAction(_build(tokens.Expression, bits=bits, signed=signed))
+	return n | label_name | e
 
 def _check_range(s, l, t):
-	obj = t[0].value if isinstance(t[0], isa.Expression) else t[0]
+	obj = t[0].value if isinstance(t[0], tokens.Expression) else t[0]
 	if obj.value not in [8,4,2,1,-1,-2,-4,-8]:
 		raise ParseException(s, l, "Invalid value for spec immediate")
-	return isa.Immediate(obj)
+	return tokens.Immediate(obj)
 spec_imm = number(5, True).addParseAction(_check_range)
 
 
-# numbers
-s7  = number( 7,  True)
-s8  = number( 8,  True)
-s13 = number(13,  True)
-u4  = number( 4, False)
-
 #
-offset = (name(reg, "index") | name(s7, "offset") | name(label_name, "offset"))
-tgt = name(reg, "tgt")
-src = name(reg, "src")
-base = name(reg, "base")
-op1 = name(reg, "op1")
-op2 = name(reg, "op2")
-cr = name(creg, "cr")
 
-reg_imm = op2 | name(spec_imm, "op2")
-reg3_imm = tgt + comma + op1 + comma + reg_imm
-jmp_target = (name(label_name, "offset") | name(reg, "tgt") | name(s13, "offset"))
-imm8 = (name(label_name, "imm") | name(s8, "imm"))
-count = name(u4, "count")
-sysnum = name(u4, "sysnum")
+label = label_name + colon
+reg = Suppress("$") + Word("01234567").setParseAction(to_int)
+ireg = reg | spec_imm
+creg = Suppress("$cr") + Word("01").setParseAction(to_int)
+cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 
-condition = oneOf("eq ne gt gte lt lte ult ulte")("cond")
-condition.setParseAction(_build(isa.Condition))
+u1  = number( 1, False)
+u2  = number( 2, False)
+u3  = number( 3, False)
+u4  = number( 4, False)
+u5  = number( 5, False)
+u6  = number( 6, False)
+u7  = number( 7, False)
+u8  = number( 8, False)
+u9  = number( 9, False)
+u10 = number(10, False)
+u11 = number(11, False)
+u12 = number(12, False)
+u13 = number(13, False)
+u14 = number(14, False)
+u15 = number(15, False)
+u16 = number(16, False)
+s1  = number( 1, True)
+s2  = number( 2, True)
+s3  = number( 3, True)
+s4  = number( 4, True)
+s5  = number( 5, True)
+s6  = number( 6, True)
+s7  = number( 7, True)
+s8  = number( 8, True)
+s9  = number( 9, True)
+s10 = number(10, True)
+s11 = number(11, True)
+s12 = number(12, True)
+s13 = number(13, True)
+s14 = number(14, True)
+s15 = number(15, True)
+s16 = number(16, True)
 
 comment = ";" + restOfLine
 
-ldw = Literal("ldw") + tgt + comma + offset + lparen + base + rparen
-ldb = Literal("ldb") + tgt + comma + offset + lparen + base + rparen
-stw = Literal("stw") + offset + lparen + base + rparen + comma + src
-stb = Literal("stb") + offset + lparen + base + rparen + comma + src
+# actions
 
-jmp = Literal("jmp") + jmp_target
+creg.addParseAction(_build(tokens.ControlRegister))
+reg.addParseAction(_build(tokens.Register))
+cond.addParseAction(_build(tokens.Condition))
+label_name.addParseAction(_build(tokens.Label))
+lnum.addParseAction(to_int)
 
-add = Literal("add") + reg3_imm
-sub = Literal("sub") + reg3_imm
-and_i = Literal("and") + reg3_imm
-or_i = Literal("or") + reg3_imm
-addskipz = Literal("as.z") + reg3_imm
-addskipnz = Literal("as.nz") + reg3_imm
-xor = Literal("xor") + reg3_imm
 
-skip = Literal("s") + dot + condition + op1 + comma + reg_imm
 
-lui = Literal("lui")   + tgt + comma + imm8
-addi = Literal("addi") + tgt + comma + imm8
+def parse_ast(syntax):
+	try:
+		return instruction.parseString(syntax, parseAll=True)
+	except (ParseException, ParseFatalException), err:
+		print err.line
+		print " "*(err.column-1) + "^"
+		print err
+		raise
 
-shl  = Literal("shl")  + tgt + comma + src
-shr  = Literal("shr")  + tgt + comma + src
-sext = Literal("sext") + tgt + comma + src
-sar  = Literal("sar")  + tgt + comma + src
-inw  = Literal("inw")  + tgt + comma + src
-inb  = Literal("inb")  + tgt + comma + src
-outw = Literal("outw") + tgt + comma + src
-outb = Literal("outb") + tgt + comma + src
 
-halt = Literal("halt")
-trap = Literal("trap") + sysnum
-lcr = Literal("lcr") + tgt + comma + cr
-scr = Literal("scr") + cr + comma + src
+def build_grammer(ast):
+	""" convert parsed instruction format into pyparsing grammer """
+	# ex: ['ldw', ['tgt', 'reg'], ',', ['offset', 's7'], '(', ['base', 'reg'], ')']
+	def lookup(name, type):
+		g = globals()[type].setResultsName(name).setName(name)
+		def setname(s, l, t):
+			t[0].name = name
+			t[0].type = type
+		g.addParseAction(setname)
+		return g
+	def punct(c):
+		return Suppress(c).setResultsName(c).setName(c)
+	if isinstance(ast[0], str):
+		g = Literal(ast[0]).setResultsName(ast[0]).setName(ast[0])
+	for arg in ast[1:]:
+		g += punct(arg) if isinstance(arg, str) else lookup(*arg)
+	return g
 
-instruction = ldw | ldb | stw | stb | jmp | add | sub | and_i | or_i | skip | addskipz
-instruction |= addskipnz | xor | lui | addi | shl | shr | sext | sar | inw | inb | outw
-instruction |= outb | halt | trap | lcr | scr
-instruction.setParseAction(lambda s,l,t: isa.Instruction(t[0], t[1:]))
+
+def add_instruction(syntax, token_type, kwargs={}):
+	ast = parse_ast(syntax)
+	g = build_grammer(ast)
+	g.addParseAction(_build(token_type, **kwargs))
+	instructions.append(g)
+	return ast
+
+
+def join_grammer(gs):
+	g = gs[0]
+	for ng in gs[1:]:
+		g |= ng
+	return g
+
+
+def build_instruction_grammers():
+	g = []
+	for encoding in isa.encodings:
+		if encoding["ast"]:
+			g.append(encoding["grammer"])
+			continue
+		ast = parse_ast(encoding["syntax"])
+		inst = build_grammer(ast)
+		inst.addParseAction(_build(tokens.Instruction))
+		types = dict(a for a in ast[1:] if not isinstance(a, str))
+		format = isa.parse_format(ast)
+		encoding["ast"] = ast
+		encoding["grammer"] = inst
+		encoding["types"] = types
+		encoding["format"] = format
+		g.append(inst)
+	return join_grammer(g)
+
+
+def build_macro_grammers():
+	g = []
+	for syntax, func in macros.macros:
+		ast = parse_ast(syntax)
+		macro = build_grammer(ast)
+		macro.addParseAction(_build(tokens.Macro, callback=func))
+		g.append(macro)
+	return join_grammer(g)
 
 
 def grammer(_cache=[None]):
 	if _cache[0]:
 		return _cache[0]
-	macro = _macros_grammer()
-	line = Optional(label) + (instruction | macro)
+	instruction = build_instruction_grammers()
+	instruction |= build_macro_grammers()
+	line = (label + instruction) | instruction | label
 	g = OneOrMore(line)
 	g.ignore(comment)
 	_cache[0] = g
 	return g
-
-
-#
-# Macros
-#
-
-_macros = []
-
-def macro(arg):
-	def add_macro(func, name, format):
-		try:
-			grammer = _build_macro_grammer(name, format)
-		except (ParseException, ParseFatalException), err:
-			print err.line
-			print " "*(err.column-1) + "^"
-			print err
-			print "Error encountered while parsing macro definition for", name
-			import sys
-			sys.exit(1)
-		def build_macro(s, l, t):
-			return isa.Macro(name, func, t[1:])
-		grammer.setParseAction(build_macro)
-		_macros.append(grammer)
-	if hasattr(arg, "__call__"):
-		add_macro(arg, arg.func_name, None)
-		return arg
-	def _decorator(func):
-		add_macro(func, func.func_name, arg)
-		return func
-	return _decorator
-
-
-def _macros_grammer():
-	gram = _macros[0]
-	for m in _macros[1:]:
-		gram |= m
-	return gram
-
-
-def _build_macro_grammer(name, format):
-	name = dot + Literal(name)
-	if not format:
-		return name
-	unumber = Suppress("u") + num_dec
-	snumber = Suppress("s") + num_dec
-	unumber.setParseAction(lambda s,l,t: label_name ^ number(t[0][0], False))
-	snumber.setParseAction(lambda s,l,t: label_name ^ number(t[0][0], True))
-	reg_macro = Literal("reg").setParseAction(lambda s,l,t: reg)
-	types = unumber | snumber | reg_macro
-
-	toks = OneOrMore(types).parseString(format, parseAll=True)
-	grammer = toks[0]
-	for tok in toks[1:]:
-		grammer = grammer + comma + tok
-	return name - grammer
