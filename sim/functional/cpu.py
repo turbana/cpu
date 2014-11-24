@@ -1,5 +1,7 @@
 import sys
-import isa
+import asm.encoding
+
+PC = 8 # register
 
 class globals(object):
 	trace = True
@@ -26,10 +28,9 @@ condition_func = {
 	"ulte":	lambda x, y: UnimplmentedError(),
 }
 
-def traceop(name, args, kwargs):
+def traceop(tok):
 	if globals.trace:
-		items = [key+"="+str(val) for key, val in kwargs.items()]
-		print "%-8s %s" % (name, " ".join(items))
+		print tok
 
 def trace(*msg):
 	if globals.trace:
@@ -43,9 +44,9 @@ def op(func):
 	if name.endswith("_"):
 		name = name[:-1]
 	name = name.replace("_", ".")
-	def wrap(*args, **kwargs):
-		traceop(name, args, kwargs)
-		return func(*args, **kwargs)
+	def wrap(cpu, tok):
+		traceop(tok)
+		return func(cpu, **tok.arguments())
 	operations[name] = wrap
 	return wrap
 
@@ -73,9 +74,9 @@ def stb(cpu, offset, base, src):
 @op
 def jmp(cpu, offset=None, tgt=None):
 	if offset is not None:
-		cpu.reg[7] += offset - 1
+		cpu.reg[PC] += offset + 1
 	elif tgt is not None:
-		cpu.reg[7] = cpu.rget(tgt)
+		cpu.reg[PC] = cpu.rget(tgt)
 
 @op
 def add(cpu, tgt, op1, op2, ir):
@@ -111,7 +112,7 @@ def s(cpu, cond, op1, op2, ir):
 	if not ir: op2 = cpu.rget(op2)
 	func = condition_func[cond]
 	if func(op1, op2):
-		cpu.reg[7] += 1
+		cpu.reg[PC] += 1
 
 @op
 def as_z(cpu, ir, op1, op2, tgt):
@@ -121,7 +122,7 @@ def as_z(cpu, ir, op1, op2, tgt):
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res == 0:
-		cpu.reg[7] += 1
+		cpu.reg[PC] += 1
 
 @op
 def as_nz(cpu, ir, op1, op2, tgt):
@@ -130,7 +131,7 @@ def as_nz(cpu, ir, op1, op2, tgt):
 	res = op1 + op2
 	cpu.rset(tgt, res)
 	if res != 0:
-		cpu.reg[7] += 1
+		cpu.reg[PC] += 1
 
 @op
 def lui(cpu, imm, tgt):
@@ -173,10 +174,18 @@ def sext(cpu, tgt):
 	if val & (2**7):
 		cpu.rset(tgt, val | 0xFF00)
 
+@op
+def lcr(cpu, tgt, cr):
+	cpu.rset(tgt, cpu.crget(cr))
+
+@op
+def scr(cpu, cr, src):
+	cpu.crset(cr, cpu.rget(src))
+
 
 class CPU(object):
 	def __init__(self):
-		self.reg  = [0 for _ in xrange(8)]
+		self.reg  = [0 for _ in xrange(10)]
 		self.mem  = [0 for _ in xrange(2**17)]
 		self.halt = True
 	
@@ -210,21 +219,21 @@ class CPU(object):
 	def run(self):
 		self.halt = False
 		while not self.halt:
-			if self.reg[7] in globals.breakpoints:
+			if self.reg[PC] in globals.breakpoints:
 				globals.trace = False
 				globals.step = True
 			opcode = self.fetch()
-			tok = isa.decode(opcode)
+			tok = asm.encoding.decode(opcode)
 			if globals.step:
 				self.dump(*globals.mem_range)
-				print "%s> %s" % (shex(self.reg[7]-1, 4), str(tok)),
+				print "%s> %s" % (shex(self.reg[PC]-1, 4), str(tok)),
 				raw_input()
 				print
-			operations[tok.name](self, **tok.arguments())
+			operations[tok.name](self, tok)
 	
 	def fetch(self):
-		pc = self.reg[7]
-		self.reg[7] = pc + 1
+		pc = self.reg[PC]
+		self.reg[PC] = pc + 1
 		return self.mget(pc)
 	
 	def mget(self, addr):
@@ -245,8 +254,16 @@ class CPU(object):
 		return self.reg[reg]
 
 	def rset(self, reg, value):
-		if reg not in (0, 7):
+		if reg != 0:
 			self.reg[reg] = value
+
+	def crget(self, cr):
+		val = self.reg[8 + cr]
+		if cr == 0: val += 1
+		return val
+
+	def crset(self, reg, value):
+		raise NotImplementedError()
 
 
 
