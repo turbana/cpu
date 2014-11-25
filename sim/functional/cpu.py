@@ -278,8 +278,12 @@ def main(args):
 	cpu.load(data)
 	globals.mem_range[1] = (len(data)/2) + (len(data)%2)
 	cpu.dump(*globals.mem_range)
-	cpu.run()
-	cpu.dump(*globals.mem_range)
+	try:
+		cpu.run()
+		cpu.dump(*globals.mem_range)
+	except KeyboardInterrupt:
+		print
+		return 0
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
