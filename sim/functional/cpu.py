@@ -202,9 +202,11 @@ class CPU(object):
 		def bin_word(n):
 			b = bin(n)[2:].zfill(16)
 			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
-		for r in xrange(1, 8):
+		print
+		for r in xrange(1, 10):
 			v = self.reg[r]
-			print "$%d:  %s  |  %s  =  %5s" % (r, bin_word(v), hex_word(v), v)
+			name = ("  $%d" % r) if r < 8 else ("$cr%d" % (r-8))
+			print "%s:  %s  |  %s  =  %5s" % (name, bin_word(v), hex_word(v), v)
 		if mstart is not None and mend is not None:
 			count = 0
 			for addr in xrange(mstart*2, mend*2, 2):
