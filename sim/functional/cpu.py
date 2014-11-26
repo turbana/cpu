@@ -60,30 +60,43 @@ def lookup_op(tok):
 
 @op
 def ldw(cpu, tgt, base, offset):
-	# TODO handle reg ldw
-	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset))
+	cpu.rset(tgt, cpu.mget((cpu.rget(base) + offset) * 2))
+
+@op
+def ldw(cpu, tgt, base, index):
+	cpu.rset(tgt, cpu.mget((cpu.rget(base) + cpu.rget(index)) * 2))
 
 @op
 def ldb(cpu, tgt, base, offset):
-	# TODO handle reg ldb
 	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset) >> 8)
 
 @op
-def stw(cpu, offset, base, src):
-	# TODO handle reg stw
-	cpu.mset(offset + cpu.rget(base), cpu.rget(src))
+def ldb(cpu, tgt, base, index):
+	cpu.rset(tgt, cpu.mget(cpu.rget(base) + cpu.rget(index)) >> 8)
 
 @op
-def stb(cpu, offset, base, src):
-	# TODO handle reg stb
+def stw(cpu, base, src, offset):
+	cpu.mset((offset + cpu.rget(base)) * 2, cpu.rget(src))
+
+@op
+def stw(cpu, base, src, index):
+	cpu.mset((cpu.rget(index) + cpu.rget(base)) * 2, cpu.rget(src))
+
+@op
+def stb(cpu, base, src, offset):
 	cpu.mset(offset + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
 
 @op
-def jmp(cpu, offset=None, tgt=None):
-	if offset is not None:
-		cpu.reg[PC] += offset + 1
-	elif tgt is not None:
-		cpu.reg[PC] = cpu.rget(tgt)
+def stb(cpu, base, src, index):
+	cpu.mset(cpu.rget(index) + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
+
+@op
+def jmp(cpu, offset):
+	cpu.reg[PC] += offset + 1
+
+@op
+def jmp(cpu, tgt):
+	cpu.reg[PC] = cpu.rget(tgt)
 
 @op
 def add(cpu, tgt, op1, op2, ir):
@@ -152,12 +165,14 @@ def addi(cpu, imm, tgt):
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op
-def shl(cpu, count, src, tgt):
-	cpu.rset(tgt, cpu.rget(src) >> count)
+def shl(cpu, src, tgt):
+	n = (cpu.rget(src) << 1) & 0xFFFF
+	cpu.rset(tgt, n)
 
 @op
-def shr(cpu, count, src, tgt):
-	cpu.rset(tgt, cpu.rget(src) << count)
+def shr(cpu, src, tgt):
+	n = (cpu.rget(src) >> 1) & 0xFFFF
+	cpu.rset(tgt, n)
 
 @op
 def xor(cpu, tgt, src):
