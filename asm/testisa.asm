@@ -18,4 +18,17 @@ m:	.dw	0x0000
 	as.z	$3, $3, -1		; $3 -= 1; loop until 0
 	jmp	1b
 
+	ldw	$1, 0($4)		; $1 = n (0xABCD)
+	ldw	$2, 0($6)		; $2 = m (0xCDBA)
+	add	$3, $0, 4		; $3 = 4
+1:	shl	$1, $1			; $1 <<= 1
+	shr	$2, $2			; $2 >>= 1
+	sub	$3, $3, 1		; $3 -= 1
+	s.eq	$3, $0			; loop until $3 == 0
+	jmp	1b
+
+	or	$3, $1, $2		; $3 = $1 | $2 (0xBCD0 | 0x0CDA == 0xBCDA)
+	stw	$0($4), $3		;  n = $3
+	ldw	$1, $0($4)		; $1 = n
+
 	halt
