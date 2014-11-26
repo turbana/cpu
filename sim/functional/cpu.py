@@ -1,3 +1,6 @@
+import inspect
+import collections
+
 import sys
 import asm.encoding
 
@@ -37,19 +40,23 @@ def trace(*msg):
 		print " ".join(map(str, msg))
 
 
-operations = {}
+operations = collections.defaultdict(list)
 
 def op(func):
 	name = func.func_name
 	if name.endswith("_"):
 		name = name[:-1]
 	name = name.replace("_", ".")
-	def wrap(cpu, tok):
-		traceop(tok)
-		return func(cpu, **tok.arguments())
-	operations[name] = wrap
-	return wrap
+	operations[name].append(func)
+	return func
 
+def lookup_op(tok):
+	argnames = sorted(tok.arguments().keys())
+	for func in operations[tok.name]:
+		fargs = inspect.getargspec(func).args[1:]
+		if sorted(fargs) == argnames:
+			return func
+	raise Exception("%s not defined" % tok.name)
 
 @op
 def ldw(cpu, tgt, base, offset):
@@ -231,7 +238,8 @@ class CPU(object):
 				print "%s> %s" % (shex(self.reg[PC]-1, 4), str(tok)),
 				raw_input()
 				print
-			operations[tok.name](self, tok)
+			func = lookup_op(tok)
+			func(self, **tok.arguments())
 	
 	def fetch(self):
 		pc = self.reg[PC]
