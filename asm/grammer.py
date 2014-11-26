@@ -76,8 +76,7 @@ lparen = Suppress("(")
 rparen = Suppress(")")
 dot = Suppress(".")
 
-lnum = Word(nums)
-label_name = Word(alphas, alphanums) | (lnum + Word("fb", exact=1))
+label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums)
 label_name.setName("label")
 
 _just_int_value = lambda s,l,t: t[0][0]
@@ -105,7 +104,7 @@ expr.setName("expr")
 def number(bits, signed):
 	n = num.copy().addParseAction(_build(tokens.Number, bits=bits, signed=signed))
 	e = expr.copy().addParseAction(_build(tokens.Expression, bits=bits, signed=signed))
-	return n | label_name | e
+	return n ^ label_name ^ e
 
 def _check_range(s, l, t):
 	obj = t[0].value if isinstance(t[0], tokens.Expression) else t[0]
@@ -164,7 +163,6 @@ creg.addParseAction(_build(tokens.ControlRegister))
 reg.addParseAction(_build(tokens.Register))
 cond.addParseAction(_build(tokens.Condition))
 label_name.addParseAction(_build(tokens.Label))
-lnum.addParseAction(to_int)
 
 
 
