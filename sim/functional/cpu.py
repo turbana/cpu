@@ -236,11 +236,11 @@ class CPU(object):
 	def fetch(self):
 		pc = self.reg[PC]
 		self.reg[PC] = pc + 1
-		return self.mget(pc)
+		return self.mget(pc * 2)
 	
 	def mget(self, addr):
-		high = self.mem[addr*2]
-		low = self.mem[addr*2+1]
+		high = self.mem[addr]
+		low = self.mem[addr + 1]
 		byte = (high << 8) | low
 		trace("  read  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
@@ -249,8 +249,9 @@ class CPU(object):
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
 		trace("  write (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
-		self.mem[addr*2]   = high
-		self.mem[addr*2+1] = low
+		self.mem[addr] = high
+		if not byte:
+			self.mem[addr + 1] = low
 	
 	def rget(self, reg):
 		return self.reg[reg]
