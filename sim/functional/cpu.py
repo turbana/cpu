@@ -18,17 +18,21 @@ def shex(n, x=0):
 	return hex(n)[2:].upper().zfill(x)
 def num(s):
 	return int(s.replace(" ", ""), 2)
+def twoc_unsign(n, bits=16):
+	return ((2**bits) + n) if n < 0 else n
+def twoc_sign(n):
+	return (n - (2**16)) if n >= (2**15) else n
 
 
 condition_func = {
-	"eq":	lambda x, y: x == y,
-	"ne":	lambda x, y: x != y,
-	"lt":	lambda x, y: y <  y,
-	"lte":	lambda x, y: y <= x,
-	"gt":	lambda x, y: y >  x,
-	"gte":	lambda x, y: y >= x,
-	"ult":	lambda x, y: UnimplmentedError(),
-	"ulte":	lambda x, y: UnimplmentedError(),
+	"eq":	lambda x, y: twoc_sign(x) == twoc_sign(y),
+	"ne":	lambda x, y: twoc_sign(x) != twoc_sign(y),
+	"lt":	lambda x, y: twoc_sign(x) <  twoc_sign(y),
+	"lte":	lambda x, y: twoc_sign(x) <= twoc_sign(y),
+	"gt":	lambda x, y: twoc_sign(x) >  twoc_sign(y),
+	"gte":	lambda x, y: twoc_sign(x) >= twoc_sign(y),
+	"ult":	lambda x, y: twoc_unsign(x) < twoc_unsign(y),
+	"ulte":	lambda x, y: twoc_unsign(x) <= twoc_unsign(y),
 }
 
 def traceop(tok):
@@ -155,12 +159,12 @@ def as_nz(cpu, ir, op1, op2, tgt):
 
 @op
 def lui(cpu, imm, tgt):
-	imm = ((2**8) + imm) if imm < 0 else imm
+	imm = twoc_unsign(imm, 8)
 	cpu.rset(tgt, imm << 8)
 
 @op
 def addi(cpu, imm, tgt):
-	imm = ((2**8) + imm) if imm < 0 else imm
+	imm = twoc_unsign(imm)
 	# TODO check overflow
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
