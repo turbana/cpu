@@ -76,7 +76,7 @@ lparen = Suppress("(")
 rparen = Suppress(")")
 dot = Suppress(".")
 
-label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums)
+label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums + "_")
 label_name.setName("label")
 
 _just_int_value = lambda s,l,t: t[0][0]
