@@ -131,6 +131,12 @@ def or_(cpu, tgt, op1, op2, ir):
 	cpu.rset(tgt, op1 | op2)
 
 @op
+def xor(cpu, tgt, op1, op2, ir):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	cpu.rset(tgt, op1 ^ op2)
+
+@op
 def s(cpu, cond, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
@@ -179,6 +185,13 @@ def shr(cpu, src, tgt):
 	cpu.rset(tgt, n)
 
 @op
+def sar(cpu, src, tgt):
+	n = cpu.rget(src)
+	msb = n & 0x8000
+	shr = (n >> 1) & 0xFFFF
+	cpu.rset(tgt, shr | msb)
+
+@op
 def xor(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
 
@@ -195,10 +208,13 @@ def trap(cpu, int):
 	raise NotImplementedError()
 
 @op
-def sext(cpu, tgt):
-	val = cpu.rget(tgt)
-	if val & (2**7):
-		cpu.rset(tgt, val | 0xFF00)
+def sext(cpu, tgt, src):
+	val = cpu.rget(src)
+	if val & 0x80:
+		val |= 0xFF00
+	else:
+		val &= 0x00FF
+	cpu.rset(tgt, val)
 
 @op
 def lcr(cpu, tgt, cr):
