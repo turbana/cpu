@@ -104,9 +104,9 @@ def call(pos, addr, scratch):
 	""".format(addr=addr.value, reg=scratch)
 
 
-@macro
-def ret(pos):
+@macro("reg")
+def ret(pos, scratch):
 	return """
-		.pop $5
-		jmp  $5
-	"""
+		.pop {reg}
+		jmp  {reg}
+	""".format(reg=scratch)
