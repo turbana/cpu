@@ -247,5 +247,6 @@ def grammer(_cache=[None]):
 	line = (label + instruction) | instruction | label
 	g = OneOrMore(line)
 	g.ignore(comment)
+	g.enablePackrat()
 	_cache[0] = g
 	return g
