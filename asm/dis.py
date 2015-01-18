@@ -11,7 +11,7 @@ def main(args):
 	for i in xrange(len(bytes)/2):
 		j = i * 2
 		word = (bytes[j] << 8) | bytes[j+1]
-		print "%04X: %s" % (i, encoding.decode(word))
+		print "%04X: (%04X)  %s" % (i, word, encoding.decode(word))
 
 
 if __name__ == "__main__":
