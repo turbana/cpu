@@ -39,8 +39,7 @@ def expand_labels(toks):
 				found = [l for l in search if l.pos <= pos][-1]
 		addr = found.pos
 		if pc_relative:
-			# PC relative values are really PC + 1 word, so add 2 bytes
-			addr -= pos + 2
+			addr -= pos
 		addr /= 2
 		return tokens.Number((addr, 10), bits=bits, signed=signed, name=label.name)
 

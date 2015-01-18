@@ -31,8 +31,10 @@ def encode(token):
 	args = code["args"]
 	word = prelude << prelude_end
 	for name, start, end in args:
-		value = getattr(token, name).binary()
-		word |= value << end
+		value = getattr(token, name)
+		if opname == "jmp" and name == "offset":
+			value.value -= 1
+		word |= value.binary() << end
 		if word < 0:
 			raise Error("cannot encode negative word: " + hex(word))
 	return [(word & 0xFF00) >> 8, word & 0xFF]
@@ -82,6 +84,8 @@ def decode(opcode):
 				else:
 					raise ValueError("Unknown opcode argument type: " + type)
 				arg.type = type
+				if name == "jmp" and aname == "offset":
+					arg.value += 1
 				tok_args.append(arg)
 			return Instruction(name, *tok_args)
 	raise ValueError("Unknown opcode: " + hex(opcode))
