@@ -32,48 +32,70 @@ def parse_format(ast):
 
 
 
-
-add("ldw tgt:reg, offset:s7(base:reg)",
-	0x0, 13, ("offset", 12, 6), ("base", 5, 3), ("tgt", 2, 0))
-
-add("ldb tgt:reg, offset:s7(base:reg)",
-	0x1, 13, ("offset", 12, 6), ("base", 5, 3), ("tgt", 2, 0))
-
-add("stw offset:s7(base:reg), src:reg",
-	0x2, 13, ("offset", 12, 6), ("base", 5, 3), ("src", 2, 0))
-
-add("stb offset:s7(base:reg), src:reg",
-	0x3, 13, ("offset", 12, 6), ("base", 5, 3), ("src", 2, 0))
-
-
-add("jmp offset:s13",
-	0x4, 13, ("offset", 12, 0))
-
-
 add("add tgt:reg, op1:reg, op2:ireg",
-	0x28, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x00, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("sub tgt:reg, op1:reg, op2:ireg",
-	0x29, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x01, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("and tgt:reg, op1:reg, op2:ireg",
-	0x2A, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x02, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("or tgt:reg, op1:reg, op2:ireg",
-	0x2B, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x03, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("s.cond:cond op1:reg, op2:ireg",
-	0x2C, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("cond", 2, 0))
+	0x04, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("cond", 2, 0))
 
 add("as.z tgt:reg, op1:reg, op2:ireg",
-	0x2D, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x05, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("as.nz tgt:reg, op1:reg, op2:ireg",
-	0x2E, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x06, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
 add("xor tgt:reg, op1:reg, op2:ireg",
-	0x2F, 10, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+	0x07, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
 
+add("shl tgt:reg, op1:reg, op2:ireg",
+	0x08, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+
+add("shr tgt:reg, op1:reg, op2:ireg",
+	0x09, 11, ("ir", 9, 9), ("op1", 8, 6), ("op2", 5, 3), ("tgt", 2, 0))
+
+add("ldw tgt:reg, index:ireg(base:reg)",
+	0x0A, 11, ("ir", 9, 9), ("index", 5, 3), ("base", 8, 6), ("tgt", 2, 0))
+
+add("stw index:ireg(base:reg), src:reg",
+	0x0B, 11, ("ir", 9, 9), ("index", 5, 3), ("base", 8, 6), ("src", 2, 0))
+
+add("inb tgt:reg, src:reg",
+	0x0C, 11, ("src", 8, 6), ("tgt", 2, 0))
+
+add("outb tgt:reg, src:reg",
+	0x0D, 11, ("src", 8, 6), ("tgt", 2, 0))
+
+add("ldiw tgt:reg, src:reg",
+	0x0E, 11, ("src", 8, 6), ("tgt", 2, 0))
+
+add("stiw tgt:reg, src:reg",
+	0x0F, 11, ("src", 8, 6), ("tgt", 2, 0))
+
+add("lcr tgt:reg, cr:creg",
+	0x10, 11, ("cr", 8, 6), ("tgt", 2, 0))
+
+add("scr cr:creg, src:reg",
+	0x11, 11, ("cr", 8, 6), ("src", 2, 0))
+
+add("jmp tgt:reg",
+	0x12, 11, ("tgt", 2, 0))
+
+add("sext tgt:reg, src:reg",
+	0x13, 11, ("src", 8, 6), ("tgt", 2, 0))
+
+add("trap reg:reg",
+	0x14, 11, ("reg", 2, 0))
+
+# ...
 
 add("lui tgt:reg, imm:s8",
 	0x18, 11, ("imm", 10, 3), ("tgt", 2, 0))
@@ -81,59 +103,21 @@ add("lui tgt:reg, imm:s8",
 add("addi tgt:reg, imm:s8",
 	0x19, 11, ("imm", 10, 3), ("tgt", 2, 0))
 
+add("ldw tgt:reg, offset:s5(base:reg)",
+	0x1A, 11, ("offset", 10, 6), ("base", 5, 3), ("tgt", 2, 0))
 
-add("ldw tgt:reg, index:reg(base:reg)",
-	0x68,  9, ("index", 8, 6), ("base", 5, 3), ("tgt", 2, 0))
+add("stw offset:s5(base:reg), src:reg",
+	0x1B, 11, ("offset", 10, 6), ("base", 5, 3), ("src", 2, 0))
 
-add("ldb tgt:reg, index:reg(base:reg)",
-	0x69,  9, ("index", 8, 6), ("base", 5, 3), ("tgt", 2, 0))
+# ...
 
-add("stw index:reg(base:reg), src:reg",
-	0x6A,  9, ("index", 8, 6), ("base", 5, 3), ("src", 2, 0))
+add("reti",
+	0x1E, 11)
 
-add("stb index:reg(base:reg), src:reg",
-	0x6B,  9, ("index", 8, 6), ("base", 5, 3), ("src", 2, 0))
-
-
-add("shl tgt:reg, src:reg",
-	0x360, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("shr tgt:reg, src:reg",
-	0x361, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("sext tgt:reg, src:reg",
-	0x362, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("sar tgt:reg, src:reg",
-	0x363, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("inw tgt:reg, src:reg",
-	0x364, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("inb tgt:reg, src:reg",
-	0x365, 6, ("src", 5, 3), ("tgt", 2, 0))
-
-add("outw tgt:reg, src:reg",
-	0x366, 6, ("tgt", 5, 3), ("src", 2, 0))
-
-add("outb tgt:reg, src:reg",
-	0x367, 6, ("tgt", 5, 3), ("src", 2, 0))
+add("jmp offset:s11",
+	0x1F, 11, ("offset", 10, 0))
 
 
-add("halt",
-	0xFEDE, 0)
-
-add("trap sysnum:u4",
-	0xFEE, 4, ("sysnum", 3, 0))
-
-add("jmp tgt:reg",
-	0x1FDF, 3, ("tgt", 2, 0))
-
-add("lcr tgt:reg, cr:creg",
-	0x3FE, 6, ("cr", 5, 3), ("tgt", 2, 0))
-
-add("scr cr:creg, src:reg",
-	0x3FF, 6, ("cr", 5, 3), ("src", 2, 0))
 
 
 conditions = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
