@@ -52,9 +52,9 @@ def expand_labels(toks):
 				apply_labels(arg, pos, False, pc_relative)
 			elif isinstance(arg, tokens.Label):
 				if tok.name == "jmp":
-					bits = 13
-				elif tok.name in ("ldw", "ldb", "stw", "stb"):
-					bits = 7
+					bits = 11
+				elif tok.name in ("ldw", "stw"):
+					bits = 5
 				elif tok.name in ("lui", "addi"):
 					bits = 8
 				elif isinstance(tok, tokens.Expression):
