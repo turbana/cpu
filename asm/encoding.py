@@ -73,14 +73,12 @@ def decode(opcode):
 						arg = Immediate(n, aname)
 					else:
 						arg = Register(value, aname)
-				elif type == "s7":
-					arg = Number((twoc(value, 7), 10), 7, True, aname)
-				elif type == "s8":
-					arg = Number((twoc(value, 8), 10), 8, True, aname)
-				elif type == "s13":
-					arg = Number((twoc(value, 13), 10), 13, True, aname)
-				elif type == "u4":
-					arg = Number((value, 10), 4, False, aname)
+				elif type.startswith("s"):
+					n = int(type[1:])
+					arg = Number((twoc(value, n), 10), n, True, aname)
+				elif type.startswith("u"):
+					n = int(type[1:])
+					arg = Number((value, 10), n, False, aname)
 				else:
 					raise ValueError("Unknown opcode argument type: " + type)
 				arg.type = type
