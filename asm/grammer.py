@@ -108,7 +108,7 @@ def number(bits, signed):
 
 def _check_range(s, l, t):
 	obj = t[0].value if isinstance(t[0], tokens.Expression) else t[0]
-	if obj.value not in [8,4,2,1,-1,-2,-4,-8]:
+	if obj is None or obj.value not in [8,4,2,1,-1,-2,-4,-8]:
 		raise ParseException(s, l, "Invalid value for spec immediate")
 	return tokens.Immediate(obj)
 spec_imm = number(5, True).addParseAction(_check_range)
