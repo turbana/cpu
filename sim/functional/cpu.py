@@ -4,6 +4,7 @@ import collections
 import sys
 import asm.encoding
 
+MAGIC_HEADER = 0xDEADF00D
 PC = 8 # register
 
 class globals(object):
@@ -68,36 +69,26 @@ def ldw(cpu, tgt, base, offset):
 	cpu.rset(tgt, cpu.mget((cpu.rget(base) + offset) * 2))
 
 @op
-def ldw(cpu, tgt, base, index):
-	cpu.rset(tgt, cpu.mget((cpu.rget(base) + cpu.rget(index)) * 2))
-
-@op
-def ldb(cpu, tgt, base, offset):
-	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset) >> 8)
-
-@op
-def ldb(cpu, tgt, base, index):
-	cpu.rset(tgt, cpu.mget(cpu.rget(base) + cpu.rget(index)) >> 8)
+def ldw(cpu, tgt, base, index, ir):
+	base = cpu.rget(base)
+	if not ir: index = cpu.rget(index)
+	cpu.rset(tgt, cpu.mget((base + index) * 2))
 
 @op
 def stw(cpu, base, src, offset):
 	cpu.mset((offset + cpu.rget(base)) * 2, cpu.rget(src))
 
 @op
-def stw(cpu, base, src, index):
-	cpu.mset((cpu.rget(index) + cpu.rget(base)) * 2, cpu.rget(src))
-
-@op
-def stb(cpu, base, src, offset):
-	cpu.mset(offset + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
-
-@op
-def stb(cpu, base, src, index):
-	cpu.mset(cpu.rget(index) + cpu.rget(base), cpu.rget(src) & 0xFF, byte=True)
+def stw(cpu, base, src, index, ir):
+	base = cpu.rget(base)
+	if not ir: index = cpu.rget(index)
+	cpu.mset((index + base) * 2, cpu.rget(src))
 
 @op
 def jmp(cpu, offset):
-	cpu.reg[PC] += offset + 1
+	# jmp is PC + offset + 1, but we've already incremented PC in cpu.fetch(),
+	# and offset is also incremented by 1 in decode()
+	cpu.reg[PC] += offset - 1
 
 @op
 def jmp(cpu, tgt):
@@ -176,13 +167,17 @@ def addi(cpu, imm, tgt):
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op
-def shl(cpu, src, tgt):
-	n = (cpu.rget(src) << 1) & 0xFFFF
+def shl(cpu, ir, op1, op2, tgt):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	n = (op1 << op2) & 0xFFFF
 	cpu.rset(tgt, n)
 
 @op
-def shr(cpu, src, tgt):
-	n = (cpu.rget(src) >> 1) & 0xFFFF
+def shr(cpu, ir, op1, op2, tgt):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	n = (op1 >> op2) & 0xFFFF
 	cpu.rset(tgt, n)
 
 @op
@@ -228,14 +223,19 @@ def scr(cpu, cr, src):
 
 class CPU(object):
 	def __init__(self):
-		self.reg  = [0 for _ in xrange(10)]
-		self.mem  = [0 for _ in xrange(2**17)]
+		self.reg  = [0] * 10
+		self.imem = [0] * 2**17 # memory is 2**16 words therefore 2**17 bytes
+		self.dmem = [0] * 2**17 # ...
 		self.halt = True
 		self.clock = 0
-	
-	def load(self, data):
+
+	def dload(self, data):
 		for i, n in enumerate(data):
-			self.mem[i] = n
+			self.dmem[i] = n
+
+	def iload(self, data):
+		for i, n in enumerate(data):
+			self.imem[i] = n
 	
 	def dump(self, mstart=None, mend=None):
 		def hex_word(n):
@@ -257,7 +257,7 @@ class CPU(object):
 			for addr in xrange(mstart*2, mend*2, 2):
 				if not count:
 					print "\n%s | " % hex_word(addr/2),
-				word = (self.mem[addr] << 8) | self.mem[addr+1]
+				word = (self.dmem[addr] << 8) | self.dmem[addr+1]
 				print hex_word(word),
 				count = (count + 1) % 8
 			print
@@ -283,22 +283,36 @@ class CPU(object):
 	def fetch(self):
 		pc = self.reg[PC]
 		self.reg[PC] = pc + 1
-		return self.mget(pc * 2)
-	
-	def mget(self, addr):
-		high = self.mem[addr]
-		low = self.mem[addr + 1]
+		return self.iget(pc * 2)
+
+	def iget(self, addr):
+		self._check_addr(addr)
+		high = self.imem[addr]
+		low = self.imem[addr + 1]
 		byte = (high << 8) | low
-		trace("  read  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
+		trace("  iread  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
+		return byte
+
+	def mget(self, addr):
+		self._check_addr(addr)
+		high = self.dmem[addr]
+		low = self.dmem[addr + 1]
+		byte = (high << 8) | low
+		trace("  dread  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
 
 	def mset(self, addr, val, byte=False):
+		self._check_addr(addr)
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
-		trace("  write (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
-		self.mem[addr] = high
+		trace("  dwrite (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
+		self.dmem[addr] = high
 		if not byte:
-			self.mem[addr + 1] = low
+			self.dmem[addr + 1] = low
+
+	def _check_addr(self, addr):
+		if addr >= 2**17:
+			raise Exception("Invalid memory access: %04X" % addr)
 	
 	def rget(self, reg):
 		return self.reg[reg]
@@ -318,13 +332,25 @@ class CPU(object):
 
 
 def main(args):
+	def read(stream, bytes):
+		value = 0
+		for b in stream.read(bytes):
+			value <<= 8
+			value |= ord(b)
+		return value
 	if len(args) != 1:
 		print "USAGE: %s binary" % sys.argv[0]
 		return 2
-	data = map(ord, open(args[0], "rb").read())
-	cpu = CPU()
-	cpu.load(data)
-	globals.mem_range[1] = (len(data)/2) + (len(data)%2)
+	with open(args[0], "rb") as stream:
+		if read(stream, 4) != MAGIC_HEADER:
+			print "ERROR: Magic header not found"
+			return 1
+		cpu = CPU()
+		n = read(stream, 2)
+		cpu.dload(map(ord, stream.read(n * 2)))
+		globals.mem_range[1] = n
+		n = read(stream, 2)
+		cpu.iload(map(ord, stream.read(n * 2)))
 	cpu.dump(*globals.mem_range)
 	try:
 		cpu.run()
