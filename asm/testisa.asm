@@ -13,24 +13,22 @@ sbp:
 	.text
 	.ldi	$4, n			; $4 = &n
 	.ldi	$6, m			; $6 = &m
-	add	$5, $4, $4		; $5 = &n (byte address-able)
-	add	$7, $6, $6		; $7 = &m (byte address-able)
-	add	$3, $0, 2		; $3 = 2
+	add	$5, $0, 2		; $3 = 2
 
 1:	ldw	$1, 0($4)		; $1 = n
 	stw	0($6), $1		;  m = n
-	ldb	$2, (127/127-1)($7)	; $2 = m[15:8]
-	ldb	$1, 1($7)		; $3 = m[7:0]
-	stb	1($5), $2		; n[15:8] = m[7:0]
-	stb	0($5), $1		; m[7:0] = m[15:0]
-	as.z	$3, $3, -1		; $3 -= 1; loop until 0
+	shl	$2, $1, 8		; $2 = n << 8
+	shr	$3, $1, 8		; $3 = n >> 8
+	or	$1, $3, $2		; $1 = $3 | $2
+	stw	0($4), $1		;  n = $1
+	as.z	$5, $5, -1		; $3 -= 1; loop until 0
 	jmp	1b
 
 	ldw	$1, 0($4)		; $1 = n (0xABCD)
 	ldw	$2, 0($6)		; $2 = m (0xCDBA)
 	sub	$3, $0, -4		; $3 = 4
-1:	shl	$1, $1			; $1 <<= 1
-	shr	$2, $2			; $2 >>= 1
+1:	shl	$1, $1, 1		; $1 <<= 1
+	shr	$2, $2, 1		; $2 >>= 1
 	sub	$3, $3, 1		; $3 -= 1
 	s.eq	$3, $0			; loop until $3 == 0
 	jmp	1b
@@ -40,13 +38,14 @@ sbp:
 	ldw	$1, $0($4)		; $1 = n
 	ldw	$2, $0($6)		; $2 = m
 	xor	$3, $1, $2		; $3 = 0xBCDA ^ 0xCDAB = 0x7171
-	shl	$2, $3			; $2 = $3 << 1 = 0xE2E2
-	sar	$1, $2			; $1 = $2 >>> 1 = 0xF171
+	shl	$2, $3, 1		; $2 = $3 << 1 = 0xE2E2
+	lui	$1, 0x80		; $1 = 0x8000
+	or	$1, $1, $3		; $1 = $1 | $3 = 0xF171
 	xor	$3, $3, $3		; $3 = $3 ^ $3 = 0
 	addi	$3, -1			; $3 = -1
 	stw	0($6), $3		;  m = $3
-	add	$3, $0, $0		; $3 = 0
-	ldb	$3, 0($7)		; $3 = m = 0x00FF (-1 byte)
+	add	$3, $0, -1		; $3 = 0xFFFF
+	shr	$3, $3, 8		; $3 >>= 8 = 0x00FF
 	sext	$2, $3			; $2 = sext $3 = 0xFFFF
 	and	$1, $1, $2		; $1 = $1 & $2 = 0xF171
 
@@ -62,13 +61,16 @@ sbp:
 test:	s.eq	$1, $2			; skip if same address
 	add	$3, $3, $1		; scramble $3
 
-	sar	$3, $3			; $3 = $3 >>> 1 = 0xF8BC
+	shr	$3, $3, 1		; $3 >>= 1 = 0x78BC
+	lui	$5, 0x80		; $5 = 0x8000
+	or	$3, $3, $5		; $3 |= $5 = 0xF8BC
+
 	add	$3, $3, 1		; $3 += 1 (0xF8BD)
 	ldw	$2, 0($6)		; $2 = m (0xFFFF)
 	ldw	$1, 0($6)		; $1 = m (0xFFFF)
 	.ldi	$5, 12			; $5 = 12 (shift count)
-1:	shl	$1, $1			; $1 <<= 1
-	shr	$2, $2			; $2 >>= 1
+1:	shl	$1, $1, 1		; $1 <<= 1
+	shr	$2, $2, 1		; $2 >>= 1
 	as.z	$5, $5, -1		; dec 5, skip if zero
 	jmp	1b			; loop
 
@@ -97,7 +99,7 @@ test:	s.eq	$1, $2			; skip if same address
 	s.ulte	$7, $2
 	add	$1, $1, 1
 
-	halt
+	jmp	0
 
 count_bits:
 	.push	$1			; preserve $1
@@ -110,7 +112,7 @@ count_bits:
 1:	and	$3, $1, 1		; $3 = $1 & 1
 	s.eq	$3, $0			; skip if 0
 	add	$2, $2, 1		; inc $2
-	shr	$1, $1			; $1 = $1 >> 1
+	shr	$1, $1, 1		; $1 = $1 >> 1
 	as.z	$4, $4, -1		; dec $4, skip when done
 	jmp	1b			; loop
 	.pop	$4			; restore $4
