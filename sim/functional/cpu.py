@@ -11,6 +11,7 @@ class globals(object):
 	step  = False
 	mem_range = [0x00, 0x40]
 	breakpoints = []
+	break_clock = 1000
 
 def sbin(n, x=0):
 	return bin(n)[2:].zfill(z)
@@ -230,6 +231,7 @@ class CPU(object):
 		self.reg  = [0 for _ in xrange(10)]
 		self.mem  = [0 for _ in xrange(2**17)]
 		self.halt = True
+		self.clock = 0
 	
 	def load(self, data):
 		for i, n in enumerate(data):
@@ -245,6 +247,7 @@ class CPU(object):
 			b = bin(n)[2:].zfill(16)
 			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
 		print
+		print " "*40 + "clock:", self.clock
 		for r in xrange(1, 10):
 			v = self.reg[r]
 			name = ("  $%d" % r) if r < 8 else ("$cr%d" % (r-8))
@@ -263,7 +266,8 @@ class CPU(object):
 	def run(self):
 		self.halt = False
 		while not self.halt:
-			if self.reg[PC] in globals.breakpoints:
+			self.clock += 1
+			if self.reg[PC] in globals.breakpoints or self.clock == globals.break_clock:
 				globals.trace = False
 				globals.step = True
 			opcode = self.fetch()
