@@ -29,11 +29,13 @@ def read(stream, bytes):
 
 def show_data(data, out):
 	length = read(data, 2)
-	for addr in range(length):
+	addr = 0
+	for _ in range(length):
 		word = read(data, 2)
 		if addr % 8 == 0:
 			out.write("\n%04X:" % addr)
 		out.write(" %04X" % word)
+		addr += 1
 	if addr % 8 != 0:
 		out.write("\n")
 	out.write("\n")
