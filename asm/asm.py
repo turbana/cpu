@@ -1,3 +1,4 @@
+import collections
 import sys
 
 import pyparsing
@@ -9,6 +10,13 @@ import macros
 import grammer
 
 
+MAGIC_HEADER = [0xDE, 0xAD, 0xF0, 0x0D]
+
+SECTION_DATA = "data"
+SECTION_TEXT = "text"
+SECTION_UNKNOWN = "unknown"
+
+
 def bin_str(n, bits=0):
 	s = ""
 	while n:
@@ -17,13 +25,11 @@ def bin_str(n, bits=0):
 	return s.zfill(bits)
 
 
-def expand_labels(toks):
-	labels = {}
+def expand_labels(sections):
+	labels = collections.defaultdict(list)
 
 	def add_label(label, pos):
 		label.pos = pos
-		if label.value not in labels:
-			labels[label.value] = []
 		labels[label.value].append(label)
 
 	def lookup_label(label, pos, bits, signed, pc_relative):
@@ -37,6 +43,8 @@ def expand_labels(toks):
 				found = [l for l in search if l.pos > pos][0]
 			elif label.direction == "b":
 				found = [l for l in search if l.pos <= pos][-1]
+			else:
+				raise Exception("Ambiguous definition for label %s" % repr(label.value))
 		addr = found.pos
 		if pc_relative:
 			addr -= pos
@@ -62,46 +70,46 @@ def expand_labels(toks):
 					bits = 64
 				tok.args[j] = lookup_label(arg, pos, bits, signed, pc_relative)
 
-	toks = list(toks)
-	i = 0
-	pos = 0
-	while i < len(toks):
-		tok = toks[i]
-		if isinstance(tok, tokens.Label):
-			add_label(tok, pos)
-			del toks[i]
-			continue
-		pos += tok.size
-		i += 1
-	
-	pos = 0
-	for i, tok in enumerate(toks):
-		apply_labels(tok, pos)
-		pos += tok.size
 
-	return toks
+	for section, toks in sections.items():
+		i = 0
+		pos = 0
+		while i < len(toks):
+			tok = toks[i]
+			if isinstance(tok, tokens.Label):
+				add_label(tok, pos)
+				del toks[i]
+				continue
+			pos += tok.size
+			i += 1
+	
+	for section, toks in sections.items():
+		pos = 0
+		for tok in toks:
+			apply_labels(tok, pos)
+			pos += tok.size
+
+	return sections
 
 
 def apply_text_data(toks):
-	text = []
-	data = []
-	section = data
+	section = SECTION_TEXT
 	for tok in toks:
 		if isinstance(tok, tokens.Macro):
 			if tok.name == ".text":
-				section = text
+				section = SECTION_TEXT
 				continue
 			elif tok.name == ".data":
-				section = data
+				section = SECTION_DATA
 				continue
-		section.append(tok)
-	return text + data
+		yield (section, tok)
 
 
 def parse_macro(tok, macro):
 	try:
 		g = grammer.grammer()
-		return g.parseString(macro, parseAll=True)
+		for tok in g.parseString(macro, parseAll=True):
+			yield (SECTION_UNKNOWN, tok)
 	except RuntimeError, e:
 		print macro
 		print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
@@ -113,26 +121,54 @@ def expand_macro(tok, byte_pos):
 	if isinstance(result, str):
 		toks = apply_macros(parse_macro(tok, result), byte_pos)
 	else:
-		toks = result
+		toks = ((SECTION_UNKNOWN, tok) for tok in result)
 	for tok in toks:
 		yield tok
 
 
 def apply_macros(toks, byte_pos=0):
-	for tok in toks:
+	for section, tok in toks:
 		if isinstance(tok, tokens.Macro):
-			for mtok in expand_macro(tok, byte_pos):
-				yield mtok
+			for _, mtok in expand_macro(tok, byte_pos):
+				yield (section, mtok)
 				byte_pos += mtok.size
 		else:
-			yield tok
+			yield (section, tok)
 			byte_pos += tok.size
 
 
-def translate(toks):
-	bytes = []
-	map(bytes.extend, map(encoding.encode, toks))
-	return bytes
+def translate(sections):
+	def trans(toks):
+		bytes = []
+		map(bytes.extend, map(encoding.encode, toks))
+		return bytes
+	return dict((section, trans(toks)) for section, toks in sections.items())
+
+
+def collapse_sections(toks):
+	sections = collections.defaultdict(list)
+	for section, tok in toks:
+		sections[section].append(tok)
+	return sections
+
+
+def emit(sections, stream):
+	def emit(bytes):
+		words = len(bytes) / 2
+		stream.write(chr(words >> 16))
+		stream.write(chr(words & 0x00FF))
+		map(stream.write, map(chr, bytes))
+	def sect(name):
+		s = sections.get(name, [])
+		if len(s) % 2 == 1:
+			s.append(0)
+		return s
+	data = sect(SECTION_DATA)
+	text = sect(SECTION_TEXT)
+
+	map(stream.write, map(chr, MAGIC_HEADER))
+	emit(data)
+	emit(text)
 
 
 def main(args):
@@ -148,12 +184,11 @@ def main(args):
 			return 1
 		toks = apply_text_data(toks)
 		toks = apply_macros(toks)
-		toks = expand_labels(toks)
-		bytes = translate(toks)
-		fout = open(out_filename, "wb")
-		for byte in bytes:
-			#fout.write(bin_str(byte, 8) + "\n")
-			fout.write(chr(byte))
+		sections = collapse_sections(toks)
+		sections = expand_labels(sections)
+		sections = translate(sections)
+		with open(out_filename, "wb") as stream:
+			emit(sections, stream)
 	except (pyparsing.ParseException, pyparsing.ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"
