@@ -14,6 +14,10 @@ def _no_trim_arity(func, maxargs=None):
 import pyparsing
 pyparsing._trim_arity = _no_trim_arity
 
+# turn off skipping newlines by default
+ParseElementEnhance.setDefaultWhitespaceChars("".join(
+	c for c in ParseElementEnhance.DEFAULT_WHITE_CHARS if c != "\n"))
+
 
 #
 # ISA Grammer
@@ -75,6 +79,7 @@ colon = Suppress(":")
 lparen = Suppress("(")
 rparen = Suppress(")")
 dot = Suppress(".")
+nl = Suppress(LineEnd())
 
 label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums + "_")
 label_name.setName("label")
@@ -244,7 +249,7 @@ def grammer(_cache=[None]):
 		return _cache[0]
 	instruction = build_instruction_grammers()
 	instruction |= build_macro_grammers()
-	line = (label + instruction) | instruction | label
+	line = Optional((label + ~nl + instruction) | instruction | label) + nl
 	g = OneOrMore(line)
 	g.ignore(comment)
 	g.enablePackrat()
