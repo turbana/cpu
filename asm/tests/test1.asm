@@ -1,3 +1,12 @@
+;;
+;;	Assembler Test
+;;
+;;	These binary values must match the entire .o file
+;;
+;;	Magic Header Word 1		; 1101 1110 1010 1101 | DE AD
+;;	Magic Header Word 2		; 1111 0000 0000 1101 | F0 0D
+;;	Size of .data			; 0000 0000 0000 0000 | 00 00
+;;	Size of .text			; 0000 0000 0010 1110 | 00 2E
 start:	ldw	$1, b10110($2)		; 1101 0101 1001 0001 | D5 91
 	stw	(end-24)($0), $4	; 1101 1011 1100 0100 | DB C4
 	jmp	end			; 1111 1000 0010 0100 | F8 24
