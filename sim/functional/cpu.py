@@ -248,6 +248,27 @@ class CPU(object):
 		for i, n in enumerate(data):
 			self.imem[i] = n
 	
+	def idump(self, mstart=None, mend=None):
+		def hex_word(n):
+			h = hex(n)[2:].upper().zfill(4)
+			return h
+		def hex_byte(n):
+			return hex(n)[2:].upper().zfill(2)
+		def bin_word(n):
+			b = bin(n)[2:].zfill(16)
+			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
+		print
+		if mstart is not None and mend is not None:
+			count = 0
+			for addr in xrange(mstart*2, mend*2, 2):
+				if not count:
+					print "\n%s | " % hex_word(addr/2),
+				word = (self.imem[addr] << 8) | self.imem[addr+1]
+				print hex_word(word),
+				count = (count + 1) % 8
+			print
+			print
+
 	def dump(self, mstart=None, mend=None):
 		def hex_word(n):
 			h = hex(n)[2:].upper().zfill(4)
@@ -284,6 +305,7 @@ class CPU(object):
 			opcode = self.fetch()
 			tok = asm.encoding.decode(opcode)
 			if globals.step:
+				self.idump(0, 128)
 				self.dump(*globals.mem_range)
 				print "%s> %s" % (shex(self.reg[PC]-1, 4), str(tok)),
 				raw_input()
