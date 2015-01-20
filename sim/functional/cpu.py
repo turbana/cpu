@@ -8,11 +8,11 @@ MAGIC_HEADER = 0xDEADF00D
 PC = 8 # register
 
 class globals(object):
-	trace = True
+	trace = False
 	step  = False
 	mem_range = [0x00, 0x40]
-	breakpoints = []
-	break_clock = 1000
+	breakpoints = [0x000C]
+	break_clock = None
 
 def sbin(n, x=0):
 	return bin(n)[2:].zfill(z)
@@ -294,8 +294,14 @@ class CPU(object):
 				count = (count + 1) % 8
 			print
 			print
+
+	def dump_short(self):
+		for r in xrange(1, 10):
+			v = self.reg[r]
+			name = ("$%d" % r) if r < 8 else ("$cr%d" % (r-8))
+			print "%s 0x%04X" % (name, v)
 	
-	def run(self):
+	def run(self, stop_clock=None):
 		self.halt = False
 		while not self.halt:
 			self.clock += 1
@@ -312,6 +318,8 @@ class CPU(object):
 				print
 			func = lookup_op(tok)
 			func(self, **tok.arguments())
+			if self.clock == stop_clock:
+				self.halt = True
 	
 	def fetch(self):
 		pc = self.reg[PC]
@@ -372,31 +380,56 @@ class CPU(object):
 		raise NotImplementedError()
 
 
-
-def main(args):
+def parse_file(filename):
 	def read(stream, bytes):
 		value = 0
 		for b in stream.read(bytes):
 			value <<= 8
 			value |= ord(b)
 		return value
-	if len(args) != 1:
-		print "USAGE: %s binary" % sys.argv[0]
-		return 2
-	with open(args[0], "rb") as stream:
-		if read(stream, 4) != MAGIC_HEADER:
+	sections = []
+	with open(filename, "rb") as stream:
+		if read(stream, 4) == MAGIC_HEADER:
+			n = read(stream, 2)
+			sections.append(map(ord, stream.read(n * 2)))
+			n = read(stream, 2)
+			sections.append(map(ord, stream.read(n * 2)))
+		else:
 			print "ERROR: Magic header not found"
-			return 1
-		cpu = CPU()
-		n = read(stream, 2)
-		cpu.dload(map(ord, stream.read(n * 2)))
-		globals.mem_range[1] = n
-		n = read(stream, 2)
-		cpu.iload(map(ord, stream.read(n * 2)))
-	cpu.dump(*globals.mem_range)
-	try:
-		cpu.run()
+	return sections
+
+
+def main(args):
+	if len(args) == 1:
+		filename = args[0]
+		stop_clock = None
+	elif len(args) == 3 and args[1] == "--dump":
+		filename = args[0]
+		stop_clock = int(args[2])
+	else:
+		print "USAGE: %s binary [--dump clock]" % sys.argv[0]
+		return 2
+	sections = parse_file(filename)
+	if not sections:
+		return 1
+	data, text = sections
+	cpu = CPU()
+	cpu.dload(data)
+	cpu.iload(text)
+	globals.mem_range[1] = len(data) / 2
+	if stop_clock is not None:
+		globals.trace = False
+		globals.step = False
+		globals.breakpoints = []
+		globals.break_clock = -1
+	else:
 		cpu.dump(*globals.mem_range)
+	try:
+		cpu.run(stop_clock)
+		if stop_clock is not None:
+			cpu.dump_short()
+		else:
+			cpu.dump(*globals.mem_range)
 	except KeyboardInterrupt:
 		print
 		return 0
