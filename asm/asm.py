@@ -116,25 +116,26 @@ def parse_macro(tok, macro):
 		sys.exit(1)
 
 
-def expand_macro(tok, byte_pos):
+def expand_macro(tok, section, positions):
+	byte_pos = positions[section]
 	result = tok.callback(byte_pos/2, *tok.args)
 	if isinstance(result, str):
-		toks = apply_macros(parse_macro(tok, result), byte_pos)
+		toks = apply_macros(parse_macro(tok, result), positions)
 	else:
-		toks = ((SECTION_UNKNOWN, tok) for tok in result)
+		toks = ((section, tok) for tok in result)
 	for tok in toks:
 		yield tok
 
 
-def apply_macros(toks, byte_pos=0):
+def apply_macros(toks, positions):
 	for section, tok in toks:
 		if isinstance(tok, tokens.Macro):
-			for _, mtok in expand_macro(tok, byte_pos):
+			for _, mtok in expand_macro(tok, section, positions):
 				yield (section, mtok)
-				byte_pos += mtok.size
+				positions[section] += mtok.size
 		else:
 			yield (section, tok)
-			byte_pos += tok.size
+			positions[section] += tok.size
 
 
 def translate(sections):
@@ -177,13 +178,14 @@ def main(args):
 		return 2
 	in_filename  = args[0]
 	out_filename = args[1]
+	section_positions = collections.defaultdict(int) # used in macro expansion
 	try:
 		g = grammer.grammer()
 		toks = g.parseFile(in_filename, parseAll=True)
 		if not toks:
 			return 1
 		toks = apply_text_data(toks)
-		toks = apply_macros(toks)
+		toks = apply_macros(toks, section_positions)
 		sections = collapse_sections(toks)
 		sections = expand_labels(sections)
 		sections = translate(sections)
