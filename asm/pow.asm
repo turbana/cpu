@@ -1,4 +1,8 @@
-; calculates 3^9 and stores result back in memory
+;;
+;; calculates 3^9 and stores result back in memory
+;;
+;@; stop(77)
+;@; assert($4 = 0x4CE3)
 
 	.data
 n:	.dw	0x0003
@@ -18,4 +22,4 @@ inner:	add	$4, $4, $5
 	as.z	$2, $2, -1
 	jmp	outter
 	stw	x($0), $4
-	halt
+	jmp	0

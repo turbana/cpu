@@ -1,4 +1,8 @@
-; calculates the Nth fibonacci number
+;;
+;; calculates the Nth fibonacci number
+;;
+;@; stop(9676)
+;@; assert($1 = 0x0090)
 
 	.data
 n:	.dw	0x000C			; n-th fibonacci number
@@ -13,7 +17,7 @@ sbp:
 	.call	fib, $3			; call fib(n)
 	.pop	$1			; store result in x
 	stw	x($0), $1
-	halt
+	jmp	0
 
 fib:	ldw	$1, 1($7)		; load parameter into $1
 	s.ne	$1, $0			; check for 0
@@ -33,4 +37,4 @@ fib:	ldw	$1, 1($7)		; load parameter into $1
 	.pop	$2			; result of fib(n-1)
 	add	$1, $1, $2		; sum
 	stw	1($7), $1		; store in result
-done:	.ret
+done:	.ret	$4

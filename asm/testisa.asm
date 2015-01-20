@@ -1,8 +1,10 @@
 ;;
 ;; Test ISA
 ;;
-;; After running $1 should equal 0xF00D
-;;
+; After running $1 should equal 0xF00D
+;
+;@; stop(257)
+;@; assert($1 = 0xF00D)
 
 	.data
 n:	.dw	0xABCD
