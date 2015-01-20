@@ -282,7 +282,7 @@ class CPU(object):
 	
 	def fetch(self):
 		pc = self.reg[PC]
-		self.reg[PC] = pc + 1
+		self.reg[PC] = (pc + 1) & 0xFFFF
 		return self.iget(pc * 2)
 
 	def iget(self, addr):
