@@ -181,13 +181,6 @@ def shr(cpu, ir, op1, op2, tgt):
 	cpu.rset(tgt, n)
 
 @op
-def sar(cpu, src, tgt):
-	n = cpu.rget(src)
-	msb = n & 0x8000
-	shr = (n >> 1) & 0xFFFF
-	cpu.rset(tgt, shr | msb)
-
-@op
 def xor(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
 
@@ -196,11 +189,7 @@ def not_(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(src) ^ 0xFFFF)
 
 @op
-def halt(cpu):
-	cpu.halt = True
-
-@op
-def trap(cpu, int):
+def trap(cpu, reg):
 	raise NotImplementedError()
 
 @op
@@ -219,6 +208,28 @@ def lcr(cpu, tgt, cr):
 @op
 def scr(cpu, cr, src):
 	cpu.crset(cr, cpu.rget(src))
+
+@op
+def reti(cpu):
+	raise NotImplementedError()
+
+@op
+def inb(cpu, tgt, src):
+	raise NotImplementedError()
+
+@op
+def outb(cpu, tgt, src):
+	raise NotImplementedError()
+
+@op
+def ldiw(cpu, tgt, src):
+	inst = cpu.iget(cpu.rget(src) * 2)
+	cpu.rset(tgt, inst)
+
+@op
+def stiw(cpu, tgt, src):
+	inst = cpu.rget(src)
+	cpu.iset(cpu.rget(tgt) * 2, inst)
 
 
 class CPU(object):
@@ -292,6 +303,15 @@ class CPU(object):
 		byte = (high << 8) | low
 		trace("  iread  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
+
+	def iset(self, addr, val, byte=False):
+		self._check_addr(addr)
+		high = (val & 0xFF) if byte else (val >> 8)
+		low  = 0            if byte else (val & 0xFF)
+		trace("  iwrite (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
+		self.imem[addr] = high
+		if not byte:
+			self.imem[addr + 1] = low
 
 	def mget(self, addr):
 		self._check_addr(addr)
