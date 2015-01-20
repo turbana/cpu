@@ -40,7 +40,7 @@ def dw(pos, w):
 def align(pos, n):
 	offset = n.value - (pos % n.value)
 	if offset != n.value:
-		return [tokens.Number(n=0, base=10, bits=8*offset, signed=False)]
+		return [tokens.Number((0, 10), bits=8*offset, signed=False)]
 	return []
 
 
