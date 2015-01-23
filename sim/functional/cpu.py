@@ -106,8 +106,7 @@ def add(cpu, tgt, op1, op2, ir):
 def sub(cpu, tgt, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	res = op1 - op2
-	# TODO check for underflow
+	res = twoc_unsign(op1 - op2)
 	cpu.rset(tgt, res)
 
 @op
