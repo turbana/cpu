@@ -161,7 +161,7 @@ def lui(cpu, imm, tgt):
 
 @op
 def addi(cpu, imm, tgt):
-	imm = twoc_unsign(imm)
+	imm = twoc_unsign(imm, 8)
 	# TODO check overflow
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
