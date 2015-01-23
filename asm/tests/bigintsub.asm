@@ -20,21 +20,9 @@
 	.ldi	$5, 0x0000
 	.ldi	$6, 0x0001
 
-	; alow = blow - clow
-	; ahigh = bhigh - chigh
-
 	sub	$2, $4, $6
 	sub	$1, $3, $5
 	s.ulte	$6, $4
 	sub	$1, $1, 1
-
-	; borrow if blow < clow
-	; skip borrow if blow >= clow
-	; skip if clow <= blow
-
-	;add	$2, $4, $6
-	;add	$1, $3, $5
-	;s.ulte	$6, $2
-	;add	$1, $1, 1
 
 	jmp	0
