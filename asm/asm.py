@@ -156,7 +156,7 @@ def collapse_sections(toks):
 def emit(sections, stream):
 	def emit(bytes):
 		words = len(bytes) / 2
-		stream.write(chr(words >> 16))
+		stream.write(chr(words >> 8))
 		stream.write(chr(words & 0x00FF))
 		map(stream.write, map(chr, bytes))
 	def sect(name):
