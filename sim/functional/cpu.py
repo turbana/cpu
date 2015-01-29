@@ -1,8 +1,10 @@
-import inspect
 import collections
-
+import inspect
 import sys
+
 import asm.encoding
+import debugger
+
 
 MAGIC_HEADER = 0xDEADF00D
 TIMER_PERIOD = 25
@@ -17,13 +19,6 @@ EPC   = 10
 
 IE = 1 # interrupts enabled flag bit
 
-
-class globals(object):
-	trace = False
-	step  = False
-	mem_range = [0x00, 0x40]
-	breakpoints = [0x0000]
-	break_clock = None
 
 def sbin(n, x=0):
 	return bin(n)[2:].zfill(z)
@@ -47,14 +42,6 @@ condition_func = {
 	"ult":	lambda x, y: twoc_unsign(x) < twoc_unsign(y),
 	"ulte":	lambda x, y: twoc_unsign(x) <= twoc_unsign(y),
 }
-
-def traceop(tok):
-	if globals.trace:
-		print tok
-
-def trace(*msg):
-	if globals.trace:
-		print " ".join(map(str, msg))
 
 
 operations = collections.defaultdict(list)
@@ -245,6 +232,25 @@ def stiw(cpu, tgt, src):
 	cpu.iset(cpu.rget(tgt) * 2, inst)
 
 
+def send_debugger(fn):
+	before = lambda *args, **kwargs: None
+	after = before
+	def wrapper(cpu, *args, **kwargs):
+		debugger_call(cpu, fn.__name__, True, None, args, kwargs)
+		res = fn(cpu, *args, **kwargs)
+		debugger_call(cpu, fn.__name__, False, res, args, kwargs)
+		return res
+	return wrapper
+
+
+def debugger_call(cpu, name, before, result, args, kwargs):
+	func = lambda *args, **kwargs: None
+	if cpu.debugger:
+		name = ("before_" if before else "after_") + name
+		func = getattr(cpu.debugger, name, func)
+	func(cpu, result, *args, **kwargs)
+
+
 class CPU(object):
 	def __init__(self):
 		self.reg  = [0] * 16
@@ -254,68 +260,19 @@ class CPU(object):
 		self.pic = None
 		self.halt = True
 		self.clock = 0
+		self.debugger = None
 
+	@send_debugger
 	def dload(self, data):
 		for i, n in enumerate(data):
 			self.dmem[i] = n
 
+	@send_debugger
 	def iload(self, data):
 		for i, n in enumerate(data):
 			self.imem[i] = n
 
-	def idump(self, mstart=None, mend=None):
-		def hex_word(n):
-			h = hex(n)[2:].upper().zfill(4)
-			return h
-		def hex_byte(n):
-			return hex(n)[2:].upper().zfill(2)
-		def bin_word(n):
-			b = bin(n)[2:].zfill(16)
-			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
-		print
-		if mstart is not None and mend is not None:
-			count = 0
-			for addr in xrange(mstart*2, mend*2, 2):
-				if not count:
-					print "\n%s | " % hex_word(addr/2),
-				word = (self.imem[addr] << 8) | self.imem[addr+1]
-				print hex_word(word),
-				count = (count + 1) % 8
-			print
-			print
-
-	def dump(self, mstart=None, mend=None):
-		def hex_word(n):
-			h = hex(n)[2:].upper().zfill(4)
-			return h
-		def hex_byte(n):
-			return hex(n)[2:].upper().zfill(2)
-		def bin_word(n):
-			b = bin(n)[2:].zfill(16)
-			return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
-		print
-		print " "*40 + "clock:", self.clock
-		for r in xrange(1, 10):
-			v = self.reg[r]
-			name = ("  $%d" % r) if r < 8 else ("$cr%d" % (r-8))
-			print "%s:  %s  |  %s  =  %5s" % (name, bin_word(v), hex_word(v), v)
-		if mstart is not None and mend is not None:
-			count = 0
-			for addr in xrange(mstart*2, mend*2, 2):
-				if not count:
-					print "\n%s | " % hex_word(addr/2),
-				word = (self.dmem[addr] << 8) | self.dmem[addr+1]
-				print hex_word(word),
-				count = (count + 1) % 8
-			print
-			print
-
-	def dump_short(self):
-		for r in xrange(1, 10):
-			v = self.reg[r]
-			name = ("$%d" % r) if r < 8 else ("$cr%d" % (r-8))
-			print "%s 0x%04X" % (name, v)
-
+	@send_debugger
 	def run(self, stop_clock=None):
 		self.halt = False
 		while not self.halt:
@@ -326,57 +283,49 @@ class CPU(object):
 				self.reg[EPC] = self.reg[PC]
 				self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
 				self.reg[FLAGS] &= ~IE
-			if self.reg[PC] in globals.breakpoints or self.clock == globals.break_clock:
-				globals.trace = False
-				globals.step = True
 			opcode = self.fetch()
 			tok = asm.encoding.decode(opcode)
-			if globals.step:
-				self.idump(0, 128)
-				self.dump(*globals.mem_range)
-				print "%s> %s" % (shex(self.reg[PC]-1, 4), str(tok)),
-				raw_input()
-				print
 			func = lookup_op(tok)
 			func(self, **tok.arguments())
 			if self.clock == stop_clock:
 				self.halt = True
 
+	@send_debugger
 	def fetch(self):
 		pc = self.reg[PC]
 		self.reg[PC] = (pc + 1) & 0xFFFF
 		return self.iget(pc * 2)
 
+	@send_debugger
 	def iget(self, addr):
 		self._check_addr(addr)
 		high = self.imem[addr]
 		low = self.imem[addr + 1]
 		byte = (high << 8) | low
-		trace("  iread  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
 
+	@send_debugger
 	def iset(self, addr, val, byte=False):
 		self._check_addr(addr)
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
-		trace("  iwrite (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
 		self.imem[addr] = high
 		if not byte:
 			self.imem[addr + 1] = low
 
+	@send_debugger
 	def mget(self, addr):
 		self._check_addr(addr)
 		high = self.dmem[addr]
 		low = self.dmem[addr + 1]
 		byte = (high << 8) | low
-		trace("  dread  (%s) : %s" % (shex(addr, 4), shex(byte, 4)))
 		return byte
 
+	@send_debugger
 	def mset(self, addr, val, byte=False):
 		self._check_addr(addr)
 		high = (val & 0xFF) if byte else (val >> 8)
 		low  = 0            if byte else (val & 0xFF)
-		trace("  dwrite (%s) : %s%s" % (shex(addr, 4), shex(high, 2), shex(low, 2)))
 		self.dmem[addr] = high
 		if not byte:
 			self.dmem[addr + 1] = low
@@ -385,40 +334,33 @@ class CPU(object):
 		if addr >= 2**17:
 			raise Exception("Invalid memory access: %04X" % addr)
 
+	@send_debugger
 	def rget(self, reg):
 		return self.reg[reg]
 
+	@send_debugger
 	def rset(self, reg, value):
 		if reg != 0:
 			self.reg[reg] = value
 
+	@send_debugger
 	def crget(self, cr):
 		val = self.reg[8 + cr]
 		if cr == 0: val += 1
 		return val
 
+	@send_debugger
 	def crset(self, cr, value):
 		if cr != 0:
 			self.reg[8 + cr] = value
 
 
-def parse_file(filename):
-	def read(stream, bytes):
-		value = 0
-		for b in stream.read(bytes):
-			value <<= 8
-			value |= ord(b)
-		return value
-	sections = []
-	with open(filename, "rb") as stream:
-		if read(stream, 4) == MAGIC_HEADER:
-			n = read(stream, 2)
-			sections.append(map(ord, stream.read(n * 2)))
-			n = read(stream, 2)
-			sections.append(map(ord, stream.read(n * 2)))
-		else:
-			print "ERROR: Magic header not found"
-	return sections
+def dump_short(cpu):
+	for r in xrange(1, 10):
+		v = cpu.reg[r]
+		name = ("$%d" % r) if r < 8 else ("$cr%d" % (r-8))
+		print "%s 0x%04X" % (name, v)
+
 
 
 class Device(object):
@@ -505,6 +447,25 @@ def load_devices(cpu):
 	cpu.dev[PIC_ADDR] = pic
 
 
+def parse_file(filename):
+	def read(stream, bytes):
+		value = 0
+		for b in stream.read(bytes):
+			value <<= 8
+			value |= ord(b)
+		return value
+	sections = []
+	with open(filename, "rb") as stream:
+		if read(stream, 4) == MAGIC_HEADER:
+			n = read(stream, 2)
+			sections.append(map(ord, stream.read(n * 2)))
+			n = read(stream, 2)
+			sections.append(map(ord, stream.read(n * 2)))
+		else:
+			print "ERROR: Magic header not found"
+	return sections
+
+
 def main(args):
 	if len(args) == 1:
 		filename = args[0]
@@ -520,23 +481,15 @@ def main(args):
 		return 1
 	data, text = sections
 	cpu = CPU()
+	if not stop_clock:
+		cpu.debugger = debugger.Debugger(cpu)
 	cpu.dload(data)
 	cpu.iload(text)
-	globals.mem_range[1] = len(data) / 2
 	load_devices(cpu)
-	if stop_clock is not None:
-		globals.trace = False
-		globals.step = False
-		globals.breakpoints = []
-		globals.break_clock = -1
-	else:
-		cpu.dump(*globals.mem_range)
 	try:
 		cpu.run(stop_clock)
 		if stop_clock is not None:
-			cpu.dump_short()
-		else:
-			cpu.dump(*globals.mem_range)
+			dump_short(cpu)
 	except KeyboardInterrupt:
 		print
 		return 0
