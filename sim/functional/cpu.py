@@ -5,13 +5,24 @@ import sys
 import asm.encoding
 
 MAGIC_HEADER = 0xDEADF00D
-PC = 8 # register
+TIMER_PERIOD = 25
+
+IDT_ADDR = 0x0100
+PIC_ADDR = 0x0010
+EOI_VAL = 0x00AB
+
+PC    = 8 # register
+FLAGS = 9
+EPC   = 10
+
+IE = 1 # interrupts enabled flag bit
+
 
 class globals(object):
 	trace = False
 	step  = False
 	mem_range = [0x00, 0x40]
-	breakpoints = [0x000C]
+	breakpoints = [0x0000]
 	break_clock = None
 
 def sbin(n, x=0):
@@ -210,7 +221,7 @@ def scr(cpu, cr, src):
 
 @op
 def reti(cpu):
-	raise NotImplementedError()
+	cpu.reg[PC] = cpu.reg[EPC]
 
 @op
 def inb(cpu, tgt, src):
@@ -218,7 +229,10 @@ def inb(cpu, tgt, src):
 
 @op
 def outb(cpu, tgt, src):
-	raise NotImplementedError()
+	val = cpu.rget(src)
+	addr = cpu.rget(tgt)
+	if cpu.dev[addr]:
+		cpu.dev[addr].read(val)
 
 @op
 def ldiw(cpu, tgt, src):
@@ -233,9 +247,11 @@ def stiw(cpu, tgt, src):
 
 class CPU(object):
 	def __init__(self):
-		self.reg  = [0] * 10
+		self.reg  = [0] * 16
 		self.imem = [0] * 2**17 # memory is 2**16 words therefore 2**17 bytes
 		self.dmem = [0] * 2**17 # ...
+		self.dev = [None] * 2**16
+		self.pic = None
 		self.halt = True
 		self.clock = 0
 
@@ -246,7 +262,7 @@ class CPU(object):
 	def iload(self, data):
 		for i, n in enumerate(data):
 			self.imem[i] = n
-	
+
 	def idump(self, mstart=None, mend=None):
 		def hex_word(n):
 			h = hex(n)[2:].upper().zfill(4)
@@ -299,11 +315,17 @@ class CPU(object):
 			v = self.reg[r]
 			name = ("$%d" % r) if r < 8 else ("$cr%d" % (r-8))
 			print "%s 0x%04X" % (name, v)
-	
+
 	def run(self, stop_clock=None):
 		self.halt = False
 		while not self.halt:
 			self.clock += 1
+			self.pic.tick()
+			if (self.reg[FLAGS] & IE) and self.pic.int_line:
+				irq = self.pic.get_interrupt()
+				self.reg[EPC] = self.reg[PC]
+				self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
+				self.reg[FLAGS] &= ~IE
 			if self.reg[PC] in globals.breakpoints or self.clock == globals.break_clock:
 				globals.trace = False
 				globals.step = True
@@ -319,7 +341,7 @@ class CPU(object):
 			func(self, **tok.arguments())
 			if self.clock == stop_clock:
 				self.halt = True
-	
+
 	def fetch(self):
 		pc = self.reg[PC]
 		self.reg[PC] = (pc + 1) & 0xFFFF
@@ -362,7 +384,7 @@ class CPU(object):
 	def _check_addr(self, addr):
 		if addr >= 2**17:
 			raise Exception("Invalid memory access: %04X" % addr)
-	
+
 	def rget(self, reg):
 		return self.reg[reg]
 
@@ -375,8 +397,9 @@ class CPU(object):
 		if cr == 0: val += 1
 		return val
 
-	def crset(self, reg, value):
-		raise NotImplementedError()
+	def crset(self, cr, value):
+		if cr != 0:
+			self.reg[8 + cr] = value
 
 
 def parse_file(filename):
@@ -398,6 +421,90 @@ def parse_file(filename):
 	return sections
 
 
+class Device(object):
+	def tick(self):
+		pass
+
+	def read(self, write=None):
+		pass
+
+
+class TimerDevice(Device):
+	def __init__(self, period):
+		self.count = 0
+		self.period = period
+		self.pic = None
+
+	def tick(self):
+		self.count += 1
+		if self.count == self.period:
+			self.count = 0
+			self.pic.interrupt(self)
+
+	def read(self, count=None):
+		if count is None:
+			return self.count
+		self.count = count
+
+
+class PICDevice(Device):
+	def __init__(self, cpu):
+		self.devices = [None] * 8
+		self.cpu = cpu
+		self.pending = 0
+		self.int_line = False
+
+	def tick(self):
+		for dev in self.devices:
+			if dev is not None:
+				dev.tick()
+
+	def read(self, val):
+		if val != EOI_VAL:
+			print "pic error: received wrong value for EOI:", val
+			sys.exit(1)
+		irq = self.get_interrupt()
+		self.pending &= ~(1 << irq)
+		self.int_line = self.pending != 0
+
+	def register(self, dev, irq):
+		self.devices[irq] = dev
+		dev.pic = self
+
+	def interrupt(self, dev):
+		irq = self.devices.index(dev)
+		already = self.pending & (1 << irq)
+		self.pending |= (1 << irq)
+		# TODO check for priority
+		if not already:
+			self.int_line = True
+
+	def get_interrupt(self):
+		self.int_line = False
+		for irq in range(8):
+			if self.pending & (1 << irq):
+				return irq
+		return None
+
+
+class KeyboardDevice(Device):
+	pass
+
+class ScreenDevice(Device):
+	pass
+
+
+def load_devices(cpu):
+	pic = PICDevice(cpu)
+	timer = TimerDevice(TIMER_PERIOD)
+	kb = KeyboardDevice()
+	scr = ScreenDevice()
+	pic.register(timer, 7)
+	pic.register(kb, 2)
+	cpu.pic = pic
+	cpu.dev[PIC_ADDR] = pic
+
+
 def main(args):
 	if len(args) == 1:
 		filename = args[0]
@@ -416,6 +523,7 @@ def main(args):
 	cpu.dload(data)
 	cpu.iload(text)
 	globals.mem_range[1] = len(data) / 2
+	load_devices(cpu)
 	if stop_clock is not None:
 		globals.trace = False
 		globals.step = False
