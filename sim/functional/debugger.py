@@ -139,8 +139,9 @@ class Debugger(object):
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
 					for addr in range(addr1*2, (addr2+1)*2, 2):
-						inst = asm.encoding.decode(self.cpu.iget(addr))
-						show("%04X> %s\n" % (addr/2, inst))
+						opcode = self.cpu.iget(addr)
+						inst = asm.encoding.decode(opcode)
+						show("%04X> (%04X) %s\n" % (addr/2, opcode, inst))
 				elif cmd[0] in ("?", "h", "help"):
 					show("s|step            step\n")
 					show("r|run             run\n")
