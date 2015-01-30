@@ -11,6 +11,7 @@ TIMER_PERIOD = 25
 
 IDT_ADDR = 0x0100
 PIC_ADDR = 0x0010
+SCR_ADDR = 0x0020
 EOI_VAL = 0x00AB
 
 PC    = 8 # register
@@ -222,7 +223,7 @@ def outb(cpu, tgt, src):
 	val = cpu.rget(src)
 	addr = cpu.rget(tgt)
 	if cpu.dev[addr]:
-		cpu.dev[addr].read(val)
+		cpu.dev[addr].read(val & 0x00FF)
 
 @op
 def ldiw(cpu, tgt, src):
@@ -435,8 +436,11 @@ class PICDevice(Device):
 class KeyboardDevice(Device):
 	pass
 
+
 class ScreenDevice(Device):
-	pass
+	def read(self, val=None):
+		if val is not None:
+			sys.stdout.write(chr(val))
 
 
 def load_devices(cpu):
@@ -448,6 +452,7 @@ def load_devices(cpu):
 	pic.register(kb, 2)
 	cpu.pic = pic
 	cpu.dev[PIC_ADDR] = pic
+	cpu.dev[SCR_ADDR] = scr
 
 
 def parse_file(filename):
