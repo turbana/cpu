@@ -248,7 +248,7 @@ def debugger_call(cpu, name, before, result, args, kwargs):
 	if cpu.debugger:
 		name = ("before_" if before else "after_") + name
 		func = getattr(cpu.debugger, name, func)
-	func(cpu, result, *args, **kwargs)
+	func(result, *args, **kwargs)
 
 
 class CPU(object):
@@ -258,7 +258,7 @@ class CPU(object):
 		self.dmem = [0] * 2**17 # ...
 		self.dev = [None] * 2**16
 		self.pic = None
-		self.halt = True
+		self.halt = False
 		self.clock = 0
 		self.debugger = None
 
@@ -274,7 +274,6 @@ class CPU(object):
 
 	@send_debugger
 	def run(self, stop_clock=None):
-		self.halt = False
 		while not self.halt:
 			self.clock += 1
 			self.pic.tick()
