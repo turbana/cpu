@@ -32,7 +32,7 @@ def dump(mem, mstart=None, mend=None):
 					show("\n")
 				show("%04X | " % (addr/2))
 			word = (mem[addr] << 8) | mem[addr+1]
-			show("%04X" % word)
+			show("%04X " % word)
 		show("\n")
 
 
@@ -147,7 +147,7 @@ class Debugger(object):
 					show("b [addr]          show breakpoints / add breakpoint (addr)\n")
 					show("bo op             add breakpoint (opcode)\n")
 					show("rb addr           remove breakpoint (addr)\n")
-					show("rbo op            remove breakpoint (opcode\n")
+					show("rbo op            remove breakpoint (opcode)\n")
 					show("mem addr [addr]   dump data memory between addrs\n")
 					show("imem addr [addr]  dump instruction memory between addrs\n")
 					show("memr addr addr    set memory dump range\n")
