@@ -1,4 +1,5 @@
 import readline
+import sys
 
 import asm.encoding
 
@@ -19,24 +20,27 @@ def bin_word(n):
 	b = bin(n)[2:].zfill(16)
 	return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
 
+def show(*strs):
+	sys.stdout.write(" ".join(map(str, strs)))
+
 
 def dump(mem, mstart=None, mend=None):
 	if mstart is not None and mend is not None:
 		for i, addr in enumerate(range(mstart*2, mend*2, 2)):
 			if (i % 8) == 0:
 				if i > 0:
-					print
-				print "%04X | " % (addr/2),
+					show("\n")
+				show("%04X | " % (addr/2))
 			word = (mem[addr] << 8) | mem[addr+1]
-			print "%04X" % word,
-		print
+			show("%04X" % word)
+		show("\n")
 
 
 def reg_dump(cpu, top_reg):
 	for r in range(1, top_reg+1):
 		v = cpu.reg[r]
 		name = ("  $%d" % r) if r < 8 else ("$cr%d" % (r-8))
-		print "%s:  %s  |  %s  =  %5s" % (name, bin_word(v), hex_word(v), v)
+		show("%s:  %s  |  %s  =  %5s\n" % (name, bin_word(v), hex_word(v), v))
 
 
 class Debugger(object):
@@ -64,16 +68,15 @@ class Debugger(object):
 			self.normal_dump(opcode)
 
 	def normal_dump(self, opcode=None):
-		print " "*40 + "clock:", self.cpu.clock
+		show(" "*40 + "clock:", self.cpu.clock, "\n")
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
-			print
+			show("\n")
 			dump(self.cpu.dmem, *self.drange)
-		print
+		show("\n")
 		if opcode is not None:
 			inst = asm.encoding.decode(opcode)
-			print "%04X> %s" % (self.cpu.reg[PC]-1, str(inst).replace("\t", " "))
-			print
+			show("%04X> %s\n" % (self.cpu.reg[PC]-1, str(inst).replace("\t", " ")))
 		self.command()
 
 	def command(self):
@@ -93,9 +96,9 @@ class Debugger(object):
 				elif cmd[0] == "b":
 					if len(cmd) == 1:
 						for brk in sorted(self.brk_addrs):
-							print "@%04X" % brk
+							show("@%04X\n" % brk)
 						for opcode in sorted(self.brk_opcodes):
-							print "$%04X" % opcode
+							show("$%04X\n" % opcode)
 					else:
 						addr = int(cmd[1], 16)
 						self.brk_addrs.add(addr)
@@ -121,9 +124,9 @@ class Debugger(object):
 					addr2 = int(cmd[2], 16)
 					self.drange = [addr1, addr2]
 				elif cmd[0] == "regs":
-					print
+					show("\n")
 					reg_dump(self.cpu, REGISTER_COUNT)
-					print
+					show("\n")
 				elif cmd[0] == "mem!":
 					addr = int(cmd[1], 16)
 					val = int(cmd[2], 16)
@@ -137,29 +140,29 @@ class Debugger(object):
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
 					for addr in range(addr1*2, (addr2+1)*2, 2):
 						inst = asm.encoding.decode(self.cpu.iget(addr))
-						print "%04X> %s" % (addr/2, inst)
+						show("%04X> %s\n" % (addr/2, inst))
 				elif cmd[0] in ("?", "h", "help"):
-					print "s|step            step"
-					print "r|run             run"
-					print "b [addr]          show breakpoints / add breakpoint (addr)"
-					print "bo op             add breakpoint (opcode)"
-					print "rb addr           remove breakpoint (addr)"
-					print "rbo op            remove breakpoint (opcode"
-					print "mem addr [addr]   dump data memory between addrs"
-					print "imem addr [addr]  dump instruction memory between addrs"
-					print "memr addr addr    set memory dump range"
-					print "regs              show all registers"
-					print "mem! addr val     set data mem @addr to val"
-					print "imem! addr val    set instruction mem @addr to val"
-					#print "reg! reg val      set register to val"
-					#print "io addr           read io port @addr"
-					#print "io! addr val      set io port @addr to val"
-					print "dis addr [addr]   disassemble imem"
+					show("s|step            step\n")
+					show("r|run             run\n")
+					show("b [addr]          show breakpoints / add breakpoint (addr)\n")
+					show("bo op             add breakpoint (opcode)\n")
+					show("rb addr           remove breakpoint (addr)\n")
+					show("rbo op            remove breakpoint (opcode\n")
+					show("mem addr [addr]   dump data memory between addrs\n")
+					show("imem addr [addr]  dump instruction memory between addrs\n")
+					show("memr addr addr    set memory dump range\n")
+					show("regs              show all registers\n")
+					show("mem! addr val     set data mem @addr to val\n")
+					show("imem! addr val    set instruction mem @addr to val\n")
+					#show("reg! reg val      set register to val\n")
+					#show("io addr           read io port @addr\n")
+					#show("io! addr val      set io port @addr to val\n")
+					show("dis addr [addr]   disassemble imem\n")
 				else:
-					print "unknown command:", " ".join(cmd)
+					show("unknown command:", " ".join(cmd))
 			except EOFError:
 				self.cpu.halt = True
 				done = True
-				print
+				show("\n")
 			except Exception, e:
-				print "error:", e
+				show("error:", e, "\n")

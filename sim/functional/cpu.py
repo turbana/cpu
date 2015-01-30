@@ -31,6 +31,9 @@ def twoc_unsign(n, bits=16):
 def twoc_sign(n):
 	return (n - (2**16)) if n >= (2**15) else n
 
+def show(*strs):
+	sys.stdout.write(" ".join(map(str, strs)))
+
 
 condition_func = {
 	"eq":	lambda x, y: twoc_sign(x) == twoc_sign(y),
@@ -358,6 +361,7 @@ def dump_short(cpu):
 	for r in xrange(1, 10):
 		v = cpu.reg[r]
 		name = ("$%d" % r) if r < 8 else ("$cr%d" % (r-8))
+		# print to stdout for runtest.sh
 		print "%s 0x%04X" % (name, v)
 
 
@@ -402,7 +406,7 @@ class PICDevice(Device):
 
 	def read(self, val):
 		if val != EOI_VAL:
-			print "pic error: received wrong value for EOI:", val
+			show("pic error: received wrong value for EOI:", val, "\n")
 			sys.exit(1)
 		irq = self.get_interrupt()
 		self.pending &= ~(1 << irq)
@@ -461,7 +465,7 @@ def parse_file(filename):
 			n = read(stream, 2)
 			sections.append(map(ord, stream.read(n * 2)))
 		else:
-			print "ERROR: Magic header not found"
+			show("ERROR: Magic header not found\n")
 	return sections
 
 
@@ -473,7 +477,7 @@ def main(args):
 		filename = args[0]
 		stop_clock = int(args[2])
 	else:
-		print "USAGE: %s binary [--dump clock]" % sys.argv[0]
+		show("USAGE: %s binary [--dump clock]\n" % sys.argv[0])
 		return 2
 	sections = parse_file(filename)
 	if not sections:
@@ -490,7 +494,7 @@ def main(args):
 		if stop_clock is not None:
 			dump_short(cpu)
 	except KeyboardInterrupt:
-		print
+		show("\n")
 		return 0
 
 if __name__ == "__main__":
