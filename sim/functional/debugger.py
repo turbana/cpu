@@ -162,8 +162,8 @@ class Debugger(object):
 					show("mem! addr val     set data mem @addr to val\n")
 					show("imem! addr val    set instruction mem @addr to val\n")
 					#show("reg! reg val      set register to val\n")
-					#show("io addr           read io port @addr\n")
-					#show("io! addr val      set io port @addr to val\n")
+					#show("io addr           read from io port @addr\n")
+					#show("io! addr val      write val to io port @addr\n")
 					show("dis addr [addr]   disassemble imem\n")
 				else:
 					show("unknown command:", " ".join(cmd))

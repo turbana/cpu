@@ -101,7 +101,6 @@ def add(cpu, tgt, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
 	res = op1 + op2
-	# TODO check for overflow
 	cpu.rset(tgt, res & 0xFFFF)
 
 @op
@@ -141,7 +140,6 @@ def s(cpu, cond, op1, op2, ir):
 def as_z(cpu, ir, op1, op2, tgt):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	# TODO check for overflow
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res == 0:
@@ -184,10 +182,6 @@ def shr(cpu, ir, op1, op2, tgt):
 @op
 def xor(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
-
-@op
-def not_(cpu, tgt, src):
-	cpu.rset(tgt, cpu.rget(src) ^ 0xFFFF)
 
 @op
 def trap(cpu, reg):
@@ -237,8 +231,6 @@ def stiw(cpu, tgt, src):
 
 
 def send_debugger(fn):
-	before = lambda *args, **kwargs: None
-	after = before
 	def wrapper(cpu, *args, **kwargs):
 		debugger_call(cpu, fn.__name__, True, None, args, kwargs)
 		res = fn(cpu, *args, **kwargs)
