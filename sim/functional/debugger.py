@@ -55,6 +55,9 @@ class Debugger(object):
 	def before_dload(self, _, bytes):
 		self.drange[1] = len(bytes) / 2
 
+	def before_iload(self, _, bytes):
+		self.irange[1] = len(bytes) / 2
+
 	def before_run(self, *args):
 		self.normal_dump()
 		self.command()
@@ -136,12 +139,15 @@ class Debugger(object):
 					val = int(cmd[2], 16)
 					self.cpu.iset(addr*2, val, byte=False)
 				elif cmd[0] == "dis":
-					addr1 = int(cmd[1], 16)
-					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
+					if len(cmd) == 1:
+						addr1, addr2 = self.irange
+					else:
+						addr1 = int(cmd[1], 16)
+						addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
 					for addr in range(addr1*2, (addr2+1)*2, 2):
 						opcode = self.cpu.iget(addr)
 						inst = asm.encoding.decode(opcode)
-						show("%04X> (%04X) %s\n" % (addr/2, opcode, inst))
+						show("%04X | (%04X)\t%s\n" % (addr/2, opcode, inst))
 				elif cmd[0] in ("?", "h", "help"):
 					show("s|step            step\n")
 					show("r|run             run\n")
