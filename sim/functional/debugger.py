@@ -69,6 +69,7 @@ class Debugger(object):
 	def after_fetch(self, opcode):
 		if self.step:
 			self.normal_dump(opcode)
+			self.command()
 
 	def normal_dump(self, opcode=None):
 		show(" "*40 + "clock:", self.cpu.clock, "\n")
@@ -80,7 +81,6 @@ class Debugger(object):
 		if opcode is not None:
 			inst = asm.encoding.decode(opcode)
 			show("%04X> %s\n" % (self.cpu.reg[PC]-1, str(inst).replace("\t", " ")))
-		self.command()
 
 	def command(self):
 		done = False
