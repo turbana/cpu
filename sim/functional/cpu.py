@@ -501,12 +501,14 @@ def main(args):
 	else:
 		show("USAGE: %s binary [--dump clock]\n" % sys.argv[0])
 		return 2
+	debugging = False
+	trace_file = open("trace.log", "w")
 	chunks = parse_file(filename)
 	if not chunks:
 		return 1
 	cpu = CPU()
 	if not stop_clock:
-		cpu.debugger = debugger.Debugger(cpu)
+		cpu.debugger = debugger.Debugger(cpu, debugging, trace_file)
 	map(cpu.dload, chunks[0])
 	map(cpu.iload, chunks[1])
 	load_devices(cpu)
