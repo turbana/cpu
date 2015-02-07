@@ -18,7 +18,8 @@
 ;	0x0019: jmp to 0x0010
 
 	.data
-	.zero	16
+	.zero	1
+	.align	16
 a:	.dw	0		; a @ 0x0010
 
 	.text
