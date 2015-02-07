@@ -260,24 +260,19 @@ class CPU(object):
 
 	@send_debugger
 	def dload(self, chunk):
-		print "dload",
 		self._load(self.dmem, chunk)
 
 	@send_debugger
 	def iload(self, chunk):
-		print "iload",
 		self._load(self.imem, chunk)
 
 	def _load(self, mem, (addr, words)):
-		print addr, len(words)
 		for i, word in enumerate(words):
 			high = word >> 8
 			low = word & 0x00FF
 			j = (addr + i) * 2
-			print "%d = %04X" % (j, high)
-			print "%d = %04X" % (j+1, low)
 			mem[j] = high
-			mem[j+i] = low
+			mem[j+1] = low
 
 	@send_debugger
 	def run(self, stop_clock=None):
