@@ -58,7 +58,6 @@ def apply_directives(toks):
 				chunk = (section, addr, [])
 				chunks[section].append(chunk)
 				continue
-			# TODO .align
 			elif tok.name == ".align":
 				align = tok.args[0].value
 				addr = chunk[1] + len(chunk[2])
@@ -127,7 +126,7 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
 
 def label_find(labels, label, pos, bits, signed, pc_relative):
 	if label.value not in labels:
-		raise Exception("Unknown label %s" % repr(label.value))
+		raise Exception("unknown label %s" % repr(label.value))
 	search = labels[label.value]
 	if len(search) == 1:
 		addr = search[0]
