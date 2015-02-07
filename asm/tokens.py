@@ -1,6 +1,8 @@
 # this is set by isa.py to give us a reference to the encodings
 #encodings = None
 
+import re
+
 import isa
 
 
@@ -52,8 +54,9 @@ class Instruction(Token):
 
 	def __str__(self):
 		import encoding # import late to avoid circular imports
-		args = dict((a.name, a) for a in self.args)
 		code = encoding.encoding(self)
+		types = code["types"]
+		args = dict((a.name, pretty_print(a, types.get(a.name, ""))) for a in self.args)
 		return code["format"].format(**args)
 
 	def __repr__(self):
@@ -257,3 +260,13 @@ class Expression(Token):
 		val = self._value if self._value is not None else self.args
 		return "<Expr %s%s %s>" % (sign, self.bits, val)
 	__repr__ = __str__
+
+
+_number = re.compile("^(s|u)[0-9]")
+def pretty_print(arg, type):
+	if _number.match(type):
+		signed = type[0] == "s"
+		bits = int(type[1:])
+		n = arg.value
+		return (n - (2**bits)) if n >= (2**(bits-1)) else n
+	return arg
