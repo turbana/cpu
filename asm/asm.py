@@ -11,7 +11,6 @@ import grammer
 
 
 MAGIC_HEADER = [0xDEAD, 0xF00D]
-SECTION_NAMES = {".data": "data", ".text": "text"}
 
 
 ### macros
@@ -43,27 +42,34 @@ def parse_macro(macro):
 ### directives
 
 def apply_directives(toks):
-	section = SECTION_NAMES[".text"]
-	sectokens = []
-	addr = 0
+	chunks = {
+		".text": [(".text", 0, [])],
+		".data": [(".data", 0, [])],
+	}
+	chunk = chunks[".text"][-1]
 	for tok in toks:
 		if isinstance(tok, tokens.Macro):
 			if tok.name in (".text", ".data"):
-				if sectokens:
-					yield (section, addr, sectokens)
-				section = SECTION_NAMES[tok.name]
-				sectokens = []
-				addr = -1
+				chunk = chunks[tok.name][-1]
 				continue
 			elif tok.name == ".org":
-				if sectokens:
-					yield (section, addr, sectokens)
-				sectokens = []
+				section = chunk[0]
 				addr = tok.args[0].value
+				chunk = (section, addr, [])
+				chunks[section].append(chunk)
 				continue
 			# TODO .align
-		sectokens.append(tok)
-	yield (section, addr, sectokens)
+			elif tok.name == ".align":
+				align = tok.args[0].value
+				addr = chunk[1] + len(chunk[2])
+				padding = 0 if (addr % align) == 0 else align - (addr % align)
+				for _ in range(padding):
+					chunk[2].append(tokens.Number((0, 10), bits=16, signed=False))
+				continue
+		chunk[2].append(tok)
+	for chunklist in chunks.values():
+		for chunk in chunklist:
+			yield chunk
 
 
 ### labels
@@ -209,8 +215,8 @@ def emit(stream, chunks):
 		emit_word(len(bytes) / 2)
 		map(stream.write, map(chr, bytes))
 	chunks = list(chunks)
-	dchunks = filter(lambda c: c[0] == "data", chunks)
-	ichunks = filter(lambda c: c[0] == "text", chunks)
+	dchunks = filter(lambda c: c[0] == ".data", chunks)
+	ichunks = filter(lambda c: c[0] == ".text", chunks)
 	map(emit_word, MAGIC_HEADER)
 	emit_word(len(dchunks))
 	map(emit_chunk, dchunks)
