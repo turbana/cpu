@@ -148,6 +148,20 @@ class Debugger(object):
 						opcode = self.cpu.iget(addr)
 						inst = asm.encoding.decode(opcode)
 						show("%04X | (%04X)\t%s\n" % (addr/2, opcode, inst))
+				elif cmd[0] == "reg!":
+					reg_mapping = {"$1":1, "$2":2, "$3":3, "$4":4, "$5":5, "$6":6, "$7":7,
+					               "$cr0": 8, "$cr1": 9, "$cr2": 10}
+					reg = reg_mapping[cmd[1]] if cmd[1] in reg_mapping else int(reg[1])
+					val = int(cmd[2], 16)
+					self.cpu.rset(reg, val)
+				elif cmd[0] == "io":
+					port = int(cmd[1], 16)
+					val = self.cpu.io(port)
+					show("%02X | %02X\n" % (port, val))
+				elif cmd[0] == "io!":
+					port = int(cmd[1], 16)
+					val = int(cmd[2], 16)
+					self.cpu.io(port, val)
 				elif cmd[0] in ("?", "h", "help"):
 					show("s|step            step\n")
 					show("r|run             run\n")
@@ -161,9 +175,9 @@ class Debugger(object):
 					show("regs              show all registers\n")
 					show("mem! addr val     set data mem @addr to val\n")
 					show("imem! addr val    set instruction mem @addr to val\n")
-					#show("reg! reg val      set register to val\n")
-					#show("io addr           read from io port @addr\n")
-					#show("io! addr val      write val to io port @addr\n")
+					show("reg! reg val      set register to val\n")
+					show("io addr           read from io port @addr\n")
+					show("io! addr val      write val to io port @addr\n")
 					show("dis addr [addr]   disassemble imem\n")
 				else:
 					show("unknown command:", " ".join(cmd), "\n")
