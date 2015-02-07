@@ -15,37 +15,44 @@ def main(args):
 		if MAGIC_HEADER != read(in_stream, 4):
 			print "ERROR: Magic header not found"
 			return 1
-		show_data(in_stream, out_stream)
-		show_text(in_stream, out_stream)
+		dchunks = read_chunks(in_stream)
+		ichunks = read_chunks(in_stream)
+	show_chunks(dchunks, out_stream, decode=False)
+	show_chunks(ichunks, out_stream, decode=True)
 
 
 def read(stream, bytes):
 	value = 0
-	for b in stream.read(bytes):
+	for byte in stream.read(bytes):
 		value <<= 8
-		value |= ord(b)
+		value |= ord(byte)
 	return value
 
 
-def show_data(data, out):
-	length = read(data, 2)
-	addr = 0
-	for _ in range(length):
-		word = read(data, 2)
-		if addr % 8 == 0:
-			out.write("\n%04X:" % addr)
-		out.write(" %04X" % word)
-		addr += 1
-	if addr % 8 != 0:
-		out.write("\n")
-	out.write("\n")
+def read_chunks(stream):
+	chunk_count = read(stream, 2)
+	chunks = []
+	for _ in range(chunk_count):
+		addr = read(stream, 2)
+		count = read(stream, 2)
+		words = [read(stream, 2) for _ in range(count)]
+		chunks.append((addr, words))
+	return chunks
 
 
-def show_text(data, out):
-	length = read(data, 2)
-	for addr in range(length):
-		word = read(data, 2)
-		out.write("%04X: (%04X)  %s\n" % (addr, word, encoding.decode(word)))
+def show_chunks(chunks, stream, decode):
+	for addr, words in chunks:
+		if decode:
+			stream.write("\n")
+		for i,word in enumerate(words):
+			if decode:
+				stream.write("%04X | (%04X)   %s\n" % (addr+i, word, encoding.decode(word)))
+			else:
+				if i % 8 == 0:
+					stream.write("\n%04X:" % (addr+i))
+				stream.write(" %04X" % word)
+		if not decode:
+			stream.write("\n")
 
 
 if __name__ == "__main__":
