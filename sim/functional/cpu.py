@@ -259,14 +259,25 @@ class CPU(object):
 		self.debugger = None
 
 	@send_debugger
-	def dload(self, data):
-		for i, n in enumerate(data):
-			self.dmem[i] = n
+	def dload(self, chunk):
+		print "dload",
+		self._load(self.dmem, chunk)
 
 	@send_debugger
-	def iload(self, data):
-		for i, n in enumerate(data):
-			self.imem[i] = n
+	def iload(self, chunk):
+		print "iload",
+		self._load(self.imem, chunk)
+
+	def _load(self, mem, (addr, words)):
+		print addr, len(words)
+		for i, word in enumerate(words):
+			high = word >> 8
+			low = word & 0x00FF
+			j = (addr + i) * 2
+			print "%d = %04X" % (j, high)
+			print "%d = %04X" % (j+1, low)
+			mem[j] = high
+			mem[j+i] = low
 
 	@send_debugger
 	def run(self, stop_clock=None):
@@ -450,20 +461,25 @@ def load_devices(cpu):
 def parse_file(filename):
 	def read(stream, bytes):
 		value = 0
-		for b in stream.read(bytes):
+		for byte in stream.read(bytes):
 			value <<= 8
-			value |= ord(b)
+			value |= ord(byte)
 		return value
-	sections = []
+	def read_chunks(stream):
+		chunk_count = read(stream, 2)
+		chunks = []
+		for _ in range(chunk_count):
+			addr = read(stream, 2)
+			count = read(stream, 2)
+			words = [read(stream, 2) for _ in range(count)]
+			chunks.append((addr, words))
+		return chunks
+
 	with open(filename, "rb") as stream:
-		if read(stream, 4) == MAGIC_HEADER:
-			n = read(stream, 2)
-			sections.append(map(ord, stream.read(n * 2)))
-			n = read(stream, 2)
-			sections.append(map(ord, stream.read(n * 2)))
-		else:
+		if read(stream, 4) != MAGIC_HEADER:
 			show("ERROR: Magic header not found\n")
-	return sections
+			return None
+		return read_chunks(stream), read_chunks(stream)
 
 
 def main(args):
@@ -476,15 +492,14 @@ def main(args):
 	else:
 		show("USAGE: %s binary [--dump clock]\n" % sys.argv[0])
 		return 2
-	sections = parse_file(filename)
-	if not sections:
+	chunks = parse_file(filename)
+	if not chunks:
 		return 1
-	data, text = sections
 	cpu = CPU()
 	if not stop_clock:
 		cpu.debugger = debugger.Debugger(cpu)
-	cpu.dload(data)
-	cpu.iload(text)
+	map(cpu.dload, chunks[0])
+	map(cpu.iload, chunks[1])
 	load_devices(cpu)
 	try:
 		cpu.run(stop_clock)
