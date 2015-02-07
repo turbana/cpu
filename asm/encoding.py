@@ -13,7 +13,7 @@ def encoding(token):
 
 def encode(token):
 	grammer.grammer() # ensure all encodings have been fully loaded
-	if isinstance(token, Number):
+	if isinstance(token, (Number, Expression)):
 		words = []
 		size = token.size
 		num = token.binary()

@@ -203,6 +203,8 @@ class Expression(Token):
 		self.args = args
 		self.name = kwargs["name"]
 		self.bits = kwargs["bits"]
+		self.size = self.bits / 8
+		self.size += 1 if self.bits % 8 else 0
 		self.signed = kwargs["signed"]
 		self._value = None
 

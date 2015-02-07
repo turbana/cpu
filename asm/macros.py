@@ -50,7 +50,7 @@ def align(n):
 
 @macro("u16")
 def dw(w):
-	return [w]
+	return [tokens.Expression([w, "+", 0], name=".dw", bits=16, signed=False)]
 
 
 @macro("u16")
