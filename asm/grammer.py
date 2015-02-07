@@ -124,7 +124,7 @@ spec_imm = number(5, True).addParseAction(_check_range)
 label = label_name + colon
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 ireg = reg | spec_imm
-creg = Suppress("$cr") + Word("01").setParseAction(to_int)
+creg = Suppress("$cr") + Word("012").setParseAction(to_int)
 cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 
 u1  = number( 1, False)
