@@ -10,167 +10,215 @@ import macros
 import grammer
 
 
-MAGIC_HEADER = [0xDE, 0xAD, 0xF0, 0x0D]
-
-SECTION_DATA = "data"
-SECTION_TEXT = "text"
-SECTION_UNKNOWN = "unknown"
+MAGIC_HEADER = [0xDEAD, 0xF00D]
+SECTION_NAMES = {".data": "data", ".text": "text"}
 
 
-def bin_str(n, bits=0):
-	s = ""
-	while n:
-		s = ("1" if n & 1 else "0") + s
-		n >>= 1
-	return s.zfill(bits)
+### macros
 
-
-def expand_labels(sections):
-	labels = collections.defaultdict(list)
-
-	def add_label(label, pos):
-		label.pos = pos
-		labels[label.value].append(label)
-
-	def lookup_label(label, pos, bits, signed, pc_relative):
-		if label.value not in labels:
-			raise Exception("Unknown label %s" % repr(label.value))
-		search = labels[label.value]
-		if len(search) == 1:
-			found = search[0]
-		else:
-			if label.direction == "f":
-				found = [l for l in search if l.pos > pos][0]
-			elif label.direction == "b":
-				found = [l for l in search if l.pos <= pos][-1]
-			else:
-				raise Exception("Ambiguous definition for label %s" % repr(label.value))
-		addr = found.pos
-		if pc_relative:
-			addr -= pos
-		addr /= 2
-		return tokens.Number((addr, 10), bits=bits, signed=signed, name=label.name)
-
-	def apply_labels(tok, pos, signed=True, pc_relative=False):
-		for j, arg in enumerate(tok.args):
-			if tok.name == "jmp":
-				pc_relative = True
-			if isinstance(arg, tokens.Expression):
-				apply_labels(arg, pos, False, pc_relative)
-			elif isinstance(arg, tokens.Label):
-				if tok.name == "jmp":
-					bits = 11
-				elif tok.name in ("ldw", "stw"):
-					bits = 5
-				elif tok.name in ("lui", "addi"):
-					bits = 8
-				elif isinstance(tok, tokens.Expression):
-					# expressions will do their own bit checks and we need to ensure
-					# label values aren't truncated
-					bits = 64
-				tok.args[j] = lookup_label(arg, pos, bits, signed, pc_relative)
-
-
-	for section, toks in sections.items():
-		i = 0
-		pos = 0
-		while i < len(toks):
-			tok = toks[i]
-			if isinstance(tok, tokens.Label):
-				add_label(tok, pos)
-				del toks[i]
-				continue
-			pos += tok.size
-			i += 1
-	
-	for section, toks in sections.items():
-		pos = 0
-		for tok in toks:
-			apply_labels(tok, pos)
-			pos += tok.size
-
-	return sections
-
-
-def apply_text_data(toks):
-	section = SECTION_TEXT
+def apply_macros(toks):
 	for tok in toks:
 		if isinstance(tok, tokens.Macro):
-			if tok.name == ".text":
-				section = SECTION_TEXT
-				continue
-			elif tok.name == ".data":
-				section = SECTION_DATA
-				continue
-		yield (section, tok)
+			results = tok.callback(*tok.args)
+			if results is None:
+				results = [tok]
+			elif isinstance(results, str):
+				results = apply_macros(parse_macro(results))
+			for mtok in results:
+				yield mtok
+		else:
+			yield tok
 
 
-def parse_macro(tok, macro):
+def parse_macro(macro):
 	try:
 		g = grammer.grammer()
-		for tok in g.parseString(macro, parseAll=True):
-			yield (SECTION_UNKNOWN, tok)
+		return g.parseString(macro, parseAll=True)
 	except RuntimeError, e:
 		print macro
 		print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
 		sys.exit(1)
 
 
-def expand_macro(tok, section, positions):
-	byte_pos = positions[section]
-	result = tok.callback(byte_pos/2, *tok.args)
-	if isinstance(result, str):
-		toks = apply_macros(parse_macro(tok, result), positions)
-	else:
-		toks = ((section, tok) for tok in result)
+### directives
+
+def apply_directives(toks):
+	section = SECTION_NAMES[".text"]
+	sectokens = []
+	addr = 0
 	for tok in toks:
-		yield tok
-
-
-def apply_macros(toks, positions):
-	for section, tok in toks:
 		if isinstance(tok, tokens.Macro):
-			for _, mtok in expand_macro(tok, section, positions):
-				yield (section, mtok)
-				positions[section] += mtok.size
+			if tok.name in (".text", ".data"):
+				if sectokens:
+					yield (section, addr, sectokens)
+				section = SECTION_NAMES[tok.name]
+				sectokens = []
+				addr = -1
+				continue
+			elif tok.name == ".org":
+				if sectokens:
+					yield (section, addr, sectokens)
+				sectokens = []
+				addr = tok.args[0].value
+				continue
+			# TODO .align
+		sectokens.append(tok)
+	yield (section, addr, sectokens)
+
+
+### labels
+
+def lookup_labels(chunks):
+	labels = collections.defaultdict(list)
+	new_chunks = []
+	addrs = collections.defaultdict(int)
+	for section, start_addr, insts in chunks:
+		addr = start_addr
+		if start_addr < 0:
+			addr = addrs[section]
+			start_addr = addr
+		non_labels = []
+		for inst in insts:
+			if isinstance(inst, tokens.Label):
+				labels[inst.value].append(addr)
+			else:
+				non_labels.append(inst)
+				addr += 1
+		addrs[section] = addr
+		new_chunks.append((section, start_addr, non_labels))
+	return new_chunks, labels
+
+
+def apply_labels(chunks, labels):
+	for section, start_addr, insts in chunks:
+		addr = start_addr
+		insts = list(insts)
+		for inst in insts:
+			label_apply(labels, inst, addr)
+			addr += inst.size
+		yield section, start_addr, insts
+
+
+def label_apply(labels, tok, pos, signed=True, pc_relative=False):
+	for j, arg in enumerate(tok.args):
+		if tok.name == "jmp":
+			pc_relative = True
+		if isinstance(arg, tokens.Expression):
+			label_apply(labels, arg, pos, False, pc_relative)
+		elif isinstance(arg, tokens.Label):
+			if tok.name == "jmp":
+				bits = 11
+			elif tok.name in ("ldw", "stw"):
+				bits = 5
+			elif tok.name in ("lui", "addi"):
+				bits = 8
+			elif isinstance(tok, tokens.Expression):
+				# expressions will do their own bit checks and we need to ensure
+				# label values aren't truncated
+				bits = 64
+			tok.args[j] = label_find(labels, arg, pos, bits, signed, pc_relative)
+
+
+def label_find(labels, label, pos, bits, signed, pc_relative):
+	if label.value not in labels:
+		raise Exception("Unknown label %s" % repr(label.value))
+	search = labels[label.value]
+	if len(search) == 1:
+		addr = search[0]
+	else:
+		if label.direction == "f":
+			addr = [l for l in search if l.pos > pos][0]
+		elif label.direction == "b":
+			addr = [l for l in search if l.pos <= pos][-1]
 		else:
-			yield (section, tok)
-			positions[section] += tok.size
+			raise Exception("Ambiguous definition for label %s" % repr(label.value))
+	if pc_relative:
+		addr -= pos
+	return tokens.Number((addr, 10), bits=bits, signed=signed, name=label.name)
 
 
-def translate(sections):
-	def trans(toks):
+### chunks
+
+def merge_chunks(chunks):
+	schunks = sorted(chunks, key=lambda (sec,addr,insts): (sec, addr))
+	prev_chunk = schunks[0]
+	for chunk in schunks[1:]:
+		merged, new_chunk = chunk_merge(prev_chunk, chunk)
+		if not merged:
+			yield prev_chunk
+		prev_chunk = new_chunk
+	yield prev_chunk
+
+
+def chunk_merge(left_chunk, right_chunk):
+	lsect, lstart, linsts = left_chunk
+	rsect, rstart, rinsts = right_chunk
+	lend = lstart + chunk_size(left_chunk)
+	rend = rstart + chunk_size(right_chunk)
+	# if sections are different: return only right
+	# if right starts within left: zip right into left
+	# if right ends within left: zip left into right
+	# if left is subset of right: return only right (left is subsumed by right)
+	# otherwise no intersection: return only right
+	if lsect != rsect:
+		return False, right_chunk
+	elif lstart <= rstart <= lend:
+		return True, chunk_zip(left_chunk, right_chunk)
+	elif lstart <= rend <= lend:
+		return True, chunk_zip(right_chunk, left_chunk)
+	elif rstart <= lstart <= rend:
+		return True, right_chunk
+	return False, right_chunk
+
+
+def chunk_zip(left_chunk, right_chunk):
+	section, laddr, linsts = left_chunk
+	_, raddr, rinsts = right_chunk
+	insts = []
+	addr = laddr
+	while addr < (laddr + chunk_size(left_chunk)):
+		if addr == raddr:
+			insts.extend(rinsts)
+			addr += chunk_size(right_chunk)
+		else:
+			insts.append(linsts[addr - laddr])
+			addr += 1
+	return section, laddr, insts
+
+
+def chunk_size(chunk):
+	return sum(inst.size for inst in chunk[2]) / 2
+
+
+### translation
+
+def translate(chunks):
+	for section, addr, insts in chunks:
 		bytes = []
-		map(bytes.extend, map(encoding.encode, toks))
-		return bytes
-	return dict((section, trans(toks)) for section, toks in sections.items())
+		map(bytes.extend, map(encoding.encode, insts))
+		yield section, addr, bytes
 
 
-def collapse_sections(toks):
-	sections = collections.defaultdict(list)
-	for section, tok in toks:
-		sections[section].append(tok)
-	return sections
-
-
-def emit(sections, stream):
-	def emit(bytes):
-		words = len(bytes) / 2
-		stream.write(chr(words >> 8))
-		stream.write(chr(words & 0x00FF))
+def emit(stream, chunks):
+	def emit_word(word):
+		stream.write(chr(word >> 8))
+		stream.write(chr(word & 0x00FF))
+	def emit_chunk(chunk):
+		_, addr, bytes = chunk
+		emit_word(addr)
+		emit_word(len(bytes) / 2)
 		map(stream.write, map(chr, bytes))
-	def sect(name):
-		s = sections.get(name, [])
-		if len(s) % 2 == 1:
-			s.append(0)
-		return s
-	data = sect(SECTION_DATA)
-	text = sect(SECTION_TEXT)
+	chunks = list(chunks)
+	dchunks = filter(lambda c: c[0] == "data", chunks)
+	ichunks = filter(lambda c: c[0] == "text", chunks)
+	map(emit_word, MAGIC_HEADER)
+	emit_word(len(dchunks))
+	map(emit_chunk, dchunks)
+	emit_word(len(ichunks))
+	map(emit_chunk, ichunks)
 
-	map(stream.write, map(chr, MAGIC_HEADER))
-	emit(data)
-	emit(text)
 
+### main
 
 def main(args):
 	if len(args) != 2:
@@ -178,19 +226,20 @@ def main(args):
 		return 2
 	in_filename  = args[0]
 	out_filename = args[1]
-	section_positions = collections.defaultdict(int) # used in macro expansion
 	try:
 		g = grammer.grammer()
-		toks = g.parseFile(in_filename, parseAll=True)
-		if not toks:
+		tokens = g.parseFile(in_filename, parseAll=True)
+		if not tokens:
 			return 1
-		toks = apply_text_data(toks)
-		toks = apply_macros(toks, section_positions)
-		sections = collapse_sections(toks)
-		sections = expand_labels(sections)
-		sections = translate(sections)
+		tokens = apply_macros(tokens)
+		chunks = apply_directives(tokens)
+		chunks = list(chunks)
+		chunks, labels = lookup_labels(chunks)
+		chunks = apply_labels(chunks, labels)
+		chunks = merge_chunks(chunks)
+		chunks = translate(chunks)
 		with open(out_filename, "wb") as stream:
-			emit(sections, stream)
+			emit(stream, chunks)
 	except (pyparsing.ParseException, pyparsing.ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"

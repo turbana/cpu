@@ -8,7 +8,7 @@ macros = []
 
 def macro(arg):
 	def add_macro(func, name, format):
-		fargs = inspect.getargspec(func).args[1:]
+		fargs = inspect.getargspec(func).args
 		syntax = ".%s " % name
 		if format:
 			syntax += " , ".join("%s:%s" % (n,t) for n,t in zip(fargs, format.split()))
@@ -26,51 +26,41 @@ def macro(arg):
 # Directives
 #
 
-@macro("u8")
-def db(pos, b):
-	return [b]
-
-
-@macro("u16")
-def dw(pos, w):
-	return [w]
-
-
-@macro("u16")
-def align(pos, n):
-	offset = n.value - (pos % n.value)
-	if offset != n.value:
-		return [tokens.Number((0, 10), bits=8*offset, signed=False)]
-	return []
-
-
-# the following macros don't have a body as the Macro object itself is used as
-# a placeholder during expansion
-
 @macro
-def text(pos):
+def text():
 	pass
 
 
 @macro
-def data(pos):
+def data():
 	pass
 
+@macro("u16")
+def org(target):
+	pass
+
+@macro("u16")
+def align(n):
+	pass
 
 
 #
 # Macros
 #
 
+@macro("u16")
+def dw(w):
+	return [w]
+
 
 @macro("u16")
-def zero(pos, count):
+def zero(count):
 	words = count.value
-	return [tokens.Number((0, 10), bits=16*words, signed=False)]
+	return [tokens.Number((0, 10), bits=16, signed=False) for _ in range(words)]
 
 
 @macro("reg s16")
-def ldi(pos, reg, imm):
+def ldi(reg, imm):
 	return """
 		lui  {reg}, (({imm} & 0xFF00) >> 8)
 		addi {reg}, ({imm} & 0x00FF)
@@ -78,7 +68,7 @@ def ldi(pos, reg, imm):
 
 
 @macro("reg")
-def push(pos, reg):
+def push(reg):
 	return """
 		sub $7, $7, 1
 		stw 0($7), {reg}
@@ -86,7 +76,7 @@ def push(pos, reg):
 
 
 @macro("reg")
-def pop(pos, reg):
+def pop(reg):
 	return """
 		ldw	{reg}, 0($7)
 		add $7, $7, 1
@@ -94,7 +84,7 @@ def pop(pos, reg):
 
 
 @macro("u16 reg")
-def call(pos, addr, scratch):
+def call(addr, scratch):
 	return """
 		sub $7, $7, 1
 		lcr {reg}, $cr0
@@ -105,7 +95,7 @@ def call(pos, addr, scratch):
 
 
 @macro("reg")
-def ret(pos, scratch):
+def ret(scratch):
 	return """
 		.pop {reg}
 		jmp  {reg}
