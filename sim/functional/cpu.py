@@ -212,14 +212,15 @@ def reti(cpu):
 
 @op
 def inb(cpu, tgt, src):
-	raise NotImplementedError()
+	addr = cpu.rget(src)
+	val = cpu.io(addr)
+	cpu.rset(tgt, val)
 
 @op
 def outb(cpu, tgt, src):
 	val = cpu.rget(src)
 	addr = cpu.rget(tgt)
-	if cpu.dev[addr]:
-		cpu.dev[addr].read(val & 0x00FF)
+	cpu.io(addr, val & 0x00FF)
 
 @op
 def ldiw(cpu, tgt, src):
@@ -356,6 +357,13 @@ class CPU(object):
 	def crset(self, cr, value):
 		if cr != 0:
 			self.reg[8 + cr] = value
+
+	@send_debugger
+	def io(self, addr, val=None):
+		dev = self.dev[addr]
+		if dev is not None:
+			return dev.read(val)
+		raise Exception("error: read to invalid io port: %02X (%s)" % (addr, val))
 
 
 def dump_short(cpu):
