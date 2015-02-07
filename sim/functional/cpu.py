@@ -1,5 +1,6 @@
 import collections
 import inspect
+import select
 import sys
 
 import asm.encoding
@@ -7,11 +8,12 @@ import debugger
 
 
 MAGIC_HEADER = 0xDEADF00D
-TIMER_PERIOD = 25
+TIMER_PERIOD = 250
 
 IDT_ADDR = 0x0100
 PIC_ADDR = 0x0010
 SCR_ADDR = 0x0020
+KB_ADDR  = 0x0030
 EOI_VAL = 0x00AB
 
 PC    = 8 # register
@@ -446,7 +448,35 @@ class PICDevice(Device):
 
 
 class KeyboardDevice(Device):
-	pass
+	def __init__(self):
+		self.buffer = []
+		self.pic = None # set in pic device
+
+	def tick(self):
+		ready, a, b = select.select([sys.stdin], [], [], 0)
+		if ready:
+			# XXX doesn't work
+			self.buffer.append(ord(ready[0].read(1)))
+		if self.buffer:
+			self.pic.interrupt(self)
+
+	def read(self, val=None):
+		if val is not None:
+			show("keyboard error: tried to write value:", val, "\n")
+			sys.exit(1)
+		return self.buffer.pop() if self.buffer else 0
+
+
+class DebugKeyboardDevice(KeyboardDevice):
+	def tick(self):
+		if self.buffer:
+			self.pic.interrupt(self)
+
+	def read(self, val=None):
+		if val is not None:
+			self.buffer.append(val)
+			return 0
+		return self.buffer.pop(0) if self.buffer else 0
 
 
 class ScreenDevice(Device):
@@ -455,16 +485,20 @@ class ScreenDevice(Device):
 			sys.stdout.write(chr(val))
 
 
-def load_devices(cpu):
+def load_devices(cpu, debugger=False):
 	pic = PICDevice(cpu)
 	timer = TimerDevice(TIMER_PERIOD)
-	kb = KeyboardDevice()
+	if debugger:
+		kb = DebugKeyboardDevice()
+	else:
+		kb = KeyboardDevice()
 	scr = ScreenDevice()
 	pic.register(timer, 7)
 	pic.register(kb, 2)
 	cpu.pic = pic
 	cpu.dev[PIC_ADDR] = pic
 	cpu.dev[SCR_ADDR] = scr
+	cpu.dev[KB_ADDR]  = kb
 
 
 def parse_file(filename):
@@ -501,7 +535,7 @@ def main(args):
 	else:
 		show("USAGE: %s binary [--dump clock]\n" % sys.argv[0])
 		return 2
-	debugging = False
+	debugging = True
 	trace_file = open("trace.log", "w")
 	chunks = parse_file(filename)
 	if not chunks:
@@ -511,7 +545,7 @@ def main(args):
 		cpu.debugger = debugger.Debugger(cpu, debugging, trace_file)
 	map(cpu.dload, chunks[0])
 	map(cpu.iload, chunks[1])
-	load_devices(cpu)
+	load_devices(cpu, debugging)
 	try:
 		cpu.run(stop_clock)
 		if stop_clock is not None:
