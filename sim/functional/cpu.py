@@ -284,15 +284,19 @@ class CPU(object):
 			self.pic.tick()
 			if (self.reg[FLAGS] & IE) and self.pic.int_line:
 				irq = self.pic.get_interrupt()
-				self.reg[EPC] = self.reg[PC]
-				self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
-				self.reg[FLAGS] &= ~IE
+				self.do_interrupt(irq)
 			opcode = self.fetch()
 			tok = asm.encoding.decode(opcode)
 			func = lookup_op(tok)
 			func(self, **tok.arguments())
 			if self.clock == stop_clock:
 				self.halt = True
+
+	@send_debugger
+	def do_interrupt(self, irq):
+		self.reg[EPC] = self.reg[PC]
+		self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
+		self.reg[FLAGS] &= ~IE
 
 	@send_debugger
 	def fetch(self):
