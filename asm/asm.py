@@ -127,14 +127,15 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
 def label_find(labels, label, pos, bits, signed, pc_relative):
 	if label.value not in labels:
 		raise Exception("unknown label %s" % repr(label.value))
+	pos /= 2
 	search = labels[label.value]
 	if len(search) == 1:
 		addr = search[0]
 	else:
 		if label.direction == "f":
-			addr = [l for l in search if l.pos > pos][0]
+			addr = [l for l in search if l > pos][0]
 		elif label.direction == "b":
-			addr = [l for l in search if l.pos <= pos][-1]
+			addr = [l for l in search if l <= pos][-1]
 		else:
 			raise Exception("Ambiguous definition for label %s" % repr(label.value))
 	if pc_relative:
