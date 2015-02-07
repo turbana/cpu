@@ -80,7 +80,7 @@ class Debugger(object):
 		show("\n")
 		if opcode is not None:
 			inst = asm.encoding.decode(opcode)
-			show("%04X> %s\n" % (self.cpu.reg[PC]-1, str(inst).replace("\t", " ")))
+			show("%04X | (%04X)\t%s\n" % (self.cpu.reg[PC]-1, opcode, inst))
 
 	def command(self):
 		done = False
@@ -124,8 +124,8 @@ class Debugger(object):
 					dump(self.cpu.imem, addr1, addr2 + 1)
 				elif cmd[0] == "memr":
 					addr1 = int(cmd[1], 16)
-					addr2 = int(cmd[2], 16)
-					self.drange = [addr1, addr2]
+					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
+					self.drange = [addr1, addr2+1]
 				elif cmd[0] == "regs":
 					show("\n")
 					reg_dump(self.cpu, REGISTER_COUNT)
@@ -166,7 +166,7 @@ class Debugger(object):
 					#show("io! addr val      write val to io port @addr\n")
 					show("dis addr [addr]   disassemble imem\n")
 				else:
-					show("unknown command:", " ".join(cmd))
+					show("unknown command:", " ".join(cmd), "\n")
 			except EOFError:
 				self.cpu.halt = True
 				done = True
