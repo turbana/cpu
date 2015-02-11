@@ -28,6 +28,7 @@ dot = Literal(".")
 lparen = Literal("(")
 rparen = Literal(")")
 comma = Literal(",")
+plus = Literal("+")
 
 unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
 signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
@@ -36,7 +37,7 @@ atoms = (signed + unsigned + "reg ireg creg cond z nz").split()
 name = Word(alphas, alphanums)
 inst_name = Combine(Optional(dot) + name + Optional(dot + oneOf(["z", "nz"])))
 boundry = lparen | rparen | comma
-arg_type = oneOf(atoms)
+arg_type = oneOf(atoms) + Optional(plus)
 arg = Group(name + Suppress(colon) + arg_type)
 args = OneOrMore(Optional(boundry) + arg + Optional(boundry))
 modifier = dot + arg
@@ -184,8 +185,10 @@ def parse_ast(syntax):
 def build_grammer(ast):
 	""" convert parsed instruction format into pyparsing grammer """
 	# ex: ['ldw', ['tgt', 'reg'], ',', ['offset', 's7'], '(', ['base', 'reg'], ')']
-	def lookup(name, type):
+	def lookup(name, type, modifier=None):
 		g = globals()[type].setResultsName(name).setName(name)
+		if modifier == plus:
+			g = Group(delimitedList(g, delim=","))
 		def setname(s, l, t):
 			t[0].name = name
 			t[0].type = type
