@@ -53,6 +53,10 @@ def dw(words):
 	return [tokens.Expression([word, "+", 0], name=".dw", bits=16, signed=False)
 			for word in words]
 
+@macro("string")
+def ascii(string):
+	return dw(map(ord, string))
+
 
 @macro("u16")
 def zero(count):
