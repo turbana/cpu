@@ -32,7 +32,7 @@ plus = Literal("+")
 
 unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
 signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
-atoms = (signed + unsigned + "reg ireg creg cond z nz").split()
+atoms = (signed + unsigned + "reg ireg creg cond z nz string").split()
 
 name = Word(alphas, alphanums)
 inst_name = Combine(Optional(dot) + name + Optional(dot + oneOf(["z", "nz"])))
@@ -80,6 +80,7 @@ colon = Suppress(":")
 lparen = Suppress("(")
 rparen = Suppress(")")
 dot = Suppress(".")
+dquote = Suppress('"')
 nl = Suppress(LineEnd())
 
 label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums + "_")
@@ -127,6 +128,8 @@ reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 ireg = reg | spec_imm
 creg = Suppress("$cr") + Word("012").setParseAction(to_int)
 cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
+string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)
+string.setParseAction(lambda s,l,t: t[0].replace("\\n", "\n"))
 
 u1  = number( 1, False)
 u2  = number( 2, False)
@@ -190,6 +193,8 @@ def build_grammer(ast):
 		if modifier == plus:
 			g = Group(delimitedList(g, delim=","))
 		def setname(s, l, t):
+			# if token is a str object, don't set name/type
+			if isinstance(t[0], str): return
 			t[0].name = name
 			t[0].type = type
 		g.addParseAction(setname)
