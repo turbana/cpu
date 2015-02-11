@@ -3,20 +3,8 @@
 ;;
 
 	.data
-str:	.dw	0x48		; Hello World!\n
-	.dw	0x65
-	.dw	0x6C
-	.dw	0x6C
-	.dw	0x6F
-	.dw	0x20
-	.dw	0x57
-	.dw	0x6F
-	.dw	0x72
-	.dw	0x6C
-	.dw	0x64
-	.dw	0x21
-	.dw	0x0A
-strlen:	.dw	0x0D
+str:	.dw	72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33, 10
+strlen:	.dw	13
 
 
 	.text

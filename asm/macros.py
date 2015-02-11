@@ -48,9 +48,10 @@ def align(n):
 # Macros
 #
 
-@macro("u16")
-def dw(w):
-	return [tokens.Expression([w, "+", 0], name=".dw", bits=16, signed=False)]
+@macro("u16+")
+def dw(words):
+	return [tokens.Expression([word, "+", 0], name=".dw", bits=16, signed=False)
+			for word in words]
 
 
 @macro("u16")
