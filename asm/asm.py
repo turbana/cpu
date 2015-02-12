@@ -11,6 +11,7 @@ import grammer
 
 
 MAGIC_HEADER = [0xDEAD, 0xF00D]
+CHUNK_SEC, CHUNK_ADDR, CHUNK_TOKS = range(3)
 
 
 ### macros
@@ -53,19 +54,19 @@ def apply_directives(toks):
 				chunk = chunks[tok.name][-1]
 				continue
 			elif tok.name == ".org":
-				section = chunk[0]
+				section = chunk[CHUNK_SEC]
 				addr = tok.args[0].value
 				chunk = (section, addr, [])
 				chunks[section].append(chunk)
 				continue
 			elif tok.name == ".align":
 				align = tok.args[0].value
-				addr = chunk[1] + len(chunk[2])
+				addr = chunk[CHUNK_ADDR] + len(chunk[CHUNK_TOKS])
 				padding = 0 if (addr % align) == 0 else align - (addr % align)
 				for _ in range(padding):
-					chunk[2].append(tokens.Number((0, 10), bits=16, signed=False))
+					chunk[CHUNK_TOKS].append(tokens.Number((0, 10), bits=16, signed=False))
 				continue
-		chunk[2].append(tok)
+		chunk[CHUNK_TOKS].append(tok)
 	for chunklist in chunks.values():
 		for chunk in chunklist:
 			yield chunk
@@ -195,7 +196,7 @@ def chunk_zip(left_chunk, right_chunk):
 
 
 def chunk_size(chunk):
-	return sum(inst.size for inst in chunk[2]) / 2
+	return sum(inst.size for inst in chunk[CHUNK_TOKS]) / 2
 
 
 ### translation
@@ -217,8 +218,8 @@ def emit(stream, chunks):
 		emit_word(len(bytes) / 2)
 		map(stream.write, map(chr, bytes))
 	chunks = list(chunks)
-	dchunks = filter(lambda c: c[0] == ".data", chunks)
-	ichunks = filter(lambda c: c[0] == ".text", chunks)
+	dchunks = filter(lambda c: c[CHUNK_SEC] == ".data", chunks)
+	ichunks = filter(lambda c: c[CHUNK_SEC] == ".text", chunks)
 	map(emit_word, MAGIC_HEADER)
 	emit_word(len(dchunks))
 	map(emit_chunk, dchunks)
