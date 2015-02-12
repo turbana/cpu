@@ -125,6 +125,8 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
 
 
 def label_find(labels, label, pos, bits, signed, pc_relative):
+	if label.value == "@":
+		return pos
 	if label.value not in labels:
 		raise Exception("unknown label %s" % repr(label.value))
 	pos /= 2
