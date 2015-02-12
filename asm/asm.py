@@ -230,12 +230,20 @@ def emit(stream, chunks):
 ### main
 
 def main(args):
-	if len(args) != 2:
-		print "USAGE: asm source.asm output.o"
+	if len(args) == 2:
+		in_filename  = args[0]
+		macro_filename = None
+		out_filename = args[1]
+	elif len(args) == 3:
+		in_filename  = args[0]
+		macro_filename = args[1]
+		out_filename = args[2]
+	else:
+		print "USAGE: asm source.asm [macros.py] output.o"
 		return 2
-	in_filename  = args[0]
-	out_filename = args[1]
 	try:
+		if macro_filename is not None:
+			execfile(macro_filename, {"macro": macros.macro})
 		g = grammer.grammer()
 		tokens = g.parseFile(in_filename, parseAll=True)
 		if not tokens:
