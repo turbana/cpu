@@ -20,6 +20,10 @@ parse_asserts() {
 
 source=$1
 binary=${source%%.asm}.o
+macros=${source%%.asm}.py
+if [[ ! -f "$macros" ]]; then
+	macros=""
+fi
 
 clocks=$(parse_stop $source)
 asserts=$(parse_asserts $source)
@@ -27,7 +31,7 @@ asserts=$(parse_asserts $source)
 [[ -z "$clocks" ]] && echo "ERROR: No stop() found in '$source'" && exit 3
 [[ -z "$asserts" ]] && echo "ERROR: No assert()'s found in '$source'" && exit 3
 
-$ASM $source $binary
+$ASM $source $macros $binary
 results=$($SIM $binary --dump $clocks | tr ' ' =)
 failed=0
 
