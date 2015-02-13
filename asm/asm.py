@@ -48,6 +48,7 @@ def apply_directives(toks):
 		".data": [(".data", 0, [])],
 	}
 	chunk = chunks[".text"][-1]
+	vars = {}
 	for tok in toks:
 		if isinstance(tok, tokens.Macro):
 			if tok.name in (".text", ".data"):
@@ -66,10 +67,28 @@ def apply_directives(toks):
 				for _ in range(padding):
 					chunk[CHUNK_TOKS].append(tokens.Number((0, 10), bits=16, signed=False))
 				continue
+			elif tok.name == ".set":
+				name = tok.args[0].value
+				value = tok.args[1]
+				apply_variables(value, vars)
+				vars[name] = value
+				continue
+		apply_variables(tok, vars)
 		chunk[CHUNK_TOKS].append(tok)
 	for chunklist in chunks.values():
 		for chunk in chunklist:
 			yield chunk
+
+
+def apply_variables(tok, vars):
+	for i,arg in enumerate(tok.args):
+		if isinstance(arg, tokens.Label):
+			if arg.value in vars:
+				arg_name = tok.args[i].name
+				tok.args[i] = vars[arg.value]
+				tok.args[i].name = arg_name
+		elif isinstance(arg, tokens.Expression):
+			apply_variables(arg, vars)
 
 
 ### labels

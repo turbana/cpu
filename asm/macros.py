@@ -35,12 +35,19 @@ def text():
 def data():
 	pass
 
+
 @macro("u16")
 def org(target):
 	pass
 
+
 @macro("u16")
 def align(n):
+	pass
+
+
+@macro("iden u16")
+def set(name, val):
 	pass
 
 
