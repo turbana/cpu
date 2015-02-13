@@ -85,7 +85,6 @@ nl = Suppress(LineEnd())
 
 label_name = (Word(nums) + Word("fb", exact=1)) | Word(alphanums + "_@")
 label_name.setName("label")
-iden = label_name.copy()
 
 _just_int_value = lambda s,l,t: t[0][0]
 expr_num = num.copy().addParseAction(_just_int_value)
@@ -173,6 +172,7 @@ creg.addParseAction(_build(tokens.ControlRegister))
 reg.addParseAction(_build(tokens.Register))
 cond.addParseAction(_build(tokens.Condition))
 label_name.addParseAction(_build(tokens.Label))
+iden = label_name.copy() # used in macros
 
 
 
