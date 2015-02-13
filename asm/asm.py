@@ -61,7 +61,7 @@ def apply_directives(toks):
 				continue
 			elif tok.name == ".align":
 				align = tok.args[0].value
-				addr = chunk[CHUNK_ADDR] + len(chunk[CHUNK_TOKS])
+				addr = chunk[CHUNK_ADDR] + chunk_size(chunk)
 				padding = 0 if (addr % align) == 0 else align - (addr % align)
 				for _ in range(padding):
 					chunk[CHUNK_TOKS].append(tokens.Number((0, 10), bits=16, signed=False))
