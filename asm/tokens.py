@@ -18,14 +18,18 @@ class Label(Token):
 		self.name = name
 		self.direction = direction
 		self.pos = -1
-	
+
 	def __str__(self):
+		if self.direction is not None:
+			return self.value + self.direction
+		return self.value
+
+	def __repr__(self):
 		if self.direction:
 			return "<Label %s %s>" % (repr(self.value), self.direction)
 		elif self.pos >= 0:
 			return "<Label %s @%d>" % (repr(self.value), self.pos)
 		return "<Label %s>" % repr(self.value)
-	__repr__ = __str__
 
 
 class Instruction(Token):
@@ -256,15 +260,20 @@ class Expression(Token):
 
 	def __str__(self):
 		self._evaluate()
+		if self._value is not None:
+			return str(self._value)
+		return "(" + " ".join(map(str, self.args)) + ")"
+
+	def __repr__(self):
+		self._evaluate()
 		sign = "s" if self.signed else "u"
 		val = self._value if self._value is not None else self.args
 		return "<Expr %s%s %s>" % (sign, self.bits, val)
-	__repr__ = __str__
 
 
 _number = re.compile("^(s|u)[0-9]")
 def pretty_print(arg, type):
-	if _number.match(type):
+	if isinstance(arg, Number) and _number.match(type):
 		signed = type[0] == "s"
 		bits = int(type[1:])
 		n = arg.value
