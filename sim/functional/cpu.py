@@ -547,7 +547,7 @@ def load_args(args):
 	p.add_argument("exe", nargs="?", type=binfile, help="load executable into memory")
 	p.add_argument("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int, help="stop execution upon reaching clock CLOCK")
 	p.add_argument("--randomize", dest="randomize", action="store_true", help="randomize all memory and registers before execution")
-	#p.add_argument("--access-errors", dest="fail_mem", action="store_true", help="fail on memory access errors (read before write, etc)")
+	p.add_argument("--no-check-errors", dest="check_errors", action="store_false", help="check for errors (e.x. mem read before write)")
 	#p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
 	#p.add_argument("--enable-keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
 	#p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
@@ -593,6 +593,10 @@ def main(args):
 	if opts.trace:
 		trace = listeners.Tracer(cpu, opts.trace)
 		cpu.add_listener(trace)
+
+	if opts.check_errors:
+		chk = listeners.ErrorChecker(cpu)
+		cpu.add_listener(chk)
 
 	if opts.stop_clock:
 		stopper = listeners.StopClock(cpu, opts.stop_clock)

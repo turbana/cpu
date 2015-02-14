@@ -39,3 +39,40 @@ class StopClock(object):
 	def before_fetch(self, _):
 		if self.clock == self.cpu.clock:
 			self.cpu.halt = True
+
+
+class ErrorChecker(object):
+	def __init__(self, cpu):
+		self.cpu = cpu
+		self.regs = set([0])
+		self.imem = set()
+		self.dmem = set()
+
+	def after_iload(self, _, (addr, words)):
+		for n in range(len(words)*2):
+			self.imem.add(addr + n)
+
+	def after_dload(self, _, (addr, words)):
+		for n in range(len(words)*2):
+			self.dmem.add(addr + n)
+
+	def before_iget(self, _, addr):
+		if addr not in self.imem:
+			raise Exception("ERROR: read from imem 0x%04X before write\n" % (addr/2))
+
+	def before_iset(self, _, addr):
+		self.imem.add(addr)
+
+	def before_dget(self, _, addr):
+		if addr not in self.dmem:
+			raise Exception("ERROR: read from mem 0x%04X before write\n" % (addr/2))
+
+	def before_dset(self, _, addr):
+		self.imem.add(addr)
+
+	def before_rget(self, _, reg):
+		if reg not in self.regs:
+			raise Exception("ERROR: read from register %d before write\n" % reg)
+
+	def before_rset(self, _, reg, _a):
+		self.regs.add(reg)
