@@ -62,8 +62,9 @@ class Debugger(object):
 		self.irange[1] = len(bytes) / 2
 
 	def before_run(self, *args):
-		self.normal_dump()
-		self.command()
+		if not self.brk_addrs:
+			self.normal_dump()
+			self.command()
 
 	def before_fetch(self, _):
 		if self.cpu.reg[PC] in self.brk_addrs:
