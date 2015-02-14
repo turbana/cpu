@@ -13,12 +13,15 @@ def hex_word(n):
 	h = hex(n)[2:].upper().zfill(4)
 	return h
 
+
 def hex_byte(n):
 	return hex(n)[2:].upper().zfill(2)
+
 
 def bin_word(n):
 	b = bin(n)[2:].zfill(16)
 	return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
+
 
 def show(*strs):
 	sys.stdout.write(" ".join(map(str, strs)))
@@ -44,15 +47,13 @@ def reg_dump(cpu, top_reg):
 
 
 class Debugger(object):
-	def __init__(self, cpu, running, trace_file):
+	def __init__(self, cpu):
 		self.cpu = cpu
-		self.running = running
 		self.step = False
 		self.drange = [0, 0]
 		self.irange = [0, 0]
 		self.brk_addrs = set()
 		self.brk_opcodes = set()
-		self.trace = trace_file
 
 	def before_dload(self, _, bytes):
 		self.drange[1] = len(bytes) / 2
@@ -69,31 +70,11 @@ class Debugger(object):
 			self.step = True
 
 	def after_fetch(self, opcode):
-		if self.trace:
-			addr = self.cpu.reg[PC] - 1
-			toks = str(asm.encoding.decode(opcode)).split("\t")
-			tok = "%-8s %s" % (toks[0], toks[1])
-			regs = " ".join("%d=%04X" % (r, self.cpu.reg[r]) for r in range(1, 11))
-			left = "%04X | %s" % (addr, tok)
-			line = "%-32s (%s) clk=%d\n" % (left, regs, self.cpu.clock)
-			self.trace.write(line)
 		if self.step:
 			self.normal_dump(opcode)
 			self.command()
 
-	def after_do_interrupt(self, _, irq):
-		if self.trace:
-			self.trace.write("int %02X\n" % irq)
-
-	def after_io(self, res, addr, val=None):
-		if self.trace:
-			if val is None:
-				self.trace.write("io %02X > %02X\n" % (addr, res))
-			else:
-				self.trace.write("io %02X < %02X\n" % (addr, val))
-
 	def normal_dump(self, opcode=None):
-		if not self.running: return
 		show(" "*40 + "clock:", self.cpu.clock, "\n")
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
@@ -105,7 +86,6 @@ class Debugger(object):
 			show("%04X | (%04X)\t%s\n" % (self.cpu.reg[PC]-1, opcode, inst))
 
 	def command(self):
-		if not self.running: return
 		done = False
 		while not done:
 			try:

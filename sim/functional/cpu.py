@@ -5,6 +5,7 @@ import sys
 
 import asm.encoding
 import debugger
+import tracer
 
 
 MAGIC_HEADER = 0xDEADF00D
@@ -543,7 +544,9 @@ def main(args):
 		return 1
 	cpu = CPU()
 	if not stop_clock:
-		cpu.add_listener(debugger.Debugger(cpu, debugging, trace_file))
+		cpu.add_listener(debugger.Debugger(cpu))
+	if trace_file:
+		cpu.add_listener(tracer.Tracer(cpu, trace_file))
 	map(cpu.dload, chunks[0])
 	map(cpu.iload, chunks[1])
 	load_devices(cpu, debugging)
