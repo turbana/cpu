@@ -1,10 +1,10 @@
 ;;
 ;; Test macros in seperate file
 ;;
-;@; stop(17)
-;@; assert($1 = 0x00FF)
-;@; assert($2 = 0x0023)
-;@; assert($3 = 0x0004)
+
+;;; TODO update to new calling conventions
+
+;@; 17 ($1=00FF $2=0023 $3=0004)
 
 	.set	count, 0
 	.set	latest, 0

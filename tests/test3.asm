@@ -1,5 +1,7 @@
 ; test expressions
 
+;;; TODO add tests
+
 	.data
 	.zero	32
 sbp:

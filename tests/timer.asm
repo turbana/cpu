@@ -2,6 +2,8 @@
 ;; Test timer interrupt
 ;;
 
+;;; TODO add tests
+
 	.data
 count:	.dw	0
 	.zero	32

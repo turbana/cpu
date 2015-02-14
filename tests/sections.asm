@@ -1,6 +1,9 @@
 ;;
 ;; Test sections
 ;;
+
+;;; TODO add tests
+
 ; Computes fibonacci infinitely
 ;
 ; Data Mem:

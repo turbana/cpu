@@ -4,6 +4,8 @@
 ;
 ; This will copy itself into higher memory then jump into the copied code
 
+;;; TODO add tests
+
 	.data
 size:	.dw	0x0008		; size of memory to move
 src:	.dw	0x0008		; code source

@@ -1,8 +1,8 @@
 ;;
 ;; calculates 3^9 and stores result back in memory
 ;;
-;@; stop(77)
-;@; assert($4 = 0x4CE3)
+
+;@; 77 ($4=4CE3)
 
 	.data
 n:	.dw	0x0003

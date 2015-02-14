@@ -1,9 +1,8 @@
 ;;
 ;; Test Big Integer addition
 ;;
-;@; stop(13)
-;@; assert($1 = 0x1000)
-;@; assert($2 = 0x0000)
+
+;@; 13 ($1=1000 $2=0000)
 
 ; res = op1 + op2
 ; op1 = 0x0FFF FFFF

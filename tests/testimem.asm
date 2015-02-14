@@ -5,6 +5,8 @@
 ; This will first copy itself into data memory. Then copy itself back,
 ; offset by `size' words, and jump into the newly copied code.
 
+;;; TODO add tests
+
 	.data
 size:	.dw	0x0020		; size of memory to move
 cptr:	.dw	0x0000		; code pointer

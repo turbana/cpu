@@ -3,8 +3,9 @@
 ;;
 ; After running $1 should equal 0xF00D
 ;
-;@; stop(257)
-;@; assert($1 = 0xF00D)
+;@; 257 ($1=F00D)
+
+;;; TODO add more tests
 
 	.data
 n:	.dw	0xABCD

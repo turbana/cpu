@@ -1,9 +1,8 @@
 ;;
 ;; Test Big Integer subtraction
 ;;
-;@; stop(13)
-;@; assert($1 = 0x0FFF)
-;@; assert($2 = 0xFFFF)
+
+;@; 13 ($1=0FFF $2=FFFF)
 
 ; res = op1 - op2
 ; op1 = 0x1000 0000

@@ -1,6 +1,8 @@
 ; test stack pushes/pops
 ; also test lui/addi for 16 bit immediates
 
+;;; TODO add tests
+
 	.data
 	.align	2
 	.zero	16
