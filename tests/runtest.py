@@ -9,7 +9,7 @@ import sys
 import pyparsing as pp
 
 root = os.path.dirname(sys.argv[0])
-ASM = os.path.join(root, "asm.py")
+ASM = os.path.join(root, "../asm/asm.py")
 SIM = os.path.join(root, "../sim/functional/cpu.py")
 errors = [0]
 
