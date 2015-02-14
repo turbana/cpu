@@ -269,7 +269,7 @@ class CPU(object):
 	def randomize(self):
 		word = lambda _: random.randint(0, 2**16-1)
 		byte = lambda _: random.randint(0, 2**8-1)
-		self.reg = map(word, self.reg)
+		for r in range(1, 8): self.reg[r] = word(0)
 		self.imem = map(byte, self.imem)
 		self.dmem = map(byte, self.dmem)
 
