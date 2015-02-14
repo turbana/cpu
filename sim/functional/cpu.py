@@ -233,20 +233,20 @@ def stiw(cpu, tgt, src):
 	cpu.iset(cpu.rget(tgt) * 2, inst)
 
 
-def send_debugger(fn):
+def send_listeners(fn):
 	def wrapper(cpu, *args, **kwargs):
-		debugger_call(cpu, fn.__name__, True, None, args, kwargs)
+		listener_call(cpu, fn.__name__, True, None, args, kwargs)
 		res = fn(cpu, *args, **kwargs)
-		debugger_call(cpu, fn.__name__, False, res, args, kwargs)
+		listener_call(cpu, fn.__name__, False, res, args, kwargs)
 		return res
 	return wrapper
 
 
-def debugger_call(cpu, name, before, result, args, kwargs):
+def listener_call(cpu, name, before, result, args, kwargs):
 	func = lambda *args, **kwargs: None
-	if cpu.debugger:
-		name = ("before_" if before else "after_") + name
-		func = getattr(cpu.debugger, name, func)
+	name = ("before_" if before else "after_") + name
+	for listener in cpu.listeners:
+		func = getattr(listener, name, func)
 	func(result, *args, **kwargs)
 
 
@@ -259,13 +259,13 @@ class CPU(object):
 		self.pic = None
 		self.halt = False
 		self.clock = 0
-		self.debugger = None
+		self.listeners = []
 
-	@send_debugger
+	@send_listeners
 	def dload(self, chunk):
 		self._load(self.dmem, chunk)
 
-	@send_debugger
+	@send_listeners
 	def iload(self, chunk):
 		self._load(self.imem, chunk)
 
@@ -277,7 +277,7 @@ class CPU(object):
 			mem[j] = high
 			mem[j+1] = low
 
-	@send_debugger
+	@send_listeners
 	def run(self, stop_clock=None):
 		while not self.halt:
 			self.clock += 1
@@ -292,19 +292,19 @@ class CPU(object):
 			if self.clock == stop_clock:
 				self.halt = True
 
-	@send_debugger
+	@send_listeners
 	def do_interrupt(self, irq):
 		self.reg[EPC] = self.reg[PC]
 		self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
 		self.reg[FLAGS] &= ~IE
 
-	@send_debugger
+	@send_listeners
 	def fetch(self):
 		pc = self.reg[PC]
 		self.reg[PC] = (pc + 1) & 0xFFFF
 		return self.iget(pc * 2)
 
-	@send_debugger
+	@send_listeners
 	def iget(self, addr):
 		self._check_addr(addr)
 		high = self.imem[addr]
@@ -312,7 +312,7 @@ class CPU(object):
 		byte = (high << 8) | low
 		return byte
 
-	@send_debugger
+	@send_listeners
 	def iset(self, addr, val, byte=False):
 		self._check_addr(addr)
 		high = (val & 0xFF) if byte else (val >> 8)
@@ -321,7 +321,7 @@ class CPU(object):
 		if not byte:
 			self.imem[addr + 1] = low
 
-	@send_debugger
+	@send_listeners
 	def mget(self, addr):
 		self._check_addr(addr)
 		high = self.dmem[addr]
@@ -329,7 +329,7 @@ class CPU(object):
 		byte = (high << 8) | low
 		return byte
 
-	@send_debugger
+	@send_listeners
 	def mset(self, addr, val, byte=False):
 		self._check_addr(addr)
 		high = (val & 0xFF) if byte else (val >> 8)
@@ -342,32 +342,35 @@ class CPU(object):
 		if addr >= 2**17:
 			raise Exception("Invalid memory access: %04X" % addr)
 
-	@send_debugger
+	@send_listeners
 	def rget(self, reg):
 		return self.reg[reg]
 
-	@send_debugger
+	@send_listeners
 	def rset(self, reg, value):
 		if reg != 0:
 			self.reg[reg] = value
 
-	@send_debugger
+	@send_listeners
 	def crget(self, cr):
 		val = self.reg[8 + cr]
 		if cr == 0: val += 1
 		return val
 
-	@send_debugger
+	@send_listeners
 	def crset(self, cr, value):
 		if cr != 0:
 			self.reg[8 + cr] = value
 
-	@send_debugger
+	@send_listeners
 	def io(self, addr, val=None):
 		dev = self.dev[addr]
 		if dev is not None:
 			return dev.read(val)
 		raise Exception("error: read to invalid io port: %02X (%s)" % (addr, val))
+
+	def add_listener(self, listener):
+		self.listeners.append(listener)
 
 
 def dump_short(cpu):
@@ -540,7 +543,7 @@ def main(args):
 		return 1
 	cpu = CPU()
 	if not stop_clock:
-		cpu.debugger = debugger.Debugger(cpu, debugging, trace_file)
+		cpu.add_listener(debugger.Debugger(cpu, debugging, trace_file))
 	map(cpu.dload, chunks[0])
 	map(cpu.iload, chunks[1])
 	load_devices(cpu, debugging)
