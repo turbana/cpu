@@ -55,9 +55,8 @@ def assemble(asm, macro, exe):
 
 
 def simulate(exe, clocks):
-	trace = exe.replace(".o", ".trace.log")
-	fmt = "%s %s --no-debugger --randomize --test-clock %s --stop-clock %d --trace %s"
-	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks), trace)
+	fmt = "%s %s --no-debugger --randomize --test-clock %s --stop-clock %d"
+	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks))
 	return do_proc(cmd).split("\n")
 
 
@@ -70,6 +69,11 @@ def asserts(output, checks):
 		for key, value in sorted(values.items()):
 			if value != result[key]:
 				error("@%d %s expected %04X got %04X" % (clock, key, value, result[key]))
+
+def create_trace(exe, clocks):
+	trace = exe.replace(".o", ".trace.log")
+	cmd = "%s %s --no-debugger --randomize --stop-clock %d --trace %s" % (SIM, exe, max(clocks), trace)
+	do_proc(cmd)
 
 
 def do_proc(cmd):
@@ -99,6 +103,8 @@ def main(args):
 		output = simulate(exe_filename, checks.keys())
 		output = parse_output(output)
 		asserts(output, checks)
+		if errors[0] != 0:
+			create_trace(exe_filename, checks.keys())
 	except (pp.ParseException, pp.ParseFatalException), err:
 		print err.line
 		print " "*(err.column-1) + "^"
