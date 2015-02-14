@@ -8,7 +8,6 @@ import sys
 
 import asm.encoding
 import debugger
-import tracer
 import listeners
 
 
@@ -578,7 +577,7 @@ def main(args):
 		cpu.add_listener(dbg)
 
 	if opts.trace:
-		trace = tracer.Tracer(cpu, opts.trace)
+		trace = listeners.Tracer(cpu, opts.trace)
 		cpu.add_listener(trace)
 
 	if opts.stop_clock:
