@@ -566,8 +566,8 @@ def load_args(args):
 
 	g = p.add_argument_group("output-options")
 	g.add_argument("--trace", metavar="FILE", dest="trace", type=tracefile, help="trace data sent to FILE")
-	#g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", help="display test output at each CLOCK")
-	#g.add_argument("--test-clock-intvl", metavar="COUNT", dest="test_clock_int", type=int, help="display test output every COUNT clocks")
+	g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", default=[0], help="display test output at each CLOCK")
+	g.add_argument("--test-clock-rate", metavar="COUNT", dest="test_clock_rate", type=int, help="display test output every COUNT clocks")
 	# TODO configure test output
 
 	if not args:
@@ -597,6 +597,10 @@ def main(args):
 	if opts.check_errors:
 		chk = listeners.ErrorChecker(cpu)
 		cpu.add_listener(chk)
+
+	if opts.test_clocks or opts.test_clock_rate:
+		tester = listeners.TestOutput(cpu, opts.test_clock_rate, opts.test_clocks)
+		cpu.add_listener(tester)
 
 	if opts.stop_clock:
 		stopper = listeners.StopClock(cpu, opts.stop_clock)

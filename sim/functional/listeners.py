@@ -86,3 +86,16 @@ class ErrorChecker(object):
 
 	def before_rset(self, _, reg, _a):
 		self.regs.add(reg)
+
+
+class TestOutput(object):
+	def __init__(self, cpu, clock_rate, clocks):
+		self.cpu = cpu
+		self.clock_rate = clock_rate
+		self.clocks = set(clocks)
+
+	def before_fetch(self, _):
+		clock_match = self.cpu.clock in self.clocks
+		clock_rate = self.clock_rate is not None and (self.cpu.clock % self.clock_rate) == 0
+		if clock_match or clock_rate:
+			print "%d %s" % (self.cpu.clock, registers(self.cpu, 1, 11))
