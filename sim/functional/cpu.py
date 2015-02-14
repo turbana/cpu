@@ -292,6 +292,8 @@ class CPU(object):
 	@send_listeners
 	def run(self):
 		self.reg[PC] = 0
+		self.reg[EPC] = 0
+		self.reg[FLAGS] = 0
 		while not self.halt:
 			self.clock += 1
 			self.pic.tick()
