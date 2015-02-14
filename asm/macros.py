@@ -95,20 +95,33 @@ def pop(reg):
 	""".format(reg=reg)
 
 
-@macro("u16 reg")
-def call(addr, scratch):
+@macro("u16")
+def call(addr):
 	return """
 		sub $7, $7, 1
-		lcr {reg}, $cr0
-		add {reg}, {reg}, 2
-		stw 0($7), {reg}
+		stw 0($7), $6
+		lcr $6, $cr0
 		jmp {addr}
-	""".format(addr=addr.value, reg=scratch)
+		ldw $6, 0($7)
+		add $7, $7, 1
+	""".format(addr=addr)
 
 
-@macro("reg")
-def ret(scratch):
+@macro("u8")
+def enter(words):
+	# XXX figure out immediate value
 	return """
-		.pop {reg}
-		jmp  {reg}
-	""".format(reg=scratch)
+		sub $7, $7, 1
+		stw 0($7), $6
+		add $6, $7, 1
+		sub $7, $7, {words}
+	""".format(words=words)
+
+
+@macro
+def leave():
+	return """
+		add $7, $0, $6
+		ldw $6, -1($6)
+		jmp $6
+	"""
