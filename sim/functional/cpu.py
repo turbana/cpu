@@ -573,7 +573,7 @@ def main(args):
 	if opts.debug:
 		dbg = debugger.Debugger(cpu)
 		if opts.breakpoints:
-			dbg.brk_adders = set(opts.breakpoints)
+			dbg.brk_addrs = set(opts.breakpoints)
 		cpu.add_listener(dbg)
 
 	if opts.trace:
