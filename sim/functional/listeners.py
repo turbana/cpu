@@ -98,4 +98,4 @@ class TestOutput(object):
 		clock_match = self.cpu.clock in self.clocks
 		clock_rate = self.clock_rate is not None and (self.cpu.clock % self.clock_rate) == 0
 		if clock_match or clock_rate:
-			print "%d %s" % (self.cpu.clock, registers(self.cpu, 1, 11))
+			print "%d (%s)" % (self.cpu.clock, registers(self.cpu, 1, 11))
