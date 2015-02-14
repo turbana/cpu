@@ -3,6 +3,7 @@
 import argparse
 import collections
 import inspect
+import random
 import select
 import sys
 
@@ -265,6 +266,13 @@ class CPU(object):
 		self.clock = 0
 		self.listeners = []
 
+	def randomize(self):
+		word = lambda _: random.randint(0, 2**16-1)
+		byte = lambda _: random.randint(0, 2**8-1)
+		self.reg = map(word, self.reg)
+		self.imem = map(byte, self.imem)
+		self.dmem = map(byte, self.dmem)
+
 	@send_listeners
 	def dload(self, chunk):
 		self._load(self.dmem, chunk)
@@ -283,6 +291,7 @@ class CPU(object):
 
 	@send_listeners
 	def run(self):
+		self.reg[PC] = 0
 		while not self.halt:
 			self.clock += 1
 			self.pic.tick()
@@ -535,7 +544,7 @@ def load_args(args):
 
 	p.add_argument("exe", nargs="?", type=binfile, help="load executable into memory")
 	p.add_argument("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int, help="stop execution upon reaching clock CLOCK")
-	#p.add_argument("--randomize-memory", dest="random_mem", action="store_true", help="randomize all memory and registers before execution")
+	p.add_argument("--randomize", dest="randomize", action="store_true", help="randomize all memory and registers before execution")
 	#p.add_argument("--access-errors", dest="fail_mem", action="store_true", help="fail on memory access errors (read before write, etc)")
 	#p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
 	#p.add_argument("--enable-keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
@@ -569,6 +578,9 @@ def load_args(args):
 def main(args):
 	opts = load_args(args)
 	cpu = CPU()
+
+	if opts.randomize:
+		cpu.randomize()
 
 	if opts.debug:
 		dbg = debugger.Debugger(cpu)
