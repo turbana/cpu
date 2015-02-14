@@ -9,6 +9,7 @@ import sys
 import asm.encoding
 import debugger
 import tracer
+import listeners
 
 
 MAGIC_HEADER = 0xDEADF00D
@@ -282,7 +283,7 @@ class CPU(object):
 			mem[j+1] = low
 
 	@send_listeners
-	def run(self, stop_clock=None):
+	def run(self):
 		while not self.halt:
 			self.clock += 1
 			self.pic.tick()
@@ -293,8 +294,6 @@ class CPU(object):
 			tok = asm.encoding.decode(opcode)
 			func = lookup_op(tok)
 			func(self, **tok.arguments())
-			if self.clock == stop_clock:
-				self.halt = True
 
 	@send_listeners
 	def do_interrupt(self, irq):
@@ -506,7 +505,7 @@ def load_devices(cpu, debugger=False):
 	cpu.dev[KB_ADDR]  = kb
 
 
-def parse_file(filename):
+def parse_file(stream):
 	def read(stream, bytes):
 		value = 0
 		for byte in stream.read(bytes):
@@ -523,11 +522,10 @@ def parse_file(filename):
 			chunks.append((addr, words))
 		return chunks
 
-	with open(filename, "rb") as stream:
-		if read(stream, 4) != MAGIC_HEADER:
-			show("ERROR: Magic header not found\n")
-			return None
-		return read_chunks(stream), read_chunks(stream)
+	if read(stream, 4) != MAGIC_HEADER:
+		show("ERROR: Magic header not found\n")
+		return None
+	return read_chunks(stream), read_chunks(stream)
 
 
 def load_args(args):
@@ -570,35 +568,35 @@ def load_args(args):
 
 
 def main(args):
-	if len(args) == 1:
-		filename = args[0]
-		stop_clock = None
-	elif len(args) == 3 and args[1] == "--dump":
-		filename = args[0]
-		stop_clock = int(args[2])
-	else:
-		show("USAGE: %s binary [--dump clock]\n" % sys.argv[0])
-		return 2
-	debugging = True
-	trace_file = open("trace.log", "w")
-	chunks = parse_file(filename)
-	if not chunks:
-		return 1
+	opts = load_args(args)
 	cpu = CPU()
-	if not stop_clock:
-		cpu.add_listener(debugger.Debugger(cpu))
-	if trace_file:
-		cpu.add_listener(tracer.Tracer(cpu, trace_file))
-	map(cpu.dload, chunks[0])
-	map(cpu.iload, chunks[1])
-	load_devices(cpu, debugging)
+
+	if opts.debug:
+		dbg = debugger.Debugger(cpu)
+		if opts.breakpoints:
+			dbg.brk_adders = set(opts.breakpoints)
+		cpu.add_listener(dbg)
+
+	if opts.trace:
+		trace = tracer.Tracer(cpu, opts.trace)
+		cpu.add_listener(trace)
+
+	if opts.stop_clock:
+		stopper = listeners.StopClock(cpu, opts.stop_clock)
+		cpu.add_listener(stopper)
+
+	if opts.exe:
+		chunks = parse_file(opts.exe)
+		map(cpu.dload, chunks[0])
+		map(cpu.iload, chunks[1])
+
+	load_devices(cpu, opts.debug)
 	try:
-		cpu.run(stop_clock)
-		if stop_clock is not None:
-			dump_short(cpu)
+		cpu.run()
 	except KeyboardInterrupt:
 		show("\n")
-		return 0
+	return 0
+
 
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
