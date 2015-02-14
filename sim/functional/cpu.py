@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+import argparse
 import collections
 import inspect
 import select
@@ -525,6 +528,44 @@ def parse_file(filename):
 			show("ERROR: Magic header not found\n")
 			return None
 		return read_chunks(stream), read_chunks(stream)
+
+
+def load_args(args):
+	def addr(s): return int(s, 16) # def'd so that "addr" will show in error messages
+	binfile = argparse.FileType("rb")
+	p = argparse.ArgumentParser(description="Functional simulator for XXX cpu", usage="%(prog)s [exe] [options]")
+
+	p.add_argument("exe", nargs="?", type=binfile, help="load executable into memory")
+	p.add_argument("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int, help="stop execution upon reaching clock CLOCK")
+	p.add_argument("--randomize-memory", dest="random_mem", action="store_true", help="randomize all memory and registers before execution")
+	p.add_argument("--access-errors", dest="fail_mem", action="store_true", help="fail on memory access errors (read before write, etc)")
+	p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
+	p.add_argument("--enable-keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
+	p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
+
+	g = p.add_argument_group("load-options")
+	g.add_argument("--load-rom", metavar="FILE", dest="rom", type=binfile, help="load FILE into ROM")
+	g.add_argument("--load-serial-0", metavar="FILE", dest="uart0", type=binfile, help="UART0 reads from FILE")
+	g.add_argument("--load-serial-1", metavar="FILE", dest="uart1", type=binfile, help="UART1 reads from FILE")
+	g.add_argument("--load-data", metavar="FILE", dest="data0", type=binfile, help="load FILE into data memory at address 0")
+	g.add_argument("--load-inst", metavar="FILE", dest="inst0", type=binfile, help="load FILE into instruction memory at address 0")
+
+	g = p.add_argument_group("debugger-options")
+	g.add_argument("--no-debugger", dest="debug", action="store_false", help="start without debugger")
+	g.add_argument("--breakpoints", metavar="ADDR", dest="breakpoints", type=addr, nargs="+", help="set debugger breakpoints")
+	# TODO other debugger options
+
+	g = p.add_argument_group("output-options")
+	g.add_argument("--trace", metavar="FILE", dest="trace", type=file, help="trace data sent to FILE")
+	g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", help="display test output at each CLOCK")
+	g.add_argument("--test-clock-intvl", metavar="COUNT", dest="test_clock_int", type=int, help="display test output every COUNT clocks")
+	# TODO configure test output
+
+	if not args:
+		p.print_help()
+		sys.exit(2)
+
+	return p.parse_args(args)
 
 
 def main(args):
