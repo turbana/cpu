@@ -243,11 +243,11 @@ def send_listeners(fn):
 
 
 def listener_call(cpu, name, before, result, args, kwargs):
-	func = lambda *args, **kwargs: None
+	empty = lambda *args, **kwargs: None
 	name = ("before_" if before else "after_") + name
 	for listener in cpu.listeners:
-		func = getattr(listener, name, func)
-	func(result, *args, **kwargs)
+		func = getattr(listener, name, empty)
+		func(result, *args, **kwargs)
 
 
 class CPU(object):
