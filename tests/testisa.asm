@@ -45,7 +45,7 @@ sbp:
 	lui	$1, 0x80		; $1 = 0x8000
 	or	$1, $1, $3		; $1 = $1 | $3 = 0xF171
 	xor	$3, $3, $3		; $3 = $3 ^ $3 = 0
-	addi	$3, -1			; $3 = -1
+	sub	$3, $0, 1		; $3 = -1
 	stw	0($6), $3		;  m = $3
 	add	$3, $0, -1		; $3 = 0xFFFF
 	shr	$3, $3, 8		; $3 >>= 8 = 0x00FF
@@ -54,7 +54,11 @@ sbp:
 
 	.ldi	$7, sbp			; setup stack
 	.push	$1			; push 0xF171
-	.call	count_bits, $5		; count 1 bits
+	sub	$7, $7, 1		; .call count_bits
+	lcr	$5, $cr0
+	add	$5, $5, 2
+	stw	0($7), $5
+	jmp	count_bits
 	.pop	$2			; $2 = result = 9
 	xor	$3, $1, $2		; $3 = $1 ^ $2 = 0xF178
 
@@ -123,4 +127,5 @@ count_bits:
 	.pop	$3			; restore $3
 	.pop	$2			; restore $2
 	.pop	$1			; restore $1
-	.ret	$5			; return
+	.pop	$5			; .ret
+	jmp	$5
