@@ -12,7 +12,12 @@ def macro(arg):
 		syntax = ".%s " % name
 		if format:
 			syntax += " , ".join("%s:%s" % (n,t) for n,t in zip(fargs, format.split()))
-		macros.append((syntax, func))
+		def macro_wrapper(*args):
+			res = func(*args)
+			if isinstance(res, str):
+				res = res.format(**dict(zip(fargs, args)))
+			return res
+		macros.append((syntax, macro_wrapper))
 	if hasattr(arg, "__call__"):
 		add_macro(arg, arg.func_name, None)
 		return arg
@@ -73,10 +78,10 @@ def zero(count):
 
 @macro("reg s16")
 def ldi(reg, imm):
-	asm = "lui {reg}, (({imm} & 0xFF00) >> 8)\n"
+	asm = "lui {reg}, (({imm.value} & 0xFF00) >> 8)\n"
 	if isinstance(imm.value, str) or (imm.value & 0x00FF) > 0:
-		asm += "addi {reg}, ({imm} & 0x00FF)\n"
-	return asm.format(reg=reg, imm=imm.value)
+		asm += "addi {reg}, ({imm.value} & 0x00FF)\n"
+	return asm
 
 
 @macro("reg")
@@ -84,7 +89,7 @@ def push(reg):
 	return """
 		sub $7, $7, 1
 		stw 0($7), {reg}
-	""".format(reg=reg)
+	"""
 
 
 @macro("reg")
@@ -92,7 +97,7 @@ def pop(reg):
 	return """
 		ldw	{reg}, 0($7)
 		add $7, $7, 1
-	""".format(reg=reg)
+	"""
 
 
 @macro("u16")
@@ -104,7 +109,7 @@ def call(addr):
 		jmp {addr}
 		ldw $6, 0($7)
 		add $7, $7, 1
-	""".format(addr=addr)
+	"""
 
 
 @macro("u8")
@@ -115,7 +120,7 @@ def enter(words):
 		stw 0($7), $6
 		add $6, $7, 1
 		sub $7, $7, {words}
-	""".format(words=words)
+	"""
 
 
 @macro
