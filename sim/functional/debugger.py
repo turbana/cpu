@@ -94,6 +94,9 @@ class Debugger(object):
 				if not cmd:
 					if self.step:
 						done = True
+				elif cmd[0] in ("q", "quit"):
+					self.cpu.halt = True
+					done = True
 				elif cmd[0] in ("s", "step"):
 					self.step = True
 					done = True
@@ -167,6 +170,7 @@ class Debugger(object):
 					val = int(cmd[2], 16)
 					self.cpu.io(port, val)
 				elif cmd[0] in ("?", "h", "help"):
+					show("q|quit            halts\n")
 					show("s|step            step\n")
 					show("r|run             run\n")
 					show("b [addr]          show breakpoints / add breakpoint (addr)\n")
