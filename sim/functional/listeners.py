@@ -4,6 +4,16 @@ import asm.encoding
 
 PC = 8
 
+
+def registers(cpu, start, stop):
+	return " ".join("%s=%04X" % (reg_name(r), cpu.reg[r]) for r in range(1, 11))
+
+def reg_name(r):
+	if r < 8:
+		return "$" + str(r)
+	return "$cr" + str(r-8)
+
+
 class Tracer(object):
 	def __init__(self, cpu, trace_file):
 		self.cpu = cpu
@@ -16,7 +26,7 @@ class Tracer(object):
 		addr = self.cpu.reg[PC] - 1
 		toks = str(asm.encoding.decode(opcode)).split("\t")
 		tok = "%-8s %s" % (toks[0], toks[1])
-		regs = " ".join("%d=%04X" % (r, self.cpu.reg[r]) for r in range(1, 11))
+		regs = registers(self.cpu, 1, 11)
 		left = "%04X | %s" % (addr, tok)
 		line = "%-32s (%s) clk=%d\n" % (left, regs, self.cpu.clock)
 		self.show(line)
@@ -72,7 +82,7 @@ class ErrorChecker(object):
 
 	def before_rget(self, _, reg):
 		if reg not in self.regs:
-			raise Exception("ERROR: read from register %d before write\n" % reg)
+			raise Exception("ERROR: read from register %s before write\n" % reg_name(reg))
 
 	def before_rset(self, _, reg, _a):
 		self.regs.add(reg)
