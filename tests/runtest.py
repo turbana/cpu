@@ -8,6 +8,8 @@ import sys
 
 import pyparsing as pp
 
+MARK = "|@|"
+
 root = os.path.dirname(sys.argv[0])
 ASM = os.path.join(root, "../asm/asm.py")
 SIM = os.path.join(root, "../sim/functional/cpu.py")
@@ -31,23 +33,15 @@ def grammer():
 	return num + lparen + values + rparen + nl
 
 
-def parse_output(lines):
+def parse(stream):
 	g = grammer()
 	results = {}
-	for line in lines:
-		if not line.split(): continue
-		res = g.parseString(line)
-		results[res[0]] = res
+	for line in stream:
+		if MARK in line:
+			subline = line[line.find(MARK)+len(MARK):]
+			res = g.parseString(subline)
+			results[res[0]] = res
 	return results
-
-
-def parse_input(stream):
-	def inner():
-		for line in stream:
-			line = line.strip()
-			if line.startswith(";@;"):
-				yield line[3:]
-	return parse_output(inner())
 
 
 def assemble(asm, macro, exe):
@@ -57,7 +51,10 @@ def assemble(asm, macro, exe):
 def simulate(exe, clocks):
 	fmt = "%s %s --no-debugger --randomize --test-clock %s --stop-clock %d"
 	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks))
-	return do_proc(cmd).split("\n")
+	output = do_proc(cmd)
+	for line in output.split("\n"):
+		if not line.strip(): continue
+		yield MARK + line
 
 
 def asserts(output, checks):
@@ -69,6 +66,7 @@ def asserts(output, checks):
 		for key, value in sorted(values.items()):
 			if value != result[key]:
 				error("@%d %s expected %04X got %04X" % (clock, key, value, result[key]))
+
 
 def create_trace(exe, clocks):
 	trace = exe.replace(".o", ".trace.log")
@@ -98,10 +96,10 @@ def main(args):
 	if not os.path.exists(macro_filename):
 		macro_filename = ""
 	try:
-		checks = parse_input(open(asm_filename))
+		checks = parse(open(asm_filename))
 		assemble(asm_filename, macro_filename, exe_filename)
 		output = simulate(exe_filename, checks.keys())
-		output = parse_output(output)
+		output = parse(output)
 		asserts(output, checks)
 		if errors[0] != 0:
 			create_trace(exe_filename, checks.keys())
