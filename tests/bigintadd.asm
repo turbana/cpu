@@ -2,7 +2,7 @@
 ;; Test Big Integer addition
 ;;
 
-;@; 13 ($1=1000 $2=0000)
+; |@| 10 ($1=1000 $2=0000)
 
 ; res = op1 + op2
 ; op1 = 0x0FFF FFFF

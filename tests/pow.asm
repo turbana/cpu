@@ -2,7 +2,7 @@
 ;; calculates 3^9 and stores result back in memory
 ;;
 
-;@; 77 ($4=4CE3)
+; |@| 75 ($4=4CE3)
 
 	.data
 n:	.dw	0x0003

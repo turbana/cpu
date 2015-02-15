@@ -2,7 +2,7 @@
 ;; Test Big Integer subtraction
 ;;
 
-;@; 13 ($1=0FFF $2=FFFF)
+; |@| 8 ($1=0FFF $2=FFFF)
 
 ; res = op1 - op2
 ; op1 = 0x1000 0000
