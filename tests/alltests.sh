@@ -1,28 +1,86 @@
 #!/bin/bash
 
+BUILD=build
+ASM=../asm/asm.py
 TEST=./runtest.py
 status=0
 
-run_test() {
-	$TEST $1
-	status=$(($status+$?))
+run() {
+	$@ 2>&1
+	ec=$?
+	status=$(($status+$ec))
+	if [[ $ec -ne 0 ]]; then
+		echo "FAIL $@"
+	fi
+	return $ec
+}
+
+assemble() {
+	macro=${1%%.asm}.py
+	[[ -f $macro ]] || macro=
+	$ASM $1 $macro $2
+}
+
+# run assembler test (check for valid encoding)
+test_asm() {
+	fn=${1%%.asm}
+	out=$BUILD/${fn}.o
+	good=$BUILD/${fn}.good.bin
+	check=$BUILD/${fn}.test.bin
+	egrep -o '; [ 01]* \|' $1 | tr -d ' ;|' > $good
+	assemble $1 $out
+	[[ $? -ne 0 ]] && return 1
+	xxd -b -c 1 $out | cut -f2 -d' ' | sed 'N;s/\n//' > $check
+	diff $good $check
+}
+
+# run test through python functional simulator
+test_func_sim() {
+	$TEST $@
+}
+
+# run test through verilog functional simulator
+test_vfunc_sim() {
+	: # NOT IMPLEMENTED
+}
+
+# run test though verilog behavioral simulator
+test_behave_sim() {
+	: # NOT IMPLEMENTED
+}
+
+# run all tests
+run_tests() {
+	out=$BUILD/${1%%.asm}.o
+	run assemble $1 $out
+	run test_func_sim $1 $out
+	run test_vfunc_sim $1 $out
+	run test_behave_sim $1 $out
 }
 
 
-run_test bigintadd.asm
-run_test bigintsub.asm
-#run_test echo.asm
-run_test fib.asm
-#run_test macros.asm
-run_test pow.asm
-#run_test screen.asm
-#run_test sections.asm
-#run_test test1.asm
-#run_test test2.asm
-#run_test test3.asm
-#run_test testimem2.asm
-#run_test testimem.asm
-run_test testisa.asm
-#run_test timer.asm
+################################################################################
+# Tests
+################################################################################
+
+# assembler tests
+run test_asm test1.asm
+
+# main tests
+run_tests bigintadd.asm
+run_tests bigintsub.asm
+#run_tests echo.asm
+run_tests fib.asm
+#run_tests macros.asm
+run_tests pow.asm
+#run_tests screen.asm
+#run_tests sections.asm
+#run_tests test1.asm
+#run_tests test2.asm
+#run_tests test3.asm
+#run_tests testimem2.asm
+#run_tests testimem.asm
+run_tests testisa.asm
+#run_tests timer.asm
 
 exit $status

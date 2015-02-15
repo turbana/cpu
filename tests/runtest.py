@@ -44,10 +44,6 @@ def parse(stream):
 	return results
 
 
-def assemble(asm, macro, exe):
-	do_proc("%s %s %s %s" % (ASM, asm, macro, exe))
-
-
 def simulate(exe, clocks):
 	fmt = "%s %s --no-debugger --randomize --test-clock %s --stop-clock %d"
 	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks))
@@ -84,23 +80,22 @@ def do_proc(cmd):
 
 
 def main(args):
-	if len(args) != 1:
-		print "USAGE: %s testfile.asm" % sys.argv[0]
+	if len(args) != 2:
+		print "USAGE: %s testfile.asm testfile.o" % sys.argv[0]
 		return 2
 	asm_filename = args[0]
-	macro_filename = asm_filename.replace(".asm", ".py")
-	exe_filename = asm_filename.replace(".asm", ".o")
+	exe_filename = args[1]
 	if not os.path.exists(asm_filename):
 		print "ERROR: could not open file: " + asm_filename
 		return 1
-	if not os.path.exists(macro_filename):
-		macro_filename = ""
+	if not os.path.exists(exe_filename):
+		print "ERROR: could not open file: " + exe_filename
+		return 1
 	try:
 		checks = parse(open(asm_filename))
 		if not checks:
 			print "ERROR: no checks found in " + asm_filename
 			return 1
-		assemble(asm_filename, macro_filename, exe_filename)
 		output = simulate(exe_filename, checks.keys())
 		output = parse(output)
 		asserts(output, checks)
