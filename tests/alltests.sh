@@ -15,5 +15,5 @@ $TEST pow.asm
 #$TEST test3.asm
 #$TEST testimem2.asm
 #$TEST testimem.asm
-#$TEST testisa.asm
+$TEST testisa.asm
 #$TEST timer.asm
