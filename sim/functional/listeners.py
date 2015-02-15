@@ -47,7 +47,7 @@ class StopClock(object):
 		self.clock = clock
 
 	def before_fetch(self, _):
-		if self.clock == self.cpu.clock:
+		if self.cpu.clock - 1 == self.clock:
 			self.cpu.halt = True
 
 
@@ -95,7 +95,11 @@ class TestOutput(object):
 		self.clocks = set(clocks)
 
 	def before_fetch(self, _):
-		clock_match = self.cpu.clock in self.clocks
-		clock_rate = self.clock_rate is not None and (self.cpu.clock % self.clock_rate) == 0
-		if clock_match or clock_rate:
-			print "%d (%s)" % (self.cpu.clock, registers(self.cpu, 1, 11))
+		# before fetch happens before any execution, but after clock is incremented
+		cpu_clock = self.cpu.clock - 1
+		if cpu_clock < 0: return
+		clock_match = cpu_clock in self.clocks
+		clock_rate = self.clock_rate is not None and cpu_clock != 0 and (cpu_clock % self.clock_rate) == 0
+		clock_rate_first = cpu_clock == 0 and self.clock_rate == 1
+		if clock_match or clock_rate or clock_rate_first:
+			print "%d (%s)" % (cpu_clock, registers(self.cpu, 1, 11))

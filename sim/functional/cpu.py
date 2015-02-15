@@ -263,7 +263,7 @@ class CPU(object):
 		self.dev = [None] * 2**16
 		self.pic = None
 		self.halt = False
-		self.clock = 0
+		self.clock = -1
 		self.listeners = []
 
 	def randomize(self):
@@ -566,7 +566,7 @@ def load_args(args):
 
 	g = p.add_argument_group("output-options")
 	g.add_argument("--trace", metavar="FILE", dest="trace", type=tracefile, help="trace data sent to FILE")
-	g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", default=[0], help="display test output at each CLOCK")
+	g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", default=[None], help="display test output at each CLOCK")
 	g.add_argument("--test-clock-rate", metavar="COUNT", dest="test_clock_rate", type=int, help="display test output every COUNT clocks")
 	# TODO configure test output
 
