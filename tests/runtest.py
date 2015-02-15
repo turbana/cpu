@@ -97,6 +97,9 @@ def main(args):
 		macro_filename = ""
 	try:
 		checks = parse(open(asm_filename))
+		if not checks:
+			print "ERROR: no checks found in " + asm_filename
+			return 1
 		assemble(asm_filename, macro_filename, exe_filename)
 		output = simulate(exe_filename, checks.keys())
 		output = parse(output)
