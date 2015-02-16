@@ -291,19 +291,34 @@ class CPU(object):
 
 	@send_listeners
 	def run(self):
+		self.reset()
+		while not self.halt:
+			self.cycle()
+
+	@ send_listeners
+	def reset(self):
 		self.reg[PC] = 0
 		self.reg[EPC] = 0
 		self.reg[FLAGS] = 0
-		while not self.halt:
-			self.clock += 1
-			self.pic.tick()
-			if (self.reg[FLAGS] & IE) and self.pic.int_line:
-				irq = self.pic.get_interrupt()
-				self.do_interrupt(irq)
-			opcode = self.fetch()
-			tok = asm.encoding.decode(opcode)
-			func = lookup_op(tok)
-			func(self, **tok.arguments())
+
+	@send_listeners
+	def cycle(self):
+		self.pic.tick()
+		if (self.reg[FLAGS] & IE) and self.pic.int_line:
+			irq = self.pic.get_interrupt()
+			self.do_interrupt(irq)
+		opcode = self.fetch()
+		tok = asm.encoding.decode(opcode)
+		self.update_clock(tok)
+		self.execute(tok)
+
+	@send_listeners
+	def execute(self, tok):
+		func = lookup_op(tok)
+		func(self, **tok.arguments())
+
+	def update_clock(self, token):
+		self.clock += 1
 
 	@send_listeners
 	def do_interrupt(self, irq):
