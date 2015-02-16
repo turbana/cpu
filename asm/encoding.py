@@ -86,6 +86,8 @@ def decode(opcode):
 				arg.type = type
 				if name == "jmp" and aname == "offset":
 					arg.value += 1
+				arg.dest = False
 				tok_args.append(arg)
+			tok_args[-1].dest = True # set the rightmost argument as the destination (HACK)
 			return Instruction(name, *tok_args)
 	raise ValueError("Unknown opcode: " + hex(opcode))
