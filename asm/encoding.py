@@ -1,3 +1,5 @@
+import copy
+
 import isa
 from tokens import *
 import grammer
@@ -33,6 +35,8 @@ def encode(token):
 	for name, start, end in args:
 		value = getattr(token, name)
 		if opname == "jmp" and name == "offset":
+			# create shallow copy of value so we don't modify the token object
+			value = copy.copy(value)
 			value.value -= 1
 		word |= value.binary() << end
 		if word < 0:
