@@ -98,10 +98,12 @@ def jmp(cpu, offset):
 	# jmp is PC + offset + 1, but we've already incremented PC in cpu.fetch(),
 	# and offset is also incremented by 1 in decode()
 	cpu.reg[PC] += offset - 1
+	cpu.stall(2)
 
 @op
 def jmp(cpu, tgt):
 	cpu.reg[PC] = cpu.rget(tgt)
+	cpu.stall(2)
 
 @op
 def add(cpu, tgt, op1, op2, ir):
@@ -142,6 +144,7 @@ def s(cpu, cond, op1, op2, ir):
 	func = condition_func[cond]
 	if func(op1, op2):
 		cpu.reg[PC] += 1
+		cpu.stall()
 
 @op
 def as_z(cpu, ir, op1, op2, tgt):
@@ -151,6 +154,7 @@ def as_z(cpu, ir, op1, op2, tgt):
 	cpu.rset(tgt, res)
 	if res == 0:
 		cpu.reg[PC] += 1
+		cpu.stall()
 
 @op
 def as_nz(cpu, ir, op1, op2, tgt):
@@ -160,6 +164,7 @@ def as_nz(cpu, ir, op1, op2, tgt):
 	cpu.rset(tgt, res)
 	if res != 0:
 		cpu.reg[PC] += 1
+		cpu.stall()
 
 @op
 def lui(cpu, imm, tgt):
@@ -214,6 +219,7 @@ def scr(cpu, cr, src):
 @op
 def reti(cpu):
 	cpu.reg[PC] = cpu.reg[EPC]
+	cpu.stall(2)
 
 @op
 def inb(cpu, tgt, src):
@@ -256,15 +262,18 @@ def listener_call(cpu, name, before, result, args, kwargs):
 
 
 class CPU(object):
-	def __init__(self):
+	def __init__(self, real_clock):
 		self.reg  = [0] * 16
 		self.imem = [0] * 2**17 # memory is 2**16 words therefore 2**17 bytes
 		self.dmem = [0] * 2**17 # ...
 		self.dev = [None] * 2**16
 		self.pic = None
 		self.halt = False
-		self.clock = -1
+		self.real_clock = real_clock
+		self.clock = (4 if real_clock else 0) - 1
 		self.listeners = []
+		self.mem_write_reg = None
+		self.stalls = 0
 
 	def randomize(self):
 		word = lambda _: random.randint(0, 2**16-1)
@@ -307,18 +316,32 @@ class CPU(object):
 		if (self.reg[FLAGS] & IE) and self.pic.int_line:
 			irq = self.pic.get_interrupt()
 			self.do_interrupt(irq)
-		opcode = self.fetch()
-		tok = asm.encoding.decode(opcode)
+		if self.stalls:
+			self.stalls -= 1
+			tok = None
+		else:
+			opcode = self.fetch()
+			tok = asm.encoding.decode(opcode)
 		self.update_clock(tok)
-		self.execute(tok)
+		if tok is not None:
+			self.execute(tok)
 
 	@send_listeners
 	def execute(self, tok):
 		func = lookup_op(tok)
 		func(self, **tok.arguments())
 
+	def stall(self, count=1):
+		self.stalls += count
+
 	def update_clock(self, token):
 		self.clock += 1
+		if not self.real_clock or token is None: return
+		# stall this instruction on register read after memory fetch
+		read_args = [str(arg) for arg in token.args if not arg.dest]
+		if self.mem_write_reg in read_args:
+			self.clock += 1
+		self.mem_write_reg = str(token.tgt) if token.name == "ldw" else None
 
 	@send_listeners
 	def do_interrupt(self, irq):
@@ -563,6 +586,7 @@ def load_args(args):
 	p.add_argument("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int, help="stop execution upon reaching CLOCK")
 	p.add_argument("--randomize", dest="randomize", action="store_true", help="randomize all memory and registers before execution")
 	p.add_argument("--no-check-errors", dest="check_errors", action="store_false", help="don't check for errors (e.x. mem read before write)")
+	p.add_argument("--realistic-clock", dest="real_clock", action="store_true", help="report clock count from WB stage (includes bubbles)")
 	#p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
 	#p.add_argument("--enable-keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
 	#p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
@@ -594,7 +618,7 @@ def load_args(args):
 
 def main(args):
 	opts = load_args(args)
-	cpu = CPU()
+	cpu = CPU(opts.real_clock)
 
 	if opts.randomize:
 		cpu.randomize()
