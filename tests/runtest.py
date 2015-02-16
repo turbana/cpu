@@ -45,7 +45,7 @@ def parse(stream):
 
 
 def simulate(exe, clocks):
-	fmt = "%s %s --no-debugger --randomize --test-clock %s --stop-clock %d"
+	fmt = "%s %s --no-debugger --randomize --realistic-clock --test-clock %s --stop-clock %d"
 	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks))
 	output = do_proc(cmd)
 	for line in output.split("\n"):
