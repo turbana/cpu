@@ -49,7 +49,7 @@ def reg_dump(cpu, top_reg):
 class Debugger(object):
 	def __init__(self, cpu):
 		self.cpu = cpu
-		self.step = False
+		self.step = True
 		self.drange = [0, 0]
 		self.irange = [0, 0]
 		self.brk_addrs = set()
@@ -61,30 +61,26 @@ class Debugger(object):
 	def before_iload(self, _, bytes):
 		self.irange[1] = len(bytes) / 2
 
-	def before_run(self, *args):
-		if not self.brk_addrs:
-			self.normal_dump()
-			self.command()
-
 	def before_fetch(self, _):
 		if self.cpu.reg[PC] in self.brk_addrs:
 			self.step = True
 
-	def after_fetch(self, opcode):
+	def before_execute(self, _, token):
 		if self.step:
-			self.normal_dump(opcode)
+			self.normal_dump(token)
 			self.command()
 
-	def normal_dump(self, opcode=None):
+	def normal_dump(self, token=None):
 		show(" "*40 + "clock:", self.cpu.clock, "\n")
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
 			show("\n")
 			dump(self.cpu.dmem, *self.drange)
 		show("\n")
-		if opcode is not None:
-			inst = asm.encoding.decode(opcode)
-			show("%04X | (%04X)\t%s\n" % (self.cpu.reg[PC]-1, opcode, inst))
+		if token is not None:
+			words = asm.encoding.encode(token)
+			opcode = (words[0] << 8 | words[1])
+			show("%04X | (%04X)\t%s\n" % (self.cpu.reg[PC]-1, opcode, token))
 
 	def command(self):
 		done = False
