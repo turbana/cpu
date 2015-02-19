@@ -76,6 +76,7 @@ run_tests bigintadd.asm
 run_tests bigintsub.asm
 #run_tests echo.asm
 run_tests fib.asm
+run_tests immediates.asm
 #run_tests macros.asm
 run_tests pow.asm
 #run_tests screen.asm
