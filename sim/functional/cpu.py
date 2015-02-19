@@ -173,7 +173,8 @@ def lui(cpu, imm, tgt):
 @op
 def addi(cpu, imm, tgt):
 	imm = twoc_unsign(imm, 8)
-	# TODO check overflow
+	if imm & 0x80:
+		imm |= 0xFF00
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op

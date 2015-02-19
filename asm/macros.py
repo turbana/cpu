@@ -78,10 +78,10 @@ def zero(count):
 
 @macro("reg s16")
 def ldi(reg, imm):
-	asm = "lui {reg}, (({imm.value} & 0xFF00) >> 8)\n"
-	if isinstance(imm.value, str) or (imm.value & 0x00FF) > 0:
-		asm += "addi {reg}, ({imm.value} & 0x00FF)\n"
-	return asm
+	return """
+		lui  {reg}, (({imm.value} & 0xFF00) >> 8) + (({imm.value} & 0x0080) >> 7)
+		addi {reg}, ({imm.value} & 0x00FF)
+	"""
 
 
 @macro("reg")
