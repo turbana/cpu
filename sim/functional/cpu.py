@@ -109,8 +109,7 @@ def jmp(cpu, tgt):
 def add(cpu, tgt, op1, op2, ir):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	res = op1 + op2
-	cpu.rset(tgt, res & 0xFFFF)
+	cpu.rset(tgt, op1 + op2)
 
 @op
 def sub(cpu, tgt, op1, op2, ir):
@@ -160,7 +159,7 @@ def as_z(cpu, ir, op1, op2, tgt):
 def as_nz(cpu, ir, op1, op2, tgt):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	res = op1 + op2
+	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res != 0:
 		cpu.reg[PC] += 1
@@ -181,15 +180,13 @@ def addi(cpu, imm, tgt):
 def shl(cpu, ir, op1, op2, tgt):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	n = (op1 << op2) & 0xFFFF
-	cpu.rset(tgt, n)
+	cpu.rset(tgt, op1 << op2)
 
 @op
 def shr(cpu, ir, op1, op2, tgt):
 	op1 = cpu.rget(op1)
 	if not ir: op2 = cpu.rget(op2)
-	n = (op1 >> op2) & 0xFFFF
-	cpu.rset(tgt, n)
+	cpu.rset(tgt, op1 >> op2)
 
 @op
 def xor(cpu, tgt, src):
@@ -400,7 +397,7 @@ class CPU(object):
 	@send_listeners
 	def rset(self, reg, value):
 		if reg != 0:
-			self.reg[reg] = value
+			self.reg[reg] = (value & 0xFFFF)
 
 	@send_listeners
 	def crget(self, cr):
@@ -411,7 +408,7 @@ class CPU(object):
 	@send_listeners
 	def crset(self, cr, value):
 		if cr != 0:
-			self.reg[8 + cr] = value
+			self.reg[8 + cr] = (value & 0xFFFF)
 
 	@send_listeners
 	def io(self, addr, val=None):
