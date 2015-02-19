@@ -52,7 +52,7 @@ test_behave_sim() {
 # run all tests
 run_tests() {
 	out=$BUILD/${1%%.asm}.o
-	run assemble $1 $out
+	run assemble $1 $out || return 0
 	run test_func_sim $1 $out
 	run test_vfunc_sim $1 $out
 	run test_behave_sim $1 $out
@@ -62,6 +62,11 @@ run_tests() {
 ################################################################################
 # Tests
 ################################################################################
+
+cd $(dirname $0)
+
+# ensure build directory exists
+mkdir -p $BUILD
 
 # assembler tests
 run test_asm test1.asm
