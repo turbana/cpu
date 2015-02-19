@@ -23,6 +23,10 @@ def bin_word(n):
 	return "%s %s  %s %s" % (b[0:4], b[4:8], b[8:12], b[12:16])
 
 
+def twoc_sign(n):
+	return (n - (2**16)) if n >= (2**15) else n
+
+
 def show(*strs):
 	sys.stdout.write(" ".join(map(str, strs)))
 
@@ -43,7 +47,7 @@ def reg_dump(cpu, top_reg):
 	for r in range(1, top_reg+1):
 		v = cpu.reg[r]
 		name = ("  $%d" % r) if r < 8 else ("$cr%d" % (r-8))
-		show("%s:  %s  |  %s  =  %5s\n" % (name, bin_word(v), hex_word(v), v))
+		show("%s:  %s  |  %s  =  %6s\n" % (name, bin_word(v), hex_word(v), twoc_sign(v)))
 
 
 class Debugger(object):
