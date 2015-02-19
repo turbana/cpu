@@ -45,7 +45,7 @@ def parse(stream):
 
 
 def simulate(exe, clocks):
-	fmt = "%s %s --no-debugger --randomize --realistic-clock --test-clock %s --stop-clock %d"
+	fmt = "%s %s --no-debugger --test-clock %s --stop-clock %d"
 	cmd = fmt % (SIM, exe, " ".join(map(str, clocks)), max(clocks))
 	output = do_proc(cmd)
 	for line in output.split("\n"):
@@ -57,16 +57,16 @@ def asserts(output, checks):
 	for clock, values in sorted(checks.items()):
 		try:
 			result = output[clock]
+			for key, value in sorted(values.items()):
+				if value != result[key]:
+					error("@%d %s expected %04X got %04X" % (clock, key, value, result[key]))
 		except KeyError:
 			error("clock %s not found in output" % clock)
-		for key, value in sorted(values.items()):
-			if value != result[key]:
-				error("@%d %s expected %04X got %04X" % (clock, key, value, result[key]))
 
 
 def create_trace(exe, clocks):
 	trace = exe.replace(".o", ".trace.log")
-	cmd = "%s %s --no-debugger --randomize --stop-clock %d --trace %s" % (SIM, exe, max(clocks), trace)
+	cmd = "%s %s --no-debugger --stop-clock %d --trace %s" % (SIM, exe, max(clocks), trace)
 	do_proc(cmd)
 
 
