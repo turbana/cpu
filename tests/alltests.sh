@@ -16,9 +16,7 @@ run() {
 }
 
 assemble() {
-	macro=${1%%.asm}.py
-	[[ -f $macro ]] || macro=
-	$ASM $1 $macro $2
+	$ASM $1 $2
 }
 
 # run assembler test (check for valid encoding)
