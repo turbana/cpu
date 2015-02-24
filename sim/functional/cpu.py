@@ -71,7 +71,7 @@ def lookup_op(tok):
 		fargs = inspect.getargspec(func).args[1:]
 		if sorted(fargs) == argnames:
 			return func
-	raise Exception("%s not defined" % tok.name)
+	raise Exception("Instruction not defined: %s (%s)" % (tok.name, ", ".join(argnames)))
 
 @op
 def ldw(cpu, tgt, base, offset):
@@ -101,8 +101,8 @@ def jmp(cpu, offset):
 	cpu.stall(2)
 
 @op
-def jmp(cpu, tgt):
-	cpu.reg[PC] = cpu.rget(tgt)
+def jmp(cpu, epc, tgt):
+	cpu.reg[PC] = cpu.crget(EPC) if epc else cpu.rget(tgt)
 	cpu.stall(2)
 
 @op
@@ -190,21 +190,20 @@ def shr(cpu, ir, op1, op2, tgt):
 	cpu.rset(tgt, op1 >> op2)
 
 @op
+def sar(cpu, ir, op1, op2, tgt):
+	op1 = cpu.rget(op1)
+	if not ir: op2 = cpu.rget(op2)
+	res = op1 >> op2
+	mask = ~(2**(16-op2) - 1) if op1 & 0x8000 else 0
+	cpu.rset(tgt, res | mask)
+
+@op
 def xor(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
 
 @op
 def trap(cpu, reg):
 	raise NotImplementedError()
-
-@op
-def sext(cpu, tgt, src):
-	val = cpu.rget(src)
-	if val & 0x80:
-		val |= 0xFF00
-	else:
-		val &= 0x00FF
-	cpu.rset(tgt, val)
 
 @op
 def lcr(cpu, tgt, cr):
