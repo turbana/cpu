@@ -38,13 +38,18 @@ class Instruction(Token):
 		self.args = list(args[1:])
 		self.size = 2
 
-		# construct I/R token
+		# construct special tokens
 		for arg in self.args:
-			if arg.type == "ir":
+			if arg.type in ("ir", "epc"):
 				break
 			if arg.type == "ireg":
 				ir = not isinstance(arg, Register)
 				tok = Bit(ir, "ir")
+				tok.type = "bit"
+				self.args.append(tok)
+			elif arg.type == "jreg":
+				cr = str(arg) == "$cr2"
+				tok = Bit(cr, "epc")
 				tok.type = "bit"
 				self.args.append(tok)
 
