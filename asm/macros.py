@@ -116,10 +116,10 @@ def call(addr):
 def enter(words):
 	# XXX figure out immediate value
 	return """
-		sub $7, $7, 1
-		stw 0($7), $6
-		add $6, $7, 1
-		sub $7, $7, {words}
+		sub  $7, $7, 1
+		stw  0($7), $6
+		add  $6, $7, 1
+		addi $7, -{words.value}
 	"""
 
 
