@@ -20,8 +20,8 @@
 	.data
 	.zero	128			; stack
 stack:
-n:	.dw	0x000C			; n-th fibonacci number
-x:	.dw	0x0000			; store result in x
+n:	.word	0x000C			; n-th fibonacci number
+x:	.word	0x0000			; store result in x
 
 	.text
 	.ldi	$7, stack		; setup stack

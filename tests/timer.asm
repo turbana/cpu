@@ -5,7 +5,7 @@
 ;;; TODO add tests
 
 	.data
-count:	.dw	0
+count:	.word	0
 	.zero	32
 sbp:
 

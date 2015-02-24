@@ -23,7 +23,7 @@
 	.data
 	.zero	1
 	.align	16
-a:	.dw	0		; a @ 0x0010
+a:	.word	0		; a @ 0x0010
 
 	.text
 	jmp	start
@@ -40,7 +40,7 @@ loop:	ldw	$1, 0($3)	; $1 = a
 
 	.data
 	.org	0x0008
-b:	.dw	1		; b @ 0x0008
+b:	.word	1		; b @ 0x0008
 
 	.text
 	.org	0x0019

@@ -61,13 +61,13 @@ def set(name, val):
 #
 
 @macro("u16+")
-def dw(words):
+def word(words):
 	return [tokens.Expression([word, "+", 0], name=".dw", bits=16, signed=False)
 			for word in words]
 
 @macro("string")
 def ascii(string):
-	return dw(map(ord, string))
+	return word(map(ord, string))
 
 
 @macro("u16")

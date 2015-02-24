@@ -5,9 +5,9 @@
 ; |@| 119 ($4=4CE3)
 
 	.data
-n:	.dw	0x0003
-p:	.dw	0x0009
-x:	.dw	0x0000
+n:	.word	0x0003
+p:	.word	0x0009
+x:	.word	0x0000
 
 	.text
 start:	ldw	$1, n($0)

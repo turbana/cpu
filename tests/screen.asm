@@ -4,7 +4,7 @@
 
 	.data
 str:	.ascii	"Hello World!\n"
-strlen:	.dw	@-str
+strlen:	.word	@-str
 
 
 	.text

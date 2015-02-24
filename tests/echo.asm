@@ -15,21 +15,21 @@
 	.data
 	.align	4
 buf:	.zero	4		; 4 word input buffer
-bstart:	.dw	buf
-bend:	.dw	buf
+bstart:	.word	buf
+bend:	.word	buf
 	.zero	64
 sbp:
 
 	;; IDT
 	.org	0x0100
-	.dw	empty		; IRQ 0
-	.dw	empty		; IRQ 1
-	.dw	keyboard	; IRQ 2
-	.dw	empty		; IRQ 3
-	.dw	empty		; IRQ 4
-	.dw	empty		; IRQ 5
-	.dw	empty		; IRQ 6
-	.dw	empty		; IRQ 7
+	.word	empty		; IRQ 0
+	.word	empty		; IRQ 1
+	.word	keyboard	; IRQ 2
+	.word	empty		; IRQ 3
+	.word	empty		; IRQ 4
+	.word	empty		; IRQ 5
+	.word	empty		; IRQ 6
+	.word	empty		; IRQ 7
 
 
 	.text

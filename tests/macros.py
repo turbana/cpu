@@ -3,7 +3,7 @@
 def test(name, value):
 	return """
 			.data
-	{name}:	.dw			{value}
+	{name}:	.word		{value}
 			.text
 	load_{name}:
 			.enter		0

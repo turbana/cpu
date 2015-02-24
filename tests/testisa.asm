@@ -6,8 +6,8 @@
 ; final check |@| 346 ($1=F00D $cr0=005A)
 
 	.data
-n:	.dw	0xABCD
-m:	.dw	0x0000
+n:	.word	0xABCD
+m:	.word	0x0000
 	.zero	32
 sbp:
 

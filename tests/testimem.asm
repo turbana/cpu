@@ -8,9 +8,9 @@
 ;;; TODO add tests
 
 	.data
-size:	.dw	0x0020		; size of memory to move
-cptr:	.dw	0x0000		; code pointer
-dptr:	.dw	0x0003		; data pointer
+size:	.word	0x0020		; size of memory to move
+cptr:	.word	0x0000		; code pointer
+dptr:	.word	0x0003		; data pointer
 data:	.zero	0x0020		; scratch data
 
 
