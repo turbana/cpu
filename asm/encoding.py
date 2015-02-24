@@ -57,8 +57,8 @@ def decode(opcode):
 			tok_args = []
 			for arg in args:
 				aname, start, end = arg
-				type = code["types"][aname] if aname != "ir" else "ir"
-				mask = (1 << end) if start == end else ((2**(start - end + 1) - 1) << end)
+				type = aname if aname in ("ir", "epc") else code["types"][aname]
+				mask = ((2**(start - end + 1) - 1) << end)
 				value = (opcode & mask) >> end
 				def twoc(n, bits):
 					if n & (1 << (bits-1)):
@@ -69,14 +69,19 @@ def decode(opcode):
 					arg = Register(value, aname)
 				elif type == "creg":
 					arg = ControlRegister(value, aname)
-				elif type == "ir":
-					arg = IR(value, aname)
+				elif type in ("ir", "epc"):
+					arg = Bit(value, aname)
 				elif type == "cond":
 					arg = Condition(isa.conditions_rev[value], aname)
 				elif type == "ireg":
 					if tok_args[0].value == 1:
 						n = Number((isa.immediates_rev[value], 10), 5, True)
 						arg = Immediate(n, aname)
+					else:
+						arg = Register(value, aname)
+				elif type == "jreg":
+					if tok_args[0].value == 1:
+						arg = ControlRegister(value, aname)
 					else:
 						arg = Register(value, aname)
 				elif type.startswith("s"):

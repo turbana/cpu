@@ -32,7 +32,7 @@ plus = Literal("+")
 
 unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
 signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
-atoms = (signed + unsigned + "reg ireg creg cond z nz string iden").split()
+atoms = (signed + unsigned + "reg ireg jreg creg cond z nz string iden").split()
 
 name = Word(alphas, alphanums)
 inst_name = Combine(Optional(dot) + name + Optional(dot + oneOf(["z", "nz"])))
@@ -115,7 +115,7 @@ def number(bits, signed):
 
 def _check_range(s, l, t):
 	obj = t[0].value if isinstance(t[0], tokens.Expression) else t[0]
-	if obj is None or obj.value not in [8,4,2,1,-1,-2,-4,-8]:
+	if obj is None or obj.value < -8 or obj.value > 8 or obj.value == 0:
 		raise ParseException(s, l, "Invalid value for spec immediate")
 	return tokens.Immediate(obj)
 spec_imm = number(5, True).addParseAction(_check_range)
@@ -125,7 +125,9 @@ spec_imm = number(5, True).addParseAction(_check_range)
 
 label = label_name + colon
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
+epc = Suppress("$") + Literal("epc").setParseAction(_build(tokens.ControlRegister))
 ireg = reg | spec_imm
+jreg = reg | epc
 creg = Suppress("$cr") + Word("012").setParseAction(to_int)
 cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)

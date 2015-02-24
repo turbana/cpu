@@ -44,8 +44,9 @@ class Instruction(Token):
 				break
 			if arg.type == "ireg":
 				ir = not isinstance(arg, Register)
-				self.args.insert(0, IR(ir, "ir"))
-				break
+				tok = Bit(ir, "ir")
+				tok.type = "bit"
+				self.args.append(tok)
 
 	def arguments(self):
 		return dict((a.name, a.value) for a in self.args)
@@ -132,6 +133,12 @@ class Register(Token):
 
 
 class ControlRegister(Register):
+	def __init__(self, reg, name=""):
+		if reg == "epc":
+			reg = 2
+		self.name = name
+		self.value = reg
+
 	def __str__(self):
 		return "$cr%d" % self.value
 
@@ -185,7 +192,7 @@ class Macro(Token):
 	__repr__ = __str__
 
 
-class IR(Token):
+class Bit(Token):
 	def __init__(self, value, name=""):
 		self.value = True if value else False
 		self.name = name
@@ -194,7 +201,7 @@ class IR(Token):
 		return 1 if self.value else 0
 
 	def __str__(self):
-		return "<IR %d>" % self.value
+		return "<Bit %d>" % self.value
 	__repr__ = __str__
 
 
