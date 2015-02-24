@@ -238,7 +238,7 @@ def emit(stream, chunks):
 		emit_word(addr)
 		emit_word(len(bytes) / 2)
 		map(stream.write, map(chr, bytes))
-	chunks = list(chunks)
+	chunks = [chunk for chunk in chunks if chunk[CHUNK_TOKS]]
 	dchunks = filter(lambda c: c[CHUNK_SEC] == ".data", chunks)
 	ichunks = filter(lambda c: c[CHUNK_SEC] == ".text", chunks)
 	map(emit_word, MAGIC_HEADER)
