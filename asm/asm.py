@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import collections
+import os.path
 import sys
 
 import pyparsing
@@ -251,19 +252,14 @@ def emit(stream, chunks):
 ### main
 
 def main(args):
-	if len(args) == 2:
-		in_filename  = args[0]
-		macro_filename = None
-		out_filename = args[1]
-	elif len(args) == 3:
-		in_filename  = args[0]
-		macro_filename = args[1]
-		out_filename = args[2]
-	else:
-		print "USAGE: asm source.asm [macros.py] output.o"
+	if len(args) != 2:
+		print "USAGE: asm source.asm output.o"
 		return 2
+	in_filename  = args[0]
+	out_filename = args[1]
+	macro_filename = in_filename[:in_filename.rfind(".")] + ".py"
 	try:
-		if macro_filename is not None:
+		if os.path.exists(macro_filename):
 			execfile(macro_filename, {"macro": macros.macro})
 		g = grammer.grammer()
 		tokens = g.parseFile(in_filename, parseAll=True)
