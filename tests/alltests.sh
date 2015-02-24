@@ -29,7 +29,9 @@ test_asm() {
 	assemble $1 $out
 	[[ $? -ne 0 ]] && return 1
 	xxd -b -c 1 $out | cut -f2 -d' ' | sed 'N;s/\n//' > $check
-	diff $good $check
+	diff -y $good $check | tr '\t' ' ' | grep -n ' | ' | sed 's/  */ /'
+	# return exit status
+	diff -q $good $check > /dev/null
 }
 
 # run test through python functional simulator
