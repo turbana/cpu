@@ -2,9 +2,7 @@
 ;; Test macros in seperate file
 ;;
 
-;;; TODO update to new calling conventions
-
-;@; 17 ($1=00FF $2=0023 $3=0004)
+; |@| 111 ($1=00FF $2=0023 $3=0004)
 
 	.set	count, 0
 	.set	latest, 0
@@ -22,11 +20,17 @@ sbp:
 	.test	d, 0xFF
 
 load_latest:
+	.enter	0
 	.ldi	$2, latest
 	ldw	$1, 0($2)
-	.ret	$6
+	.leave
 
 main:	.ldi	$7, sbp
-	.call	latest, $6
+	add	$6, $0, $0
+	.call	load_d
+	.call	load_c
+	.call	load_b
+	.call	load_a
+	.call	latest
 	.ldi	$3, count
 	jmp	0
