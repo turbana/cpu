@@ -79,8 +79,8 @@ def zero(count):
 @macro("reg s16")
 def ldi(reg, imm):
 	return """
-		lui  {reg}, (({imm.value} & 0xFF00) >> 8) + (({imm.value} & 0x0080) >> 7)
-		addi {reg}, ({imm.value} & 0x00FF)
+		lui  {reg}, (({imm} & 0xFF00) >> 8) + (({imm} & 0x0080) >> 7)
+		addi {reg}, ({imm} & 0x00FF)
 	"""
 
 
@@ -114,13 +114,11 @@ def call(addr):
 
 @macro("u8")
 def enter(words):
-	# XXX figure out immediate value
 	return """
 		sub  $7, $7, 1
 		stw  0($7), $6
 		add  $6, $7, 1
-		addi $7, -{words.value}
-	"""
+	""" + ("addi $7, -{words}" if words.value > 0 else "")
 
 
 @macro
