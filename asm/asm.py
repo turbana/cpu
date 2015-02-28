@@ -119,7 +119,7 @@ def lookup_labels(chunks):
 
 def apply_labels(chunks, labels):
 	for section, start_addr, insts in chunks:
-		addr = start_addr
+		addr = start_addr*2
 		insts = list(insts)
 		for inst in insts:
 			label_apply(labels, inst, addr)
