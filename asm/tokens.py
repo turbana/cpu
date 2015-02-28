@@ -52,9 +52,10 @@ class Instruction(Token):
 				tok = Bit(cr, "epc")
 				tok.type = "bit"
 				self.args.append(tok)
+		self._arguments =  dict((a.name, a.value) for a in self.args)
 
 	def arguments(self):
-		return dict((a.name, a.value) for a in self.args)
+		return self._arguments
 
 	def __getattr__(self, name):
 		for arg in self.args:
