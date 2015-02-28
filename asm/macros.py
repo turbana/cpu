@@ -128,5 +128,5 @@ def leave():
 	return """
 		add $7, $0, $6
 		ldw $6, -1($6)
-		jmp $6
+		jal $0, $0($6)
 	"""

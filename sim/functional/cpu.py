@@ -102,7 +102,15 @@ def jmp(cpu, offset):
 
 @op
 def jmp(cpu, epc, tgt):
-	cpu.reg[PC] = cpu.crget(EPC) if epc else cpu.rget(tgt)
+	cpu.reg[PC] = cpu.crget(EPC-8) if epc else cpu.rget(tgt)
+	cpu.stall(2)
+
+@op
+def jal(cpu, tgt, index, base, ir):
+	base = cpu.rget(base)
+	if not ir: index = cpu.rget(index)
+	cpu.rset(tgt, cpu.reg[PC])
+	cpu.reg[PC] = base + index
 	cpu.stall(2)
 
 @op
@@ -202,8 +210,10 @@ def xor(cpu, tgt, src):
 	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
 
 @op
-def trap(cpu, reg):
-	raise NotImplementedError()
+def iret(cpu):
+	cpu.reg[PC] = cpu.crget(EPC-8)
+	cpu.reg[FLAGS] |= IE
+	cpu.stall(2)
 
 @op
 def lcr(cpu, tgt, cr):
@@ -212,11 +222,6 @@ def lcr(cpu, tgt, cr):
 @op
 def scr(cpu, cr, src):
 	cpu.crset(cr, cpu.rget(src))
-
-@op
-def reti(cpu):
-	cpu.reg[PC] = cpu.reg[EPC]
-	cpu.stall(2)
 
 @op
 def inb(cpu, tgt, src):

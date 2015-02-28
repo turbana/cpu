@@ -92,8 +92,8 @@ add("lcr tgt:reg, cr:creg",
 add("scr cr:creg, src:reg",
 	0x11, 11, ("src", 5, 3), ("cr", 2, 0))
 
-add("jmp tgt:jreg",
-	0x12, 11, ("epc", 6, 6), ("tgt", 5, 3))
+add("jal tgt:reg, index:ireg(base:reg)",
+	0x12, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
 
 add("sar tgt:reg, op1:reg, op2:ireg",
 	0x13, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
@@ -104,8 +104,8 @@ add("lui tgt:reg, imm:s8",
 add("addi tgt:reg, imm:s8",
 	0x15, 11, ("imm", 10, 3), ("tgt", 2, 0))
 
-add("trap imm:u4",
-	0x16, 11, ("imm", 9, 6))
+add("iret",
+	0x16, 11)
 
 add("jmp offset:s11",
 	0x17, 11, ("offset", 10, 0))

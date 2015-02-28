@@ -137,7 +137,7 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
 			if tok.name == "jmp":
 				bits = 11
 			elif tok.name in ("ldw", "stw"):
-				bits = 5
+				bits = 7
 			elif tok.name in ("lui", "addi"):
 				bits = 8
 			elif isinstance(tok, tokens.Expression):
