@@ -348,7 +348,7 @@ class CPU(object):
 	@send_listeners
 	def do_interrupt(self, irq):
 		self.reg[EPC] = self.reg[PC]
-		self.reg[PC] = self.mget((IDT_ADDR | irq) * 2)
+		self.reg[PC] = IDT_ADDR | irq
 		self.reg[FLAGS] &= ~IE
 
 	@send_listeners
