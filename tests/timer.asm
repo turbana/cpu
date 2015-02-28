@@ -50,4 +50,4 @@ timer:	sub	$7, $7, 2	; alloc 2 words on stack
 	ldw	$1, 0($7)	; restore $1
 	ldw	$2, 1($7)	; restore $2
 	add	$7, $7, 2	; pop 2 words
-	reti			; return
+	iret			; return
