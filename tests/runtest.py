@@ -12,7 +12,7 @@ MARK = "|@|"
 
 root = os.path.dirname(sys.argv[0])
 ASM = os.path.join(root, "../asm/asm.py")
-SIM = os.path.join(root, "../sim/functional/cpu.py")
+SIM = os.path.join(root, "../sim/pyfunc/cpu.py")
 errors = [0]
 
 

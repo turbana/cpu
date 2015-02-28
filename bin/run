@@ -3,7 +3,7 @@
 set -e
 
 ASM=$(dirname $0)/../asm/asm.py
-SIM=$(dirname $0)/../sim/functional/cpu.py
+SIM=$(dirname $0)/../sim/pyfunc/cpu.py
 BUILD=$(dirname $0)/../build
 
 if [[ $# -eq 0 ]]; then
