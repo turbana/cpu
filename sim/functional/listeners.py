@@ -60,7 +60,7 @@ class ErrorChecker(object):
 
 	def after_iload(self, _, (addr, words)):
 		for n in range(len(words)*2):
-			self.imem.add(addr + n)
+			self.imem.add(addr*2 + n)
 
 	def after_dload(self, _, (addr, words)):
 		for n in range(len(words)*2):
@@ -81,7 +81,8 @@ class ErrorChecker(object):
 		self.imem.add(addr)
 
 	def before_rget(self, _, reg):
-		if reg not in self.regs:
+		# only throw on read of non control register
+		if reg not in self.regs and reg < 8:
 			raise Exception("ERROR: read from register %s before write\n" % reg_name(reg))
 
 	def before_rset(self, _, reg, _a):
