@@ -59,17 +59,17 @@ class Debugger(object):
 		self.brk_addrs = set()
 		self.brk_opcodes = set()
 
-	def before_dload(self, _, bytes):
+	def before_dload(self, bytes):
 		self.drange[1] = len(bytes) / 2
 
-	def before_iload(self, _, bytes):
+	def before_iload(self, bytes):
 		self.irange[1] = len(bytes) / 2
 
-	def before_fetch(self, _):
+	def before_fetch(self):
 		if self.cpu.reg[PC] in self.brk_addrs:
 			self.step = True
 
-	def before_execute(self, _, token):
+	def before_execute(self, token):
 		if self.step:
 			self.normal_dump(token)
 			self.command()

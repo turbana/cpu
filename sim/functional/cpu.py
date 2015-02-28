@@ -67,14 +67,14 @@ def op(func):
 	if name.endswith("_"):
 		name = name[:-1]
 	name = name.replace("_", ".")
-	operations[name].append(func)
+	fargs = inspect.getargspec(func).args[1:]
+	operations[name].append((func, sorted(fargs)))
 	return func
 
 def lookup_op(tok):
 	argnames = sorted(tok.arguments().keys())
-	for func in operations[tok.name]:
-		fargs = inspect.getargspec(func).args[1:]
-		if sorted(fargs) == argnames:
+	for func, fargs in operations[tok.name]:
+		if fargs == argnames:
 			return func
 	raise Exception("Instruction not defined: %s (%s)" % (tok.name, ", ".join(argnames)))
 
@@ -261,19 +261,13 @@ def stiw(cpu, tgt, src):
 
 def send_listeners(fn):
 	def wrapper(cpu, *args, **kwargs):
-		listener_call(cpu, fn.__name__, True, None, args, kwargs)
+		for lis in cpu.listeners["before_" + fn.__name__]:
+			lis(*args, **kwargs)
 		res = fn(cpu, *args, **kwargs)
-		listener_call(cpu, fn.__name__, False, res, args, kwargs)
+		for lis in cpu.listeners["after_" + fn.__name__]:
+			lis(res, *args, **kwargs)
 		return res
 	return wrapper
-
-
-def listener_call(cpu, name, before, result, args, kwargs):
-	empty = lambda *args, **kwargs: None
-	name = ("before_" if before else "after_") + name
-	for listener in cpu.listeners:
-		func = getattr(listener, name, empty)
-		func(result, *args, **kwargs)
 
 
 class CPU(object):
@@ -286,7 +280,7 @@ class CPU(object):
 		self.halt = False
 		self.real_clock = real_clock
 		self.clock = (4 if real_clock else 0) - 1
-		self.listeners = []
+		self.listeners = collections.defaultdict(list)
 		self.mem_write_reg = None
 		self.stalls = 0
 
@@ -436,7 +430,9 @@ class CPU(object):
 		raise Exception("error: read to invalid io port: %02X (%s)" % (addr, val))
 
 	def add_listener(self, listener):
-		self.listeners.append(listener)
+		for attr in dir(listener):
+			if attr.startswith("before_") or attr.startswith("after_"):
+				self.listeners[attr].append(getattr(listener, attr))
 
 
 def dump_short(cpu):

@@ -31,7 +31,7 @@ class Tracer(object):
 		line = "%-32s (%s) clk=%d\n" % (left, regs, self.cpu.clock)
 		self.show(line)
 
-	def after_do_interrupt(self, _, irq):
+	def after_do_interrupt(self, irq):
 		self.show("int %02X\n" % irq)
 
 	def after_io(self, res, addr, val=None):
@@ -46,7 +46,7 @@ class StopClock(object):
 		self.cpu = cpu
 		self.clock = clock
 
-	def before_cycle(self, _):
+	def before_cycle(self):
 		if self.cpu.clock >= self.clock:
 			self.cpu.halt = True
 
@@ -66,26 +66,26 @@ class ErrorChecker(object):
 		for n in range(len(words)*2):
 			self.dmem.add(addr + n)
 
-	def before_iget(self, _, addr):
+	def before_iget(self, addr):
 		if addr not in self.imem:
 			raise Exception("ERROR: read from imem 0x%04X before write\n" % (addr/2))
 
-	def before_iset(self, _, addr):
+	def before_iset(self, addr):
 		self.imem.add(addr)
 
-	def before_dget(self, _, addr):
+	def before_dget(self, addr):
 		if addr not in self.dmem:
 			raise Exception("ERROR: read from mem 0x%04X before write\n" % (addr/2))
 
-	def before_dset(self, _, addr):
+	def before_dset(self, addr):
 		self.imem.add(addr)
 
-	def before_rget(self, _, reg):
+	def before_rget(self, reg):
 		# only throw on read of non control register
 		if reg not in self.regs and reg < 8:
 			raise Exception("ERROR: read from register %s before write\n" % reg_name(reg))
 
-	def before_rset(self, _, reg, _a):
+	def before_rset(self, reg, _a):
 		self.regs.add(reg)
 
 
