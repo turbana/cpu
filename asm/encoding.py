@@ -44,59 +44,71 @@ def encode(token):
 	return [(word & 0xFF00) >> 8, word & 0xFF]
 
 
-def decode(opcode):
+def _load_cache(cache):
 	grammer.grammer() # ensure all encodings have been fully loaded
 	for code in isa.encodings:
-		name = code["name"]
-		prelude_val = code["prelude"]
-		prelude_end = code["prelude_end"]
-		args = code["args"]
-		prelude = prelude_val << prelude_end
-		prelude_mask = (2**(16 - prelude_end) - 1) << prelude_end
-		if (opcode & prelude_mask) == prelude:
-			tok_args = []
-			for arg in args:
-				aname, start, end = arg
-				type = aname if aname in ("ir", "epc") else code["types"][aname]
-				mask = ((2**(start - end + 1) - 1) << end)
-				value = (opcode & mask) >> end
-				def twoc(n, bits):
-					if n & (1 << (bits-1)):
-						return n - 2**bits
-					return n
+		prelude = code["prelude"]
+		pend = code["prelude_end"]
+		if pend == 13:
+			prelude <<= 2
+		cache[prelude] = code
 
-				if   type == "reg":
-					arg = Register(value, aname)
-				elif type == "creg":
-					arg = ControlRegister(value, aname)
-				elif type in ("ir", "epc"):
-					arg = Bit(value, aname)
-				elif type == "cond":
-					arg = Condition(isa.conditions_rev[value], aname)
-				elif type == "ireg":
-					if tok_args[0].value == 1:
-						n = Number((isa.immediates_rev[value], 10), 5, True)
-						arg = Immediate(n, aname)
-					else:
-						arg = Register(value, aname)
-				elif type == "jreg":
-					if tok_args[0].value == 1:
-						arg = ControlRegister(value, aname)
-					else:
-						arg = Register(value, aname)
-				elif type.startswith("s"):
-					n = int(type[1:])
-					arg = Number((twoc(value, n), 10), n, True, aname)
-				elif type.startswith("u"):
-					n = int(type[1:])
-					arg = Number((value, 10), n, False, aname)
-				else:
-					raise ValueError("Unknown opcode argument type: " + type)
-				arg.type = type
-				if name == "jmp" and aname == "offset":
-					arg.value += 1
-				arg.dest = False
-				tok_args.append(arg)
-			tok_args[-1].dest = True # set the rightmost argument as the destination (HACK)
-			return Instruction(name, *tok_args)
-	raise ValueError("Unknown opcode: " + hex(opcode))
+
+def decode(opcode, _cache={}):
+	if not _cache:
+		_load_cache(_cache)
+	mask5 = opcode >> 11
+	mask3 = mask5 & 0x1D
+	code = _cache.get(mask5, None)
+	if code is None:
+		code = _cache.get(mask3, None)
+		if code is None:
+			raise ValueError("Unknown opcode: " + hex(opcode))
+	name = code["name"]
+	args = code["args"]
+	tok_args = []
+	for arg in args:
+		aname, start, end = arg
+		type = aname if aname in ("ir", "epc") else code["types"][aname]
+		mask = ((2**(start - end + 1) - 1) << end)
+		value = (opcode & mask) >> end
+		def twoc(n, bits):
+			if n & (1 << (bits-1)):
+				return n - 2**bits
+			return n
+
+		if   type == "reg":
+			arg = Register(value, aname)
+		elif type == "creg":
+			arg = ControlRegister(value, aname)
+		elif type in ("ir", "epc"):
+			arg = Bit(value, aname)
+		elif type == "cond":
+			arg = Condition(isa.conditions_rev[value], aname)
+		elif type == "ireg":
+			if tok_args[0].value == 1:
+				n = Number((isa.immediates_rev[value], 10), 5, True)
+				arg = Immediate(n, aname)
+			else:
+				arg = Register(value, aname)
+		elif type == "jreg":
+			if tok_args[0].value == 1:
+				arg = ControlRegister(value, aname)
+			else:
+				arg = Register(value, aname)
+		elif type.startswith("s"):
+			n = int(type[1:])
+			arg = Number((twoc(value, n), 10), n, True, aname)
+		elif type.startswith("u"):
+			n = int(type[1:])
+			arg = Number((value, 10), n, False, aname)
+		else:
+			raise ValueError("Unknown opcode argument type: " + type)
+		arg.type = type
+		if name == "jmp" and aname == "offset":
+			arg.value += 1
+		arg.dest = False
+		tok_args.append(arg)
+	if tok_args:
+		tok_args[-1].dest = True # set the rightmost argument as the destination (HACK)
+	return Instruction(name, *tok_args)
