@@ -2,10 +2,15 @@
 
 import argparse
 import collections
+import fcntl
 import inspect
+import os
 import random
 import select
 import sys
+import termios
+import threading
+import time
 
 import asm.encoding
 import debugger
@@ -72,6 +77,10 @@ def lookup_op(tok):
 		if sorted(fargs) == argnames:
 			return func
 	raise Exception("Instruction not defined: %s (%s)" % (tok.name, ", ".join(argnames)))
+
+#
+# Operations
+#
 
 @op
 def ldw(cpu, tgt, base, offset):
@@ -245,6 +254,10 @@ def stiw(cpu, tgt, src):
 	inst = cpu.rget(src)
 	cpu.iset(cpu.rget(tgt) * 2, inst)
 
+
+#
+# CPU
+#
 
 def send_listeners(fn):
 	def wrapper(cpu, *args, **kwargs):
@@ -434,6 +447,10 @@ def dump_short(cpu):
 		print "%s 0x%04X" % (name, v)
 
 
+#
+# Devices
+#
+
 
 class Device(object):
 	def tick(self):
@@ -503,25 +520,38 @@ class PICDevice(Device):
 
 class KeyboardDevice(Device):
 	def __init__(self):
+		self.lock = threading.Lock()
 		self.buffer = []
 		self.pic = None # set in pic device
+		t1 = threading.Thread(target=keyboard_thread, args=(self.lock, self.buffer))
+		t1.daemon = True
+		t1.start()
 
 	def tick(self):
-		ready, a, b = select.select([sys.stdin], [], [], 0)
-		if ready:
-			# XXX doesn't work
-			self.buffer.append(ord(ready[0].read(1)))
-		if self.buffer:
-			self.pic.interrupt(self)
+		with self.lock:
+			if self.buffer:
+				self.pic.interrupt(self)
 
 	def read(self, val=None):
 		if val is not None:
 			show("keyboard error: tried to write value:", val, "\n")
 			sys.exit(1)
-		return self.buffer.pop() if self.buffer else 0
+		with self.lock:
+			return self.buffer.pop() if self.buffer else 0
 
 
-class DebugKeyboardDevice(KeyboardDevice):
+def keyboard_thread(lock, buffer):
+	while True:
+		c = getch()
+		with lock:
+			buffer.append(ord(c))
+
+
+class NullKeyboardDevice(Device):
+	def __init__(self):
+		self.buffer = []
+		self.pic = None # set in pic device
+
 	def tick(self):
 		if self.buffer:
 			self.pic.interrupt(self)
@@ -539,13 +569,13 @@ class ScreenDevice(Device):
 			sys.stdout.write(chr(val))
 
 
-def load_devices(cpu, debugger=False):
+def load_devices(cpu, keyboard=False):
 	pic = PICDevice(cpu)
 	timer = TimerDevice(TIMER_PERIOD)
-	if debugger:
-		kb = DebugKeyboardDevice()
-	else:
+	if keyboard:
 		kb = KeyboardDevice()
+	else:
+		kb = NullKeyboardDevice()
 	scr = ScreenDevice()
 	pic.register(timer, 7)
 	pic.register(kb, 2)
@@ -553,6 +583,38 @@ def load_devices(cpu, debugger=False):
 	cpu.dev[PIC_ADDR] = pic
 	cpu.dev[SCR_ADDR] = scr
 	cpu.dev[KB_ADDR]  = kb
+
+
+# following three functions modified from:
+# http://love-python.blogspot.com/2010/03/getch-in-python-get-single-character.html
+def getch():
+	while True:
+		try:
+			return sys.stdin.read(1)
+		except IOError:
+			time.sleep(0.01)
+
+
+def save_term():
+	fd = sys.stdin.fileno()
+	oldterm = termios.tcgetattr(fd)
+	oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+	newattr = termios.tcgetattr(fd)
+	newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+	termios.tcsetattr(fd, termios.TCSANOW, newattr)
+	fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+	return fd, oldterm, oldflags
+
+
+def restore_term((fd, oldterm, oldflags)):
+	termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+	fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+
+
+
+#
+# Main
+#
 
 
 def parse_file(stream):
@@ -590,7 +652,7 @@ def load_args(args):
 	p.add_argument("--no-check-errors", dest="check_errors", action="store_false", help="don't check for errors (e.x. mem read before write)")
 	p.add_argument("--no-realistic-clock", dest="real_clock", action="store_false", help="report clock count from WB stage (includes bubbles)")
 	#p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
-	#p.add_argument("--enable-keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
+	p.add_argument("--keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
 	#p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
 
 	#g = p.add_argument_group("load-options")
@@ -622,6 +684,10 @@ def main(args):
 	opts = load_args(args)
 	cpu = CPU(opts.real_clock)
 
+	if opts.debug and opts.keyboard:
+		show("ERROR: cannot have both debugger and keyboard support\n")
+		return 1
+
 	if opts.randomize:
 		cpu.randomize()
 
@@ -652,11 +718,16 @@ def main(args):
 		map(cpu.dload, chunks[0])
 		map(cpu.iload, chunks[1])
 
-	load_devices(cpu, opts.debug)
+	if opts.keyboard:
+		term = save_term()
+	load_devices(cpu, opts.keyboard)
 	try:
 		cpu.run()
 	except KeyboardInterrupt:
 		show("\n")
+	finally:
+		if opts.keyboard:
+			restore_term(term)
 	return 0
 
 
