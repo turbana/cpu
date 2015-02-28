@@ -106,16 +106,7 @@ class Number(Token):
 		return self.value
 
 	def __str__(self):
-		n = self.binary()
-		bytes = []
-		size = self.size
-		while size > 0:
-			# when self.binary() returns a python long: hex() prints an L
-			byte = hex(n & 0xFF).replace("L", "")[2:].upper().zfill(2)
-			bytes.append(byte)
-			n >>= 8
-			size -= 1
-		return "0x" + "".join(reversed(bytes))
+		return str(self.value)
 
 	def __repr__(self):
 		signed = "s" if self.signed else "u"
