@@ -68,10 +68,15 @@ def emit_header(stream, module, wires):
             e("assign %s = %s;\n" % (left, right))
     e("\n")
 
+    e("/* test bench variables */\n")
+    e("integer _TB_ERRORS;\n")
+    e("\n")
+
     e("/* begin test bench */\n")
     e("initial\nbegin\n")
     e('  $dumpfile("wf_%s.vcd");\n' % module)
     e("  $dumpvars;\n")
+    e("  _TB_ERRORS = 0;\n")
     return #XXX
     vars = wires.keys()
     maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
@@ -89,6 +94,10 @@ def emit_header(stream, module, wires):
 def emit_footer(stream, module, wires):
     e = lambda s: emit(stream, s)
     e("  /* end test bench */\n")
+    e("  if (_TB_ERRORS > 0)\n")
+    e("  begin\n")
+    e('    $display("\\nFAILURE %%1d error(s) testing %s", _TB_ERRORS);\n' % module)
+    e("  end\n")
     e("end\nendmodule\n")
 
 
@@ -133,7 +142,8 @@ def emit_test(stream, delay, test, count=[0]):
                         for item in test["outputs"])
     e("  if (%s)\n" % check)
     # display diag info
-    e('  begin\n    $display("\\nFAILED TEST #%d");\n' % count[0])
+    e('  begin\n    $display("\\nFAIL (test #%d)");\n' % count[0])
+    e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
     for item in test["outputs"]:
         e('    $display("%16s=%%36b\\n%16s=%%36s", %s, "%s");\n' % (
             item["name"][3:], "", item["name"], binary_value(item["value"], item["width"])))
