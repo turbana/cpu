@@ -1,0 +1,16 @@
+{
+	"barrel_shifter": {
+		"delay": 162,
+		"inputs": {
+			"ALU_BS_A": {"width": 16},
+			"ALU_BS_S": {"width": 4},
+			"ALU_BS_R": {"width": 1}
+		},
+		"outputs": {
+			"ALU_BS_D": {
+				"width": 16,
+				"formula": "(ALU_BS_A << ALU_BS_S) if ALU_BS_R == 0 else (ALU_BS_A >> ALU_BS_S)"
+			}
+		}
+	}
+}

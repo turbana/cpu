@@ -2,20 +2,26 @@
 
 import sys
 import re
+import json
+import random
 
 import pyparsing as pp
+
+
+CONFIG_FILE = "tests.json"
+TEST_COUNT = 2**8
 
 
 def main(args):
     if len(args) != 1:
         print "USAGE: %s module.v" % sys.argv[0]
         return 2
-    module, wires = parse(args[0])
+    module, wires = parse_module(args[0])
     stream = sys.stdout
-    tests = None
-    delay = 162
+    config = parse_config(CONFIG_FILE, module)
+    tests = generate_tests(config)
     emit_header(stream, module, wires)
-    emit_tests(stream, tests, delay)
+    emit_tests(stream, tests, config["delay"])
     emit_footer(stream, module, wires)
 
 
@@ -88,6 +94,9 @@ def emit_footer(stream, module, wires):
 
 def emit_tests(stream, tests, delay):
     emit(stream, "  /* test cases */\n\n")
+    for test in tests:
+        emit_test(stream, delay, test)
+    return
     emit_test(stream, delay, {
         "inputs": [
             {"name": "TB_ALU_BS_A", "value": int("0100100011011010", 2), "width": 16},
@@ -148,7 +157,7 @@ def notequal(var, width, value):
         cond = "%s[%d] != %d" % (var, n, (value >> n) & 1)
 
 
-def parse(filename):
+def parse_module(filename):
     module, all_wires, in_wires, out_wires = grammer().parseFile(filename)
     wires = {}
     split = re.compile("^\\\?([^0-9]*)([0-9]*)$")
@@ -182,6 +191,37 @@ def grammer():
     g.ignore(pp.cStyleComment)
     g.ignore("`" + pp.restOfLine)
     return g
+
+
+def parse_config(filename, module):
+    data = json.loads(open(filename).read())
+    return data[module]
+
+
+def generate_tests(config):
+    for _ in range(TEST_COUNT):
+        yield generate_test(config)
+
+
+def randbits(bits):
+    return random.randint(0, (2**bits)-1)
+
+
+def generate_test(config):
+    test = {"inputs": [], "outputs": []}
+    env = {}
+    for name in config["inputs"].keys():
+        width = config["inputs"][name]["width"]
+        value = randbits(width)
+        test["inputs"].append({"value": value, "width": width, "name": "TB_"+name})
+        env[name] = value
+    for name in config["outputs"].keys():
+        width = config["outputs"][name]["width"]
+        formula = config["outputs"][name]["formula"]
+        formula = "(%s) & %d" % (formula, (2**width)-1)
+        value = eval(formula, {}, env)
+        test["outputs"].append({"value": value, "width": width, "name": "TB_"+name})
+    return test
 
 
 if __name__ == "__main__":
