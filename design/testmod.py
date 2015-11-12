@@ -222,9 +222,10 @@ def generate_test(config):
     env = {}
     for name in config["inputs"].keys():
         width = config["inputs"][name]["width"]
+        envname = config["inputs"][name].get("alias", name)
         value = randbits(width)
         test["inputs"].append({"value": value, "width": width, "name": "TB_"+name})
-        env[name] = value
+        env[envname] = value
     for name in config["outputs"].keys():
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
