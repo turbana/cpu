@@ -6,3 +6,4 @@
 *.log
 *.gtkw
 *.vcd
+design/schem/build
