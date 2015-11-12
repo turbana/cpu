@@ -226,6 +226,9 @@ def generate_test(config):
         value = randbits(width)
         test["inputs"].append({"value": value, "width": width, "name": "TB_"+name})
         env[envname] = value
+    if "assert" in config:
+        if not eval(config["assert"], {}, env):
+            return generate_test(config)
     for name in config["outputs"].keys():
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
