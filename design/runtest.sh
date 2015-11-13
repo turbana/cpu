@@ -10,6 +10,16 @@ if [[ "$#" -ne "1" ]]; then
     exit 2
 fi
 
+tmp=/tmp/$$.tmp
+trap 'rm -f $tmp' EXIT
+
+failon() {
+    tee >(grep -c "$1" > $tmp)
+    # For some reason grep -c is still running at this point. If we hit the return right away $tmp is empty and we return with success before grep has a change to write to $tmp. Putting a sleep here doesn't fix it, but ps'ing does. No idea why, very strange.
+    ps aux | grep grep > /dev/null
+    return $(cat $tmp)
+}
+
 module=$1
 modname=$(basename ${module%%.sch})
 modv=$BUILD/$modname.v
@@ -24,6 +34,6 @@ sed -i 's:^/\* continuous assignments \*/$:\0\nassign Vcc = 1;\nassign GND = 0;:
 echo " * building test bench"
 python testmod.py $modv > $modtb
 echo " * compiling test bench"
-iverilog $modtb $modv $DESIGN/74* -o $modtest
+iverilog $modtb $modv $DESIGN/74* -o $modtest 2>&1 | failon "error"
 echo " * executing test bench"
-$modtest
+$modtest 2>&1 | failon "FAILURE"
