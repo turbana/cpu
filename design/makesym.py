@@ -7,14 +7,14 @@ Create a .sym file from an .sch schematic
 import sys
 import pprint
 
-import pyparsing as pp
-
 # http://wiki.geda-project.org/geda:file_format_spec
 SCH_FORMAT = {
     "v": "version i:version i:fileformat_version",
     "C": "component i:x i:y u:selectable i:angle i:mirror s:basename",
     "T": "text i:x i:y i:color i:size i:visibility i:show_name_value i:angle i:alignment i:num_lines",
     "N": "net i:x1 i:y1 i:x2 i:y2 i:color",
+    "B": "box i:x i:y i:width i:height i:color i:widthline i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
+    "P": "pin i:x1 i:y1 i:x2 i:y2 i:color i:pintype i:whichend",
 }
 
 TYPE_INTEGER = "i"
