@@ -9,6 +9,23 @@ import pprint
 
 import pyparsing as pp
 
+# http://wiki.geda-project.org/geda:file_format_spec
+SCH_FORMAT = {
+    "v": "version i:version i:fileformat_version",
+    "C": "component i:x i:y u:selectable i:angle i:mirror s:basename",
+    "T": "text i:x i:y i:color i:size i:visibility i:show_name_value i:angle i:alignment i:num_lines",
+    "N": "net i:x1 i:y1 i:x2 i:y2 i:color",
+}
+
+TYPE_INTEGER = "i"
+TYPE_STRING = "s"
+ATTRIBUTES_START = "{"
+ATTRIBUTES_END = "}"
+
+
+class ParseError(Exception):
+    pass
+
 
 def main(args):
     if len(args) != 1:
@@ -19,39 +36,43 @@ def main(args):
     pprint.pprint(parts)
 
 
-def parse(sch):
-    g = sch_grammer()
-    result = g.parseFile(sch)
-    return {
-        "version": result["version"],
-        "components": [x.asDict() for x in result["components"]]
-    }
+def parse(stream):
+    objects = []
+    try:
+        while True:
+            line = stream.next()
+            parts = line.split()
+            if parts[0] == ATTRIBUTES_START:
+                objects[-1]["attributes"] = parse(stream)
+            elif parts[0] == ATTRIBUTES_END:
+                return objects
+            else:
+                object = parse_line(parts)
+                if object["type"] == "text":
+                    text = ""
+                    for _ in range(object["num_lines"]):
+                        text += stream.next()
+                    object["text"] = text[:-1]
+                objects.append(object)
+    except StopIteration:
+        pass
+    return objects
 
 
-def sch_grammer():
-    replace = lambda g,x: g.setParseAction(lambda s,l,t: x)
-    type = lambda s,t: replace(pp.Literal(s), t).setResultsName("type")
-    v = type("v", "version")
-    c = type("C", "component")
-    t = type("T", "text")
-    n = type("N", "net")
-    eol = pp.Suppress(pp.LineEnd())
-    num = lambda n: pp.Word(pp.nums).setParseAction(lambda s,l,t: int(t[0])).setResultsName(n)
-    text = lambda n: pp.Word(pp.printables).setResultsName(n)
-    items = pp.Forward()
-    attributes = pp.Suppress("{") + eol + pp.Group(pp.OneOrMore(items)) + pp.Suppress("}") + eol
-    def item(n, g):
-        g = pp.Group(g + eol + pp.Optional(attributes)).setResultsName(n)
-        items << g
-        return g
-
-    version = item("version", v + num("version") + num("format"))
-    component = item("component", c + num("x") + num("y") + num("selectable") + num("angle") + num("mirror") + text("basename"))
-    textitem = item("text", t + num("x") + num("y") + num("color") + num("size")
-                    + num("visibility") + num("show_name_value") + num("angle")
-                    + num("alignment") + num("num_lines"))
-
-    return version + pp.Group(pp.OneOrMore(items)).setResultsName("components")
+def parse_line(parts):
+    type = parts[0]
+    if type not in SCH_FORMAT:
+        raise ParseError("Unknown object: " + parts[0])
+    format = SCH_FORMAT[type].split()
+    if len(parts) != len(format):
+        raise ParseError("Item count for object %s (%d) did not match definition (%s)" % (format[0], len(parts), len(format)))
+    object = {"type": format[0]}
+    for fmt, value in zip(format[1:], parts[1:]):
+        type, name = fmt.split(":")
+        if type == TYPE_INTEGER:
+            value = int(value)
+        object[name] = value
+    return object
 
 
 if __name__ == "__main__":
