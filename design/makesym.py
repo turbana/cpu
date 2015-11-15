@@ -1,7 +1,7 @@
 #!/usr/python
 
 """
-Create a .sym file from an .sch schematic
+Read/Write gschem files (.sch/.sym)
 """
 
 import sys
@@ -23,31 +23,29 @@ ATTRIBUTES_START = "{"
 ATTRIBUTES_END = "}"
 
 
-class ParseError(Exception):
+class SchematicParseError(Exception):
     pass
 
 
-def main(args):
-    if len(args) != 1:
-        print "USAGE: %s schematic.sch" % sys.argv[0]
-        return 2
-    sch = args[0]
-    parts = parse(open(sch))
-    pprint.pprint(parts)
+class Schematic(list):
+    def __init__(self, stream=None):
+        objects = _parse(stream) if stream else []
+        super(Schematic, self).__init__(objects)
 
 
-def parse(stream):
+
+def _parse(stream):
     objects = []
     try:
         while True:
             line = stream.next()
             parts = line.split()
             if parts[0] == ATTRIBUTES_START:
-                objects[-1]["attributes"] = parse(stream)
+                objects[-1]["attributes"] = _parse(stream)
             elif parts[0] == ATTRIBUTES_END:
                 return objects
             else:
-                object = parse_line(parts)
+                object = _parse_line(parts)
                 if object["type"] == "text":
                     text = ""
                     for _ in range(object["num_lines"]):
@@ -59,13 +57,13 @@ def parse(stream):
     return objects
 
 
-def parse_line(parts):
+def _parse_line(parts):
     type = parts[0]
     if type not in SCH_FORMAT:
-        raise ParseError("Unknown object: " + parts[0])
+        raise SchematicParseError("Unknown object: " + parts[0])
     format = SCH_FORMAT[type].split()
     if len(parts) != len(format):
-        raise ParseError("Item count for object %s (%d) did not match definition (%s)" % (format[0], len(parts), len(format)))
+        raise SchematicParseError("Item count for object %s (%d) did not match definition (%s)" % (format[0], len(parts), len(format)))
     object = {"type": format[0]}
     for fmt, value in zip(format[1:], parts[1:]):
         type, name = fmt.split(":")
@@ -73,6 +71,15 @@ def parse_line(parts):
             value = int(value)
         object[name] = value
     return object
+
+
+def main(args):
+    if len(args) != 1:
+        print "USAGE: %s schematic.sch" % sys.argv[0]
+        return 2
+    sch = args[0]
+    parts = Schematic(open(sch))
+    pprint.pprint(parts)
 
 
 if __name__ == "__main__":
