@@ -60,12 +60,15 @@ def _emit_objects(stream, objects):
 
 
 def _emit(stream, object):
-    format = SCH_FORMAT[OBJECT_MAP[object["type"]]][1:]
-    fmt = " ".join("%%%s{%s}" % item.split(":") for item in format.split(" "))
-    print fmt
-    print object
-    print fmt % object
-    raise Exception("stop")
+    code = OBJECT_MAP[object["type"]]
+    format = SCH_FORMAT[code]
+    fmt = code
+    for part in format.split()[1:]:
+        type, name = part.split(":")
+        fmt += ' {%s}' % name
+    stream.write(fmt.format(**object) + "\n")
+    if object["type"] == "text":
+        stream.write(object["text"] + "\n")
 
 
 def _parse(stream):
@@ -114,7 +117,6 @@ def main(args):
     schem = args[0]
     parts = Schematic(open(schem))
     pprint.pprint(parts)
-    parts.save(open(schem + ".text", "w"))
 
 
 if __name__ == "__main__":
