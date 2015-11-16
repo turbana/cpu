@@ -37,16 +37,21 @@ class Schematic(list):
     def save(self, stream):
         _emit_objects(stream, self)
 
+    def add(self, object):
+        self.append(object)
+
 
 def object(type, **kwargs):
     if type not in OBJECT_MAP:
         raise SchematicException("Unknown object type %s" % type)
-    format = SCH_FORMAT[OBJECT_MAP[type]][1:]
+    format = SCH_FORMAT[OBJECT_MAP[type]].split()[1:]
     if len(kwargs) != len(format):
         raise SchematicException("Wrong number of arguments for %s. Received %d expected %d" % (type, len(kwargs), len(format)))
+    keys = set(item.split(":")[1] for item in format)
     for key in kwargs:
-        if key not in format:
+        if key not in keys:
             raise SchematicException("Unknown argument for %s: %s" % (type, key))
+    kwargs["type"] = type
     return kwargs
 
 
