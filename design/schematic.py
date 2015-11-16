@@ -1,9 +1,3 @@
-#!/usr/python
-
-"""
-Read/Write gschem files (.sch/.sym)
-"""
-
 import sys
 import pprint
 
@@ -16,6 +10,8 @@ SCH_FORMAT = {
     "B": "box i:x i:y i:width i:height i:color i:widthline i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
     "P": "pin i:x1 i:y1 i:x2 i:y2 i:color i:pintype i:whichend",
 }
+OBJECT_MAP = {fmt.split()[0]:key for key,fmt in SCH_FORMAT.items()}
+
 
 TYPE_INTEGER = "i"
 TYPE_STRING = "s"
@@ -23,15 +19,53 @@ ATTRIBUTES_START = "{"
 ATTRIBUTES_END = "}"
 
 
-class SchematicParseError(Exception):
+class SchematicException(Exception):
+    pass
+
+class SchematicParseError(SchematicException):
     pass
 
 
 class Schematic(list):
     def __init__(self, stream=None):
-        objects = _parse(stream) if stream else []
+        if stream:
+            objects = _parse(stream)
+        else:
+            objects = [object("version", version=20110115, fileformat_version=2)]
         super(Schematic, self).__init__(objects)
 
+    def save(self, stream):
+        _emit_objects(stream, self)
+
+
+def object(type, **kwargs):
+    if type not in OBJECT_MAP:
+        raise SchematicException("Unknown object type %s" % type)
+    format = SCH_FORMAT[OBJECT_MAP[type]][1:]
+    if len(kwargs) != len(format):
+        raise SchematicException("Wrong number of arguments for %s. Received %d expected %d" % (type, len(kwargs), len(format)))
+    for key in kwargs:
+        if key not in format:
+            raise SchematicException("Unknown argument for %s: %s" % (type, key))
+    return kwargs
+
+
+def _emit_objects(stream, objects):
+    for object in objects:
+        _emit(stream, object)
+        if "attributes" in object and object["attributes"]:
+            stream.write("{\n")
+            _emit_objects(stream, object["attributes"])
+            stream.write("}\n")
+
+
+def _emit(stream, object):
+    format = SCH_FORMAT[OBJECT_MAP[object["type"]]][1:]
+    fmt = " ".join("%%%s{%s}" % item.split(":") for item in format.split(" "))
+    print fmt
+    print object
+    print fmt % object
+    raise Exception("stop")
 
 
 def _parse(stream):
@@ -77,9 +111,10 @@ def main(args):
     if len(args) != 1:
         print "USAGE: %s schematic.sch" % sys.argv[0]
         return 2
-    sch = args[0]
-    parts = Schematic(open(sch))
+    schem = args[0]
+    parts = Schematic(open(schem))
     pprint.pprint(parts)
+    parts.save(open(schem + ".text", "w"))
 
 
 if __name__ == "__main__":
