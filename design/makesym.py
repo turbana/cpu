@@ -1,7 +1,7 @@
 #!/usr/python
 
 """
-Read/Write gschem files (.sch/.sym)
+Create gschem symbol files (.sym) from schematics (.sch)
 """
 
 import sys
@@ -39,7 +39,7 @@ def create_symbol(schem):
     gen_pins(sym, "left", ipads, OUTER_PADDING, top)
     gen_pins(sym, "right", opads, OUTER_PADDING + BOX_WIDTH + 2*PIN_WIDTH, top, len(ipads))
     gen_box(sym, OUTER_PADDING, top)
-    #gen_misc(sym, most)
+    gen_misc(sym, top)
     #print list(ipads)
     #print list(opads)
     return sym
@@ -91,7 +91,10 @@ def gen_pins(sym, direction, pads, startx, starty, seq=0):
 def gen_box(sym, startx, starty):
     box = schematic.object("box", x=OUTER_PADDING+PIN_WIDTH, y=OUTER_PADDING, width=BOX_WIDTH, height=starty-OUTER_PADDING, color=3, widthline=0, capstyle=0, dashstyle=0, dashlength=-1, dashspace=-1, filltype=0, fillwidth=-1, angle1=-1, pitch1=-1, angle2=-1, pitch2=-1)
     sym.add(box)
-    # B 400 300 2100 5100 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+
+
+def gen_misc(sym, startx):
+    pass
 
 
 if __name__ == "__main__":
