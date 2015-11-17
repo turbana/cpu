@@ -6,6 +6,7 @@ Create gschem symbol files (.sym) from schematics (.sch)
 
 import sys
 import re
+import os.path
 
 import schematic
 
@@ -19,6 +20,8 @@ TEXT_SINK = 50
 
 PIN_COLOR = 5
 PIN_SIZE = 10
+TEXT_COLOR = 5
+TEXT_SIZE = 10
 
 
 def main(args):
@@ -26,11 +29,11 @@ def main(args):
         print "USAGE: %s schematic.sch"
         return 2
     schem = schematic.Schematic(open(args[0]))
-    sym = create_symbol(schem)
+    sym = create_symbol(schem, os.path.basename(args[0]))
     sym.save(open(args[0][:-4]+".sym", "w"))
 
 
-def create_symbol(schem):
+def create_symbol(schem, sch_filename):
     sym = schematic.Schematic()
     ipads = find_pads(schem, "ipad-1.sym")
     opads = find_pads(schem, "opad-1.sym")
@@ -39,7 +42,7 @@ def create_symbol(schem):
     gen_pins(sym, "left", ipads, OUTER_PADDING, top)
     gen_pins(sym, "right", opads, OUTER_PADDING + BOX_WIDTH + 2*PIN_WIDTH, top, len(ipads))
     gen_box(sym, OUTER_PADDING, top)
-    gen_misc(sym, top)
+    gen_misc(sym, top, sch_filename)
     #print list(ipads)
     #print list(opads)
     return sym
@@ -93,8 +96,18 @@ def gen_box(sym, startx, starty):
     sym.add(box)
 
 
-def gen_misc(sym, startx):
-    pass
+def gen_misc(sym, startx, sch_filename):
+    def add_text(x, y, vis, text):
+        object = schematic.object("text", x=x, y=y, color=TEXT_COLOR, size=TEXT_SIZE, visibility=vis, show_name_value=0, angle=0, alignment=0, num_lines=1)
+        object["text"] = text
+        sym.add(object)
+    # source=filename.sch
+    add_text(OUTER_PADDING, startx+2*INNER_PADDING, 1, "source=%s" % sch_filename)
+    # device=MODULE_NAME
+    add_text(OUTER_PADDING, startx+6*INNER_PADDING, 1, "device=%s" % sch_filename.upper()[:-4])
+    # refdes=U?
+    # text Module Name
+
 
 
 if __name__ == "__main__":
