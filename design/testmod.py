@@ -10,6 +10,7 @@ import pyparsing as pp
 
 CONFIG_FILE = "tests.json"
 TEST_COUNT = 2**8
+SHOW_WAVEFORM = False
 
 
 def main(args):
@@ -77,7 +78,7 @@ def emit_header(stream, module, wires):
     e('  $dumpfile("wf_%s.vcd");\n' % module)
     e("  $dumpvars;\n")
     e("  _TB_ERRORS = 0;\n")
-    return #XXX
+    if not SHOW_WAVEFORM: return
     vars = wires.keys()
     maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
     fmt = "%%%ds" % maxlen
