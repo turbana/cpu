@@ -16,12 +16,12 @@ PIN_WIDTH = 300
 OUTER_PADDING = 100
 INNER_PADDING = 50
 BOX_WIDTH = 2500
-TEXT_SINK = 50
+TEXT_SINK = 0
 
 PIN_COLOR = 5
 PIN_SIZE = 10
-TEXT_COLOR = 5
-TEXT_SIZE = 10
+TEXT_COLOR = 3
+TEXT_SIZE = 15
 
 
 def main(args):
@@ -96,17 +96,24 @@ def gen_box(sym, startx, starty):
     sym.add(box)
 
 
-def gen_misc(sym, startx, sch_filename):
+def gen_misc(sym, starty, sch_filename):
     def add_text(x, y, vis, text):
-        object = schematic.object("text", x=x, y=y, color=TEXT_COLOR, size=TEXT_SIZE, visibility=vis, show_name_value=0, angle=0, alignment=0, num_lines=1)
-        object["text"] = text
-        sym.add(object)
+        obj = schematic.object("text", x=x, y=y, color=TEXT_COLOR, size=TEXT_SIZE, visibility=vis, show_name_value=0, angle=0, alignment=4, num_lines=1)
+        obj["text"] = text
+        sym.add(obj)
+        return obj
+    midx = BOX_WIDTH/2 + OUTER_PADDING + PIN_WIDTH
+    midy = (starty - OUTER_PADDING) / 2
     # source=filename.sch
-    add_text(OUTER_PADDING, startx+2*INNER_PADDING, 1, "source=%s" % sch_filename)
+    #add_text(midx, starty+4*INNER_PADDING, 1, "source=%s" % sch_filename)
     # device=MODULE_NAME
-    add_text(OUTER_PADDING, startx+6*INNER_PADDING, 1, "device=%s" % sch_filename.upper()[:-4])
+    add_text(midx, starty+10*INNER_PADDING, 1, "device=%s" % sch_filename.upper()[:-4])
     # refdes=U?
+    obj = add_text(midx, starty-3*INNER_PADDING, 1, "refdes=U?")
+    obj["show_name_value"] = 1
     # text Module Name
+    obj = add_text(midx, midy, 1, sch_filename.replace("_", " ").title()[:-4])
+    obj["angle"] = 270
 
 
 
