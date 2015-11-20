@@ -105,9 +105,9 @@ def gen_misc(sym, starty, sch_filename):
     midx = BOX_WIDTH/2 + OUTER_PADDING + PIN_WIDTH
     midy = (starty - OUTER_PADDING) / 2
     # source=filename.sch
-    add_text(midx, starty+4*INNER_PADDING, 1, "source=%s" % sch_filename)
+    add_text(midx, starty+4*INNER_PADDING, 0, "source=%s" % sch_filename)
     # device=MODULE_NAME
-    add_text(midx, starty+10*INNER_PADDING, 1, "device=%s" % sch_filename.upper()[:-4])
+    add_text(midx, starty+10*INNER_PADDING, 0, "device=%s" % sch_filename.upper()[:-4])
     # refdes=U?
     obj = add_text(midx, starty-3*INNER_PADDING, 1, "refdes=U?")
     obj["show_name_value"] = 1
