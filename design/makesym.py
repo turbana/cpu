@@ -35,23 +35,21 @@ def main(args):
 
 def create_symbol(schem, sch_filename):
     sym = schematic.Schematic()
-    ipads = find_pads(schem, "ipad-1.sym")
-    opads = find_pads(schem, "opad-1.sym")
+    ipads = find_pads(schem, "ipad")
+    opads = find_pads(schem, "opad")
     most = max(len(ipads), len(opads))
     top = (most + 1) * PIN_HEIGHT + OUTER_PADDING
     gen_pins(sym, "left", ipads, OUTER_PADDING, top)
     gen_pins(sym, "right", opads, OUTER_PADDING + BOX_WIDTH + 2*PIN_WIDTH, top, len(ipads))
     gen_box(sym, OUTER_PADDING, top)
     gen_misc(sym, top, sch_filename)
-    #print list(ipads)
-    #print list(opads)
     return sym
 
 
 def find_pads(schem, symbol):
     pads = []
     for object in schem:
-        if object["type"] == "component" and object["basename"] == symbol:
+        if object["type"] == "component" and object["basename"].startswith(symbol):
             for attr in object["attributes"]:
                 if attr["text"].startswith("net="):
                     pads.append(attr["text"][4:])
