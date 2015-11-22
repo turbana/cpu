@@ -1,4 +1,4 @@
-#!/usr/python
+#!/usr/bin/python
 
 """
 Add pads to a schematic
