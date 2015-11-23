@@ -29,6 +29,11 @@ modtest=$BUILD/$modname
 echo " * netlisting"
 gnetlist -g verilog -o $modv $module | \
     grep -v "is not likely a valid Verilog identifier$"
+echo " * checking netlist"
+grep -q unconnected_pin $modv && (
+    echo "ERROR: Unconnected wire:" $(grep unconnected_pin $modv | cut -f2 -d' ')
+    exit 2
+)
 echo " * fixing netlist"
 sed -i 's:^/\* continuous assignments \*/$:\0\nassign Vcc = 1;\nassign GND = 0;:' $modv
 echo " * building test bench"
