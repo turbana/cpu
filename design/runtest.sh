@@ -3,7 +3,9 @@
 set -e
 
 DESIGN=schem
-BUILD=$DESIGN/build
+BUILD=build
+SYMBOLS=symbols/**/*.sym
+VMODS=symbols/**/*.v
 
 if [[ "$#" -ne "1" ]]; then
     echo "USAGE: $(basename $0) module.v"
@@ -26,19 +28,30 @@ modv=$BUILD/$modname.v
 modtb=$BUILD/tb_$modname.v
 modtest=$BUILD/$modname
 
+[[ ! -d $BUILD ]] && mkdir -p $BUILD
+
 echo " * netlisting"
-gnetlist -g verilog -o $modv $module | \
-    grep -v "is not likely a valid Verilog identifier$"
+gnetlist -g verilog -o $modv $SYMBOLS $module | \
+    grep -v "^Loading schematic" | \
+    grep -v "is not likely a valid Verilog identifier$" | \
+    failon WARNING
+
 echo " * checking netlist"
 grep -q unconnected_pin $modv && (
     echo "ERROR: Unconnected wire(s):" $(grep unconnected_pin $modv | cut -f2 -d' ')
     exit 2
 )
+
 echo " * fixing netlist"
 sed -i 's:^/\* continuous assignments \*/$:\0\nassign Vcc = 1;\nassign GND = 0;:' $modv
+
 echo " * building test bench"
 python testmod.py $modv > $modtb
+
 echo " * compiling test bench"
-iverilog $modtb $modv $DESIGN/74* -o $modtest 2>&1 | failon "error"
+iverilog $modtb $modv $VMODS -o $modtest 2>&1 | failon "error"
+
 echo " * executing test bench"
-$modtest 2>&1 | failon "FAILURE"
+$modtest 2>&1 | \
+    grep -v "^VCD info" | \
+    failon "FAILURE"
