@@ -31,7 +31,7 @@ gnetlist -g verilog -o $modv $module | \
     grep -v "is not likely a valid Verilog identifier$"
 echo " * checking netlist"
 grep -q unconnected_pin $modv && (
-    echo "ERROR: Unconnected wire:" $(grep unconnected_pin $modv | cut -f2 -d' ')
+    echo "ERROR: Unconnected wire(s):" $(grep unconnected_pin $modv | cut -f2 -d' ')
     exit 2
 )
 echo " * fixing netlist"
