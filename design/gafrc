@@ -1,0 +1,11 @@
+;; Used by both gschem and gnetlist to load schematics/symbols.
+;; Needs to be symlinked to ~/.gEDA/gafrc
+
+(component-library "/usr/share/gEDA/sym/verilog")
+(component-library "/home/ian/src/cpu/design/symbols/74xxx")
+(component-library "/home/ian/src/cpu/design/symbols/misc")
+(component-library "/home/ian/src/cpu/design/symbols/modules")
+(source-library "/home/ian/src/cpu/design/schem")
+
+(component-library ".")
+(source-library ".")
