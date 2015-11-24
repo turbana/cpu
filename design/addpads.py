@@ -23,12 +23,17 @@ PADDING_Y = 100
 
 def main(args):
     if len(args) < 2:
-        print "USAGE: %s schematic.sch [ipad|opad]:name:bits ([ipad|opad]:name:bits).." % sys.argv[0]
+        print "USAGE: %s schematic.sch [--short] [ipad|opad]:name:bits ([ipad|opad]:name:bits).." % sys.argv[0]
         print "Creates ipads/opads in schematic.sch for every bit defined"
+        print "  --short Generate short pin names (ex ALU_BS_SA0 -> SA0)"
         return 2
     sch = args[0]
     names = []
+    gen_short = False
     for spec in args[1:]:
+        if spec == "--short":
+            gen_short = True
+            continue
         if spec.count(":") != 2:
             print "ERROR: pads must be of the format: [ipad|opad]:name:bits"
             return 2
@@ -36,16 +41,21 @@ def main(args):
         if dir not in ("ipad", "opad"):
             print "ERROR: Unknown pad type: %s" % dir
             return 2
-        names.extend(gen_names(name, dir, int(width)))
+        names.extend(gen_names(name, dir, int(width), gen_short))
     schem = schematic.Schematic(open(sch))
     gen_pads(schem, names)
     schem.save(open(sch, "w"))
 
 
-def gen_names(name, dir, width):
+def gen_names(name, dir, width, gen_short):
     for n in reversed(range(width)):
-        short = "%s%d" % (name[name.rfind("_")+1:], n)
-        yield dir, "%s%d:1" % (name, n), short
+        full = "%s%d:1" % (name, n)
+        short = full[:-2]
+        if gen_short:
+            short = "%s%d" % (name[name.rfind("_")+1:], n)
+        if width == 1:
+            short = short[:-1]
+        yield dir, full, short
 
 
 def gen_pads(schem, names):
