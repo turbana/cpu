@@ -105,72 +105,72 @@ C 48500 46800 1 0 0 opad-2.sym
 T 49400 46900 5 10 0 1 0 7 1
 device=OPAD
 T 49400 46900 5 10 0 1 0 7 1
-net=E_Rd3:1
+net=_E_Rd3:1
 T 49400 46900 5 10 1 1 0 7 1
-refdes=E_Rd3
+refdes=_E_Rd3
 }
 C 48500 47600 1 0 0 opad-2.sym
 {
 T 49400 47700 5 10 0 1 0 7 1
 device=OPAD
 T 49400 47700 5 10 0 1 0 7 1
-net=E_Rd2:1
+net=_E_Rd2:1
 T 49400 47700 5 10 1 1 0 7 1
-refdes=E_Rd2
+refdes=_E_Rd2
 }
 C 48500 48400 1 0 0 opad-2.sym
 {
 T 49400 48500 5 10 0 1 0 7 1
 device=OPAD
 T 49400 48500 5 10 0 1 0 7 1
-net=E_Rd1:1
+net=_E_Rd1:1
 T 49400 48500 5 10 1 1 0 7 1
-refdes=E_Rd1
+refdes=_E_Rd1
 }
 C 48500 49200 1 0 0 opad-2.sym
 {
 T 49400 49300 5 10 0 1 0 7 1
 device=OPAD
 T 49400 49300 5 10 0 1 0 7 1
-net=E_Rd0:1
+net=_E_Rd0:1
 T 49400 49300 5 10 1 1 0 7 1
-refdes=E_Rd0
+refdes=_E_Rd0
 }
 C 48500 42200 1 0 0 opad-2.sym
 {
 T 49400 42300 5 10 0 1 0 7 1
 device=OPAD
 T 49400 42300 5 10 0 1 0 7 1
-net=E_J0:1
+net=_E_J0:1
 T 49400 42300 5 10 1 1 0 7 1
-refdes=E_J
+refdes=_E_J
 }
 C 48500 43000 1 0 0 opad-2.sym
 {
 T 49400 43100 5 10 0 1 0 7 1
 device=OPAD
 T 49400 43100 5 10 0 1 0 7 1
-net=E_Mr0:1
+net=_E_Mr0:1
 T 49400 43100 5 10 1 1 0 7 1
-refdes=E_Mr
+refdes=_E_Mr
 }
 C 48500 43800 1 0 0 opad-2.sym
 {
 T 49400 43900 5 10 0 1 0 7 1
 device=OPAD
 T 49400 43900 5 10 0 1 0 7 1
-net=E_Mw0:1
+net=_E_Mw0:1
 T 49400 43900 5 10 1 1 0 7 1
-refdes=E_Mw
+refdes=_E_Mw
 }
 C 48500 44600 1 0 0 opad-2.sym
 {
 T 49400 44700 5 10 0 1 0 7 1
 device=OPAD
 T 49400 44700 5 10 0 1 0 7 1
-net=E_S0:1
+net=_E_S0:1
 T 49400 44700 5 10 1 1 0 7 1
-refdes=E_S
+refdes=_E_S
 }
 C 45700 40600 1 0 0 gnd-1.sym
 N 45800 40900 45800 48900 4
