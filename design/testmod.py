@@ -194,7 +194,13 @@ def grammer():
     iden   = pp.Word(pp.alphanums + "\\_", pp.alphanums + "_")
     idenlist = pp.delimitedList(iden, delim=",")
 
-    defmod  = module + iden + lparen + pp.Group(idenlist) + rparen + scolon
+    def check_module(s,l,t):
+        if t[0] == '\\not':
+            raise pp.ParseException(s, l, "Error parsing module definition. Ensure the schematic has a module_name= attribute defined")
+    mod_iden = iden.copy()
+    mod_iden.addParseAction(check_module)
+
+    defmod  = module + mod_iden + lparen + pp.Group(idenlist) + rparen + scolon
     defins  = pp.Group(pp.OneOrMore(input + idenlist + scolon))
     defouts = pp.Group(pp.OneOrMore(output + idenlist + scolon))
 
