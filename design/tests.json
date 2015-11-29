@@ -14,5 +14,23 @@
 				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
 			}
 		}
+	},
+	"execute_control": {
+		"delay": 27,
+		"inputs": {
+			"M_S":  {"width": 1},
+			"D_Rd": {"width": 4},
+			"D_J":  {"width": 1},
+			"D_Mr": {"width": 4},
+			"D_Mw": {"width": 4},
+			"D_S":  {"width": 1}
+		},
+		"outputs": {
+			"_E_Rd": {"width": 4, "formula": "0 if M_S else D_Rd"},
+			"_E_J":  {"width": 1, "formula": "0 if M_S else D_J"},
+			"_E_Mr": {"width": 1, "formula": "0 if M_S else D_Mr"},
+			"_E_Mw": {"width": 1, "formula": "0 if M_S else D_Mw"},
+			"_E_S":  {"width": 1, "formula": "0 if M_S else D_S"}
+		}
 	}
 }
