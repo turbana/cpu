@@ -966,3 +966,7 @@ net=S0:1
 T 57900 49200 5 10 1 1 0 1 1
 refdes=S0
 }
+T 50700 51400 9 32 1 0 0 0 1
+16x4 Multiplexer
+T 51500 51100 8 10 1 0 0 0 1
+module_name=mux16x4
