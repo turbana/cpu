@@ -114,27 +114,6 @@ def emit_tests(stream, tests, delay):
     emit(stream, "  /* test cases */\n\n")
     for test in tests:
         emit_test(stream, delay, test)
-    return
-    emit_test(stream, delay, {
-        "inputs": [
-            {"name": "TB_ALU_BS_A", "value": int("0100100011011010", 2), "width": 16},
-            {"name": "TB_ALU_BS_S", "value": int("0001", 2), "width": 4},
-            {"name": "TB_ALU_BS_R", "value": 0, "width": 1},
-        ],
-        "outputs": [
-            {"name": "TB_ALU_BS_D", "value": int("1001000110110100", 2), "width": 16},
-        ],
-    })
-    emit_test(stream, delay, {
-        "inputs": [
-            {"name": "TB_ALU_BS_A", "value": int("0100100011011010", 2), "width": 16},
-            {"name": "TB_ALU_BS_S", "value": int("0001", 2), "width": 4},
-            {"name": "TB_ALU_BS_R", "value": 1, "width": 1},
-        ],
-        "outputs": [
-            {"name": "TB_ALU_BS_D", "value": int("0010010001101101", 2), "width": 16},
-        ],
-    })
 
 
 def emit_test(stream, delay, test, count=[0]):
@@ -164,6 +143,7 @@ def emit_test(stream, delay, test, count=[0]):
 def binary(n, width):
     val = bin(n)[2:].zfill(width)
     return "%d'b%s" % (width, val)
+
 
 def binary_value(n, width):
     return bin(n)[2:].zfill(width)
