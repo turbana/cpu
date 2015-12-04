@@ -132,10 +132,10 @@ def emit_test(stream, delay, test, count=[0]):
     # display diag info
     e('  begin\n    $display("\\nFAIL (test #%d)");\n' % count[0])
     e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
-    for item in test["outputs"]:
+    for item in sorted(test["outputs"]):
         e('    $display("%16s=%%36b\\n%16s=%%36s", %s, "%s");\n' % (
-            item["name"][3:], "", item["name"], binary_value(item["value"], item["width"])))
-    for item in test["inputs"]:
+            item["name"][3:], "Expected", item["name"], binary_value(item["value"], item["width"])))
+    for item in sorted(test["inputs"]):
         e('    $display("%16s=%36s");\n' % (item["name"][3:], binary_value(item["value"], item["width"])))
     e("  end\n\n")
 
