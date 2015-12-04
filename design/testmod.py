@@ -13,6 +13,10 @@ TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
 
 
+class FatalTestException(Exception):
+    pass
+
+
 def main(args):
     if len(args) != 1:
         print "USAGE: %s module.v" % sys.argv[0]
@@ -20,10 +24,14 @@ def main(args):
     module, wires = parse_module(args[0])
     stream = sys.stdout
     config = parse_config(CONFIG_FILE, module)
-    tests = generate_tests(config)
-    emit_header(stream, module, wires)
-    emit_tests(stream, tests, config["delay"])
-    emit_footer(stream, module, wires)
+    try:
+        tests = generate_tests(config)
+        emit_header(stream, module, wires)
+        emit_tests(stream, tests, config["delay"])
+        emit_footer(stream, module, wires)
+    except FatalTestException, e:
+        sys.stderr.write(str(e))
+        return 1
 
 
 def wire_names(wires):
@@ -212,7 +220,9 @@ def grammer():
 
 def parse_config(filename, module):
     data = json.loads(open(filename).read())
-    return data[module]
+    mod = data[module]
+    mod["name"] = module
+    return mod
 
 
 def generate_tests(config):
@@ -240,7 +250,12 @@ def generate_test(config):
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
         formula = "(%s) & %d" % (formula, (2**width)-1)
-        value = eval(formula, {}, env)
+        try:
+            value = eval(formula, {}, env)
+        except Exception, e:
+            message = "Error evaluating formula for %s: %s\n" % (config["name"], formula)
+            message += str(e) + "\n"
+            raise FatalTestException(message)
         test["outputs"].append({"value": value, "width": width, "name": "TB_"+name})
     return test
 
