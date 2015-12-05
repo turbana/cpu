@@ -49,7 +49,9 @@ echo " * building test bench"
 python testmod.py $modv > $modtb
 
 echo " * compiling test bench"
-iverilog $modtb $modv $VMODS -o $modtest 2>&1 | failon "error"
+iverilog $modtb $modv $VMODS -o $modtest 2>&1 | \
+    failon "error" | \
+    failon "was already declared here"
 
 echo " * executing test bench"
 $modtest 2>&1 | \
