@@ -32,5 +32,18 @@
 			"_E_Mw": {"width": 1, "formula": "0 if M_S else D_Mw"},
 			"_E_S":  {"width": 1, "formula": "0 if M_S else D_S"}
 		}
+	},
+	"ic74153": {
+		"delay": 34,
+		"inputs": {
+			"A": {"width": 2},
+			"B": {"width": 2},
+			"C": {"width": 2},
+			"D": {"width": 2},
+			"S": {"width": 2}
+		},
+		"outputs": {
+			"X": {"width": 2, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
+		}
 	}
 }
