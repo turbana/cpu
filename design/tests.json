@@ -45,5 +45,18 @@
 		"outputs": {
 			"X": {"width": 2, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
 		}
+	},
+	"mux16x4": {
+		"delay": 34,
+		"inputs": {
+			"A": {"width": 16},
+			"B": {"width": 16},
+			"C": {"width": 16},
+			"D": {"width": 16},
+			"S": {"width": 2}
+		},
+		"outputs": {
+			"X": {"width": 16, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
+		}
 	}
 }
