@@ -1,5 +1,6 @@
 /* 74153 Dual 4x1 Mux
  * worse case delay of 34ns
+ * NOTE: does not currently account for chip select
  */
 `timescale 1 ns / 100 ps
 module \74153 (\1 , \2 , \3 , \4 , \5 , \6 , \7 , \8 , \9 , \10 , \11 , \12 , \13 , \14 , \15 , \16 );
