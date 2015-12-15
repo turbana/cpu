@@ -1,4 +1,4 @@
-#!/usr/python
+#!/usr/bin/python
 
 """
 Create gschem symbol files (.sym) from schematics (.sch)
@@ -26,7 +26,7 @@ TEXT_SIZE = 15
 
 def main(args):
     if len(args) != 1:
-        print "USAGE: %s schematic.sch"
+        print "USAGE: %s schematic.sch" % sys.argv[0]
         return 2
     schem = schematic.Schematic(open(args[0]))
     sym = create_symbol(schem, os.path.basename(args[0]))
