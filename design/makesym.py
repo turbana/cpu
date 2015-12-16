@@ -47,14 +47,13 @@ def create_symbol(schem, sch_filename):
 
 
 def find_pads(schem, symbol):
-    pads = []
+    pads = set()
     for object in schem:
         if object["type"] == "component" and object["basename"].startswith(symbol):
             for attr in object["attributes"]:
                 if attr["text"].startswith("net="):
-                    pads.append(attr["text"][4:])
-    pads.sort(key=sort_pads_key)
-    return pads
+                    pads.add(attr["text"][4:])
+    return sorted(pads, key=sort_pads_key)
 
 
 def sort_pads_key(name):
