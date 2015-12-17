@@ -173,12 +173,12 @@ FORWARD
  < F_B
  < E_C
 --------------------------------------------------------------------------------
-ea  := E_Rd ^ D_Ra
-ma  := M_Rd ^ D_Ra
-eb  := E_Rd ^ D_Rb
-mb  := M_Rd ^ D_Rb
-ec  := E_Rd ^ D_Rc
-mc  := M_Rd ^ D_Rc
+ea  := or4(E_Rd ^ D_Ra)
+ma  := or4(M_Rd ^ D_Ra)
+eb  := or4(E_Rd ^ D_Rb)
+mb  := or4(M_Rd ^ D_Rb)
+ec  := or4(E_Rd ^ D_Rc)
+mc  := or4(M_Rd ^ D_Rc)
 F_A := mux16(ea : ma, 00=E_D, 01=E_D, 10=M_D, 11=D_A)
 F_B := mux16(eb : mb, 00=E_D, 01=E_D, 10=M_D, 11=D_B)
 E_C := mux16(ec : mc, 00=E_D, 01=E_D, 10=M_D, 11=D_C)
