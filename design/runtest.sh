@@ -43,7 +43,7 @@ grep -q unconnected_pin $modv && (
 )
 
 echo " * fixing netlist"
-sed -i 's:^/\* continuous assignments \*/$:\0\nassign Vcc = 1;\nassign GND = 0;:' $modv
+python fixnetlist.py $modv
 
 echo " * building test bench"
 python testmod.py $modv > $modtb
