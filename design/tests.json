@@ -33,7 +33,7 @@
 			"_E_S":  {"width": 1, "formula": "0 if M_S else D_S"}
 		}
 	},
-	"ic7486": {
+	"ic74386": {
 		"delay": 30,
 		"inputs": {
 			"A": {"width": 4},
