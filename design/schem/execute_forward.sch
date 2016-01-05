@@ -6,9 +6,9 @@ device=MUX16X4
 T 38950 49850 5 15 1 1 0 4 1
 refdes=U1
 }
-T 37200 54100 9 32 1 0 0 0 1
+T 51200 53200 9 32 1 0 0 0 1
 Execute Forward
-T 38100 53900 8 10 1 0 0 0 1
+T 52100 53000 8 10 1 0 0 0 1
 module_name=execute_forward
 T 37800 50600 9 24 1 0 0 0 1
 Forward A
