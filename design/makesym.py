@@ -80,7 +80,7 @@ def gen_pins(sym, direction, pads, startx, starty, seq=0):
             return object
         pin = schematic.object("pin", x1=x, y1=y, x2=x+dirmod*PIN_WIDTH, y2=y, color=1, pintype=0, whichend=0)
         pintype = gentext("pintype=out")
-        pinlabel = gentext("pinlabel=" + net)
+        pinlabel = gentext("pinlabel=" + name)
         pinnumber = gentext("pinnumber=" + name)
         pinnumber["visibility"] = 1
         pinseq = gentext("pinseq=" + str(seq))
