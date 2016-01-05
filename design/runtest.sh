@@ -31,10 +31,10 @@ modtest=$BUILD/$modname
 [[ ! -d $BUILD ]] && mkdir -p $BUILD
 
 echo " * netlisting"
-gnetlist -g verilog -o $modv $SYMBOLS $module | \
+gnetlist -g verilog -o $modv $SYMBOLS $module 2>&1 | \
     grep -v "^Loading schematic" | \
     grep -v "is not likely a valid Verilog identifier$" | \
-    failon WARNING
+    failon '.*'
 
 echo " * checking netlist"
 grep -q unconnected_pin $modv && (
