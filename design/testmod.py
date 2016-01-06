@@ -217,28 +217,39 @@ def randbits(bits):
 def generate_test(config):
     test = {"inputs": [], "outputs": []}
     env = {}
+    # generate inputs
     for name in config["inputs"].keys():
         width = config["inputs"][name]["width"]
         envname = config["inputs"][name].get("alias", name)
         value = randbits(width)
         test["inputs"].append({"value": value, "width": width, "name": "TB_"+name})
         env[envname] = value
+    # check assertions
     if "assert" in config:
         if not eval(config["assert"], {}, env):
             return generate_test(config)
+    # load intermidiates
+    if "internal" in config:
+        for name, formula in config["internal"].items():
+            value = eval_formula(formula, env)
+            env[name] = value
+    # generate outputs
     for name in config["outputs"].keys():
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
-        formula = "(%s) & %d" % (formula, (2**width)-1)
-        try:
-            value = eval(formula, {}, env)
-        except Exception, e:
-            message = "Error evaluating formula for %s: %s\n" % (config["name"], formula)
-            message += str(e) + "\n"
-            raise FatalTestException(message)
+        value = eval_formula(formula, env, width)
         test["outputs"].append({"value": value, "width": width, "name": "TB_"+name})
     return test
 
+
+def eval_formula(formula, env, width=64):
+    formula = "(%s) & %d" % (formula, (2**width)-1)
+    try:
+        return eval(formula, {}, env)
+    except Exception, e:
+        message = "Error evaluating formula for %s: %s\n" % (config["name"], formula)
+        message += str(e) + "\n"
+        raise FatalTestException(message)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
