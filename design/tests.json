@@ -33,6 +33,34 @@
 			"_E_S":  {"width": 1, "formula": "0 if M_S else D_S"}
 		}
 	},
+	"execute_forward": {
+		"delay": 584,
+		"inputs": {
+			"D_A":  {"width": 16},
+			"D_B":  {"width": 16},
+			"D_C":  {"width": 16},
+			"D_Ra": {"width": 4},
+			"D_Rb": {"width": 4},
+			"D_Rc": {"width": 4},
+			"E_D":  {"width": 16},
+			"E_Rd": {"width": 4},
+			"M_D":  {"width": 16},
+			"M_Rd": {"width": 4}
+		},
+		"internal": {
+			"ea": "E_Rd ^ D_Ra == 0",
+			"eb": "E_Rd ^ D_Rb == 0",
+			"ec": "E_Rd ^ D_Rc == 0",
+			"ma": "M_Rd ^ D_Ra == 0",
+			"mb": "M_Rd ^ D_Rb == 0",
+			"mc": "M_Rd ^ D_Rc == 0"
+		},
+		"outputs": {
+			"F_A": {"width": 16, "formula": "E_D if ea else (M_D if ma else D_A)"},
+			"F_B": {"width": 16, "formula": "E_D if eb else (M_D if mb else D_B)"},
+			"F_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
+		}
+	},
 	"ic7432": {
 		"delay": 10,
 		"inputs": {
