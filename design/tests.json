@@ -34,7 +34,7 @@
 		}
 	},
 	"execute_forward": {
-		"delay": 584,
+		"delay": 84,
 		"inputs": {
 			"D_A":  {"width": 16},
 			"D_B":  {"width": 16},
