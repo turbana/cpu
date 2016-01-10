@@ -126,7 +126,7 @@ def emit_test(stream, delay, test, count=[0]):
         e("  %s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
     e("  #%d\n" % (delay + 1))
     # check outputs
-    check = " || ".join("(%s != %s)" % (item["name"], binary(item["value"], item["width"]))
+    check = " || ".join("(%s !== %s)" % (item["name"], binary(item["value"], item["width"]))
                         for item in test["outputs"])
     e("  if (%s)\n" % check)
     # display diag info
