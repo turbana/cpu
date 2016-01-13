@@ -39,13 +39,13 @@
 			"D_A":  {"width": 16},
 			"D_B":  {"width": 16},
 			"D_C":  {"width": 16},
-			"D_Ra": {"width": 4},
-			"D_Rb": {"width": 4},
-			"D_Rc": {"width": 4},
+			"D_Ra": {"width": 3},
+			"D_Rb": {"width": 3},
+			"D_Rc": {"width": 3},
 			"E_D":  {"width": 16},
-			"E_Rd": {"width": 4},
+			"E_Rd": {"width": 3},
 			"M_D":  {"width": 16},
-			"M_Rd": {"width": 4}
+			"M_Rd": {"width": 3}
 		},
 		"internal": {
 			"ea": "E_Rd ^ D_Ra == 0",
