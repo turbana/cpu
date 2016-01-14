@@ -1,5 +1,5 @@
 {
-	"barrel_shifter": {
+	"execute_barrel_shifter": {
 		"delay": 162,
 		"inputs": {
 			"ALU_BS_A":  {"width": 16, "alias": "n"},

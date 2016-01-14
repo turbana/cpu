@@ -622,7 +622,7 @@ N 44400 52800 44700 52800 4
 T 59700 76900 9 32 1 0 0 0 1
 Barrel Shifter
 T 60000 76600 8 10 1 0 0 0 1
-module_name=barrel_shifter
+module_name=execute_barrel_shifter
 C 41600 74300 1 0 0 ipad-2.sym
 {
 T 41600 74400 5 10 0 1 0 1 1
