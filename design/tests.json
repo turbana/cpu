@@ -94,6 +94,18 @@
 			"X": {"width": 2, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
 		}
 	},
+	"ic74283": {
+		"delay": 320,
+		"inputs": {
+			"A":   {"width": 16},
+			"B":   {"width": 16},
+			"Cin": {"width": 1}
+		},
+		"outputs": {
+			"X":    {"width": 16, "formula": "A + B + Cin"},
+			"Cout": {"width": 1,  "formula": "(A + B) >> 16"}
+		}
+	},
 	"mux16x4": {
 		"delay": 34,
 		"inputs": {
