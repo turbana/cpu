@@ -231,23 +231,23 @@ def generate_test(config):
     # load intermidiates
     if "internal" in config:
         for name, formula in config["internal"].items():
-            value = eval_formula(formula, env)
+            value = eval_formula(formula, env, config["name"])
             env[name] = value
     # generate outputs
     for name in config["outputs"].keys():
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
-        value = eval_formula(formula, env, width)
+        value = eval_formula(formula, env, config["name"], width)
         test["outputs"].append({"value": value, "width": width, "name": "TB_"+name})
     return test
 
 
-def eval_formula(formula, env, width=64):
+def eval_formula(formula, env, name, width=64):
     formula = "(%s) & %d" % (formula, (2**width)-1)
     try:
         return eval(formula, {}, env)
     except Exception, e:
-        message = "Error evaluating formula for %s: %s\n" % (config["name"], formula)
+        message = "Error evaluating formula for %s: %s\n" % (name, formula)
         message += str(e) + "\n"
         raise FatalTestException(message)
 
