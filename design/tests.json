@@ -61,6 +61,16 @@
 			"F_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
 		}
 	},
+	"execute_add": {
+		"delay": 320,
+		"inputs": {
+			"F_A":   {"width": 16},
+			"F_B":   {"width": 16}
+		},
+		"outputs": {
+			"_E_add": {"width": 16, "formula": "F_A + F_B"}
+		}
+	},
 	"ic7408": {
 		"delay": 27,
 		"inputs": {
