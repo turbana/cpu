@@ -61,6 +61,21 @@
 			"F_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
 		}
 	},
+	"execute_alu": {
+		"delay": 1000,
+		"inputs": {
+			"F_A": {"width": 16, "alias": "a"},
+			"F_B": {"width": 16, "alias": "b"},
+			"D_ALUop": {"width": 3, "alias": "op"}
+		},
+		"assert": "op in (0, 1)",
+		"outputs": {
+			"E_D": {
+				"width": 16,
+				"formula": "a+b if op==0 else (a&b if op ==1 else 0)"
+			}
+		}
+	},
 	"execute_add": {
 		"delay": 320,
 		"inputs": {
