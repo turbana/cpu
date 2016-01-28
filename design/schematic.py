@@ -1,5 +1,6 @@
 import sys
 import pprint
+import re
 
 # http://wiki.geda-project.org/geda:file_format_spec
 SCH_FORMAT = {
@@ -40,6 +41,17 @@ class Schematic(list):
 
     def add(self, object):
         self.append(object)
+
+    def findall(self, **kwargs):
+        terms = [(k, re.compile(v)) for k,v in kwargs.items()]
+        for object in self:
+            for attr, regex in terms:
+                if attr in object and regex.search(object[attr]):
+                    continue
+                break
+            else:
+                yield object
+
 
 
 def object(type, **kwargs):
