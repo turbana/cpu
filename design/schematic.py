@@ -42,15 +42,23 @@ class Schematic(list):
     def add(self, object):
         self.append(object)
 
-    def findall(self, **kwargs):
+    def findall(self, attr=None, **kwargs):
         terms = [(k, re.compile(v)) for k,v in kwargs.items()]
         for object in self:
-            for attr, regex in terms:
-                if attr in object and regex.search(object[attr]):
+            match_terms = True
+            for attribute, regex in terms:
+                if attribute in object and regex.search(object[attribute]):
                     continue
+                match_terms = False
                 break
-            else:
-                yield object
+            if match_terms:
+                if attr:
+                    regex = re.compile(attr)
+                    for attribute in object.get("attributes", []):
+                        if regex.search(attribute["text"]):
+                            yield object
+                else:
+                    yield object
 
 
 class SchematicObject(dict):
