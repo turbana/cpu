@@ -53,6 +53,14 @@ class Schematic(list):
                 yield object
 
 
+class SchematicObject(dict):
+    def __getattr__(self, item):
+        for attr in self.get("attributes", []):
+            name, value = attr["text"].split("=")
+            if name == item:
+                return value
+        return super(SchematicObject, self).getattr(item)
+
 
 def object(type, **kwargs):
     if type not in OBJECT_MAP:
@@ -65,7 +73,7 @@ def object(type, **kwargs):
         if key not in keys:
             raise SchematicException("Unknown argument for %s: %s" % (type, key))
     kwargs["type"] = type
-    return kwargs
+    return SchematicObject(kwargs)
 
 
 def _emit_objects(stream, objects):
@@ -109,7 +117,7 @@ def _parse(stream):
                 objects.append(object)
     except StopIteration:
         pass
-    return objects
+    return map(SchematicObject, objects)
 
 
 def _parse_line(parts):
@@ -125,7 +133,7 @@ def _parse_line(parts):
         if type == TYPE_INTEGER:
             value = int(value)
         object[name] = value
-    return object
+    return SchematicObject(object)
 
 
 def main(args):
