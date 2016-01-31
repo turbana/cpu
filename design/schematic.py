@@ -159,7 +159,7 @@ def main(args):
         return 2
     schem = Schematic(open(args[0]))
     attr = args[1]
-    terms = dict(term.split("=") for term in args[2:])
+    terms = dict(term.split("=", 1) for term in args[2:])
     for obj in schem.findall(**terms):
         if attr.startswith("."):
             print getattr(obj, attr[1:])
