@@ -153,12 +153,18 @@ def _parse_line(parts):
 
 
 def main(args):
-    if len(args) != 1:
-        print "USAGE: %s schematic.sch" % sys.argv[0]
+    if len(args) < 3:
+        print "USAGE: %s schematic.sch attr term=value [term2=value2]" % sys.argv[0]
+        print "Search through schematic.sch for all objects matching the terms and print attr"
         return 2
-    schem = args[0]
-    parts = Schematic(open(schem))
-    pprint.pprint(parts)
+    schem = Schematic(open(args[0]))
+    attr = args[1]
+    terms = dict(term.split("=") for term in args[2:])
+    for obj in schem.findall(**terms):
+        if attr.startswith("."):
+            print getattr(obj, attr[1:])
+        else:
+            print obj.get(attr)
 
 
 if __name__ == "__main__":
