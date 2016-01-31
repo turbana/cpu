@@ -69,6 +69,14 @@ class SchematicObject(dict):
                 return value
         return super(SchematicObject, self).getattr(item)
 
+    def __setattr__(self, item, value):
+        for attr in self.get("attributes", []):
+            name = attr["text"].split("=")[0]
+            if name == item:
+                attr["text"] = "%s=%s" % (name, str(value))
+                return attr["text"]
+        return super(SchematicObject, self).setattr(item, value)
+
 
 def object(type, **kwargs):
     if type not in OBJECT_MAP:
