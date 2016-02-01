@@ -48,7 +48,7 @@ grep -q unconnected_pin $modv && (
 )
 
 echo " * fixing netlist"
-python fixnetlist.py $modv
+python fixnetlist.py $modv $modsch_fix
 
 echo " * building test bench"
 python testmod.py $modv > $modtb
