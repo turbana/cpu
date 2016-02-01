@@ -24,14 +24,19 @@ failon() {
 
 module=$1
 modname=$(basename ${module%%.sch})
+modsch_fix=$module.fix
 modv=$BUILD/$modname.v
+modv_fix=$modv.fix
 modtb=$BUILD/tb_$modname.v
 modtest=$BUILD/$modname
 
 [[ ! -d $BUILD ]] && mkdir -p $BUILD
 
+echo " * fixing schematic"
+python fix_schematic.py $module $modsch_fix
+
 echo " * netlisting"
-gnetlist -g verilog -o $modv $SYMBOLS $module 2>&1 | \
+gnetlist -g verilog -o $modv $SYMBOLS $modsch_fix 2>&1 | \
     grep -v "^Loading schematic" | \
     grep -v "is not likely a valid Verilog identifier$" | \
     failon '.*'
