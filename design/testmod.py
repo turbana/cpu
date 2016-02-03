@@ -34,12 +34,6 @@ def main(args):
         return 1
 
 
-def wire_names(wires):
-    for name in wires:
-        for n in range(wires[name]["width"]):
-            yield "%s%d" % (name, n)
-
-
 def emit(stream, msg):
     stream.write(msg)
 
@@ -50,32 +44,17 @@ def emit_header(stream, module, wires):
     e("`timescale 1 ns / 100 ps\n\n")
     e("module tb_%s;\n\n" % module)
 
-    e("/* component wires */\n")
-    for name in wire_names(wires):
-        e("wire          %s;\n" % name)
-
     e("/* test bench wires/registers */\n")
-    for name in wires:
+    for name in sorted(wires):
         type = "reg" if wires[name]["dir"] == "in" else "wire"
         width = "[%d:0]" % (wires[name]["width"] - 1)
-        e("%4s %8s TB_%s;\n" % (type, width, name))
+        e("%4s %8s %s;\n" % (type, width, name))
     e("\n")
 
     e("/* instantiate component */\n")
     e("%s U0 (\n" % module)
-    e(",\n".join("  .%s (%s)" % (name, name) for name in wire_names(wires)))
+    e(",\n".join("  .%s (%s)" % (name, name) for name in wires))
     e(");\n\n")
-
-    e("/* assign test bench wires */\n")
-    for name in wires:
-        dir = wires[name]["dir"]
-        for n in range(wires[name]["width"]):
-            full_name = "%s%d" % (name, n)
-            index_name = "TB_%s[%d]" % (name, n)
-            left = full_name if dir == "in" else index_name
-            right = full_name if dir == "out" else index_name
-            e("assign %s = %s;\n" % (left, right))
-    e("\n")
 
     e("/* test bench variables */\n")
     e("integer _TB_ERRORS;\n")
@@ -97,7 +76,7 @@ def emit_header(stream, module, wires):
     e('  $monitor("%d ')
     e(" ".join(bfmt for _ in vars))
     e('",\n')
-    e("    $time, " + ", ".join("TB_"+name for name in vars) + ");\n\n")
+    e("    $time, " + ", ".join(name for name in vars) + ");\n\n")
 
 
 def emit_footer(stream, module, wires):
@@ -134,9 +113,9 @@ def emit_test(stream, delay, test, count=[0]):
     e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
     for item in sorted(test["outputs"]):
         e('    $display("%16s=%%36b\\n%16s=%%36s", %s, "%s");\n' % (
-            item["name"][3:], "Expected", item["name"], binary_value(item["value"], item["width"])))
+            item["name"], "Expected", item["name"], binary_value(item["value"], item["width"])))
     for item in sorted(test["inputs"]):
-        e('    $display("%16s=%36s");\n' % (item["name"][3:], binary_value(item["value"], item["width"])))
+        e('    $display("%16s=%36s");\n' % (item["name"], binary_value(item["value"], item["width"])))
     e("  end\n\n")
 
 
@@ -224,7 +203,7 @@ def generate_test(config):
         width = config["inputs"][name]["width"]
         envname = config["inputs"][name].get("alias", name)
         value = randbits(width)
-        test["inputs"].append({"value": value, "width": width, "name": "TB_"+name})
+        test["inputs"].append({"value": value, "width": width, "name": name})
         env[envname] = value
     # check assertions
     if "assert" in config:
@@ -240,7 +219,7 @@ def generate_test(config):
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
         value = eval_formula(formula, env, config["name"], width)
-        test["outputs"].append({"value": value, "width": width, "name": "TB_"+name})
+        test["outputs"].append({"value": value, "width": width, "name": name})
     return test
 
 
