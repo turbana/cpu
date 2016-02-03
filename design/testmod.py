@@ -158,27 +158,29 @@ def notequal(var, width, value):
 
 def parse_module(filename):
     module, all_wires, in_wires, out_wires = grammer().parseFile(filename)
+    def make_wire(wire, dir):
+        if len(wire) == 2:
+            return wire[1], {"width": wire[0], "dir": dir}
+        else:
+            return wire[0], {"width": 1, "dir": dir}
     wires = {}
-    split = re.compile("^\\\?([^0-9]*)([0-9]*)$")
-    for full_name in all_wires:
-        direction = "in" if full_name in list(in_wires) else "out"
-        name, width = split.search(full_name).groups()
-        if not width: width = "0"
-        width = 1 if not width else (int(width) + 1)
-        if name not in wires:
-            wires[name] = {"dir": direction, "width": width}
-        elif wires[name]["width"] < width:
-            wires[name]["width"] = width
+    wires.update(dict(make_wire(w, "in") for w in in_wires))
+    wires.update(dict(make_wire(w, "out") for w in out_wires))
     return module, wires
 
 
 def grammer():
+    colon  = pp.Suppress(pp.Literal(":"))
     scolon = pp.Suppress(pp.Literal(";"))
     lparen = pp.Suppress(pp.Literal("("))
     rparen = pp.Suppress(pp.Literal(")"))
+    lbrack = pp.Suppress(pp.Literal("["))
+    rbrack = pp.Suppress(pp.Literal("]"))
     module = pp.Suppress(pp.Keyword("module"))
     input  = pp.Suppress(pp.Keyword("input"))
     output = pp.Suppress(pp.Keyword("output"))
+    num    = pp.Word(pp.nums).addParseAction(lambda s,l,t: int(t[0]))
+    width  = (lbrack + num + colon + num + rbrack).setParseAction(lambda s,l,t: t[0]+1)
     iden   = pp.Word(pp.alphanums + "\\_", pp.alphanums + "_")
     idenlist = pp.delimitedList(iden, delim=",")
 
@@ -189,8 +191,8 @@ def grammer():
     mod_iden.addParseAction(check_module)
 
     defmod  = module + mod_iden + lparen + pp.Group(idenlist) + rparen + scolon
-    defins  = pp.Group(pp.OneOrMore(input + idenlist + scolon))
-    defouts = pp.Group(pp.OneOrMore(output + idenlist + scolon))
+    defins  = pp.Group(pp.OneOrMore(input + pp.Group(pp.Optional(width) + iden) + scolon))
+    defouts = pp.Group(pp.OneOrMore(output + pp.Group(pp.Optional(width) + iden) + scolon))
 
     g = defmod + defins + defouts
     g.ignore(pp.cStyleComment)
