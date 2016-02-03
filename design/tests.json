@@ -164,4 +164,15 @@
 			"X": {"width": 16, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
 		}
 	}
+
+	,"test": {
+		"delay": 1000,
+		"inputs": {
+			"A": {"width": 4},
+			"B": {"width": 4}
+		},
+		"outputs": {
+			"X": {"width": 4, "formula": "A + B "}
+		}
+	}
 }
