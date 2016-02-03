@@ -33,6 +33,9 @@ def main(args):
 def fixup(in_stream, out_stream, modname, schem):
     wireset = []
     checking_wires = False
+    def pretty_pad(pad):
+        s = pad.netlabel
+        return s[:s.find("[")] if "[" in s else s
     for line in in_stream:
         line = line.replace("wire GND ;", "supply0 GND ;")
         line = line.replace("wire Vcc ;", "supply1 Vcc ;")
@@ -41,17 +44,18 @@ def fixup(in_stream, out_stream, modname, schem):
             continue
         elif line.startswith("module"):
             out_stream.write("module %s (\n" % modname)
-            pretty = lambda s: s[:s.find("[")]
-            params = ",\n\t".join(pretty(obj.netlabel) for obj in schem.findall(attr="device=[IO]PAD"))
+            params = ",\n\t".join(map(pretty_pad, schem.findall(basename="[io]pad-1.sym")))
             out_stream.write("\t" + params)
+            # if we have *pad-2.sym's we already have some parameters from netlisting: ensure we end in a comma
+            if list(schem.findall(basename="[io]pad-2.sym")):
+                out_stream.write(",\n")
         elif line == "/* Port directions begin here */\n":
             out_stream.write(line)
-            for ipad in schem.findall(attr="device=IPAD"):
-                parts = ipad.netlabel.split("[")
-                out_stream.write("input [%s %s;\n" % (parts[1], parts[0]))
-            for opad in schem.findall(attr="device=OPAD"):
-                parts = opad.netlabel.split("[")
-                out_stream.write("output [%s %s;\n" % (parts[1], parts[0]))
+            def show(pad):
+                dir = "input" if pad.device == "IPAD" else "output"
+                out_stream.write("%s %s;\n" % (dir, pretty_pad(pad)))
+            map(show, schem.findall(basename="ipad-1.sym"))
+            map(show, schem.findall(basename="opad-1.sym"))
         elif line.endswith(" ( \n"):
             out_stream.write(line)
             checking_wires = True
