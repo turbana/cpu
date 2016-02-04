@@ -67,7 +67,7 @@ class SchematicObject(dict):
             name, value = attr["text"].split("=")
             if name == item:
                 return value
-        return super(SchematicObject, self).getattr(item)
+        raise AttributeError("'SchematicObject' object has no attribute '%s'" % item)
 
     def __setattr__(self, item, value):
         for attr in self.get("attributes", []):
@@ -75,7 +75,7 @@ class SchematicObject(dict):
             if name == item:
                 attr["text"] = "%s=%s" % (name, str(value))
                 return attr["text"]
-        return super(SchematicObject, self).setattr(item, value)
+        raise AttributeError("'SchematicObject' object has no attribute '%s'" % item)
 
 
 def object(type, **kwargs):
