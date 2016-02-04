@@ -53,7 +53,9 @@ def fixup(in_stream, out_stream, modname, schem):
             out_stream.write(line)
             def show(pad):
                 dir = "input" if pad.device == "IPAD" else "output"
-                out_stream.write("%s %s;\n" % (dir, pretty_pad(pad)))
+                name = pretty_pad(pad)
+                width = pad.netlabel.replace(name, "")
+                out_stream.write("%s %s %s;\n" % (dir, width, name))
             map(show, schem.findall(basename="ipad-1.sym"))
             map(show, schem.findall(basename="opad-1.sym"))
         elif line.endswith(" ( \n"):
