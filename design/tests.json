@@ -168,11 +168,13 @@
 	,"test": {
 		"delay": 1000,
 		"inputs": {
-			"A": {"width": 4},
-			"B": {"width": 4}
+			"A":   {"width": 4},
+			"B":   {"width": 4},
+			"Cin": {"width": 1}
 		},
 		"outputs": {
-			"X": {"width": 4, "formula": "A + B "}
+			"X":    {"width": 4, "formula": "A + B + Cin"},
+			"Cout": {"width": 1, "formula": "(A + B + Cin) >> 4"}
 		}
 	}
 }
