@@ -14,16 +14,18 @@ def main(args):
         print "Updates schemtic wires from X0 to X[0] to facilitate netlisting"
         return 2
     schem = schematic.Schematic(open(args[0]))
+    # fix i/opad-1 (wires)
     for pad in schem.findall(type="component", basename="[io]pad-1.sym"):
+        value = "%s:1" % pad.netlabel
+        set_attribute(pad, "refdes", value)
+        set_attribute(pad, "net", value)
+    # fix i/opad-2 (buses)
+    for pad in schem.findall(type="component", basename="[io]pad-2.sym"):
         name = pad.netlabel.split("[")[0]
         search = "netname=%s[0-9]+" % name
         for net in schem.findall(type="net", attr=search):
             num = net.netname[len(name):]
             net.netname = "%s[%s]" %  (name, num)
-    for pad in schem.findall(type="component", basename="[io]pad-2.sym"):
-        value = "%s:1" % pad.netlabel
-        set_attribute(pad, "refdes", value)
-        set_attribute(pad, "net", value)
     schem.save(open(args[1], "w"))
 
 

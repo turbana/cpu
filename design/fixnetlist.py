@@ -44,7 +44,7 @@ def fixup(in_stream, out_stream, modname, schem):
             continue
         elif line.startswith("module"):
             out_stream.write("module %s (\n" % modname)
-            params = ",\n\t".join(map(pretty_pad, schem.findall(basename="[io]pad-1.sym")))
+            params = ",\n\t".join(map(pretty_pad, schem.findall(basename="[io]pad-2.sym")))
             out_stream.write("\t" + params)
             # if we have *pad-2.sym's we already have some parameters from netlisting: ensure we end in a comma
             if list(schem.findall(basename="[io]pad-2.sym")):
@@ -56,8 +56,8 @@ def fixup(in_stream, out_stream, modname, schem):
                 name = pretty_pad(pad)
                 width = pad.netlabel.replace(name, "")
                 out_stream.write("%s %s %s;\n" % (dir, width, name))
-            map(show, schem.findall(basename="ipad-1.sym"))
-            map(show, schem.findall(basename="opad-1.sym"))
+            map(show, schem.findall(basename="ipad-2.sym"))
+            map(show, schem.findall(basename="opad-2.sym"))
         elif line.endswith(" ( \n"):
             out_stream.write(line)
             checking_wires = True
