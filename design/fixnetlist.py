@@ -46,8 +46,8 @@ def fixup(in_stream, out_stream, modname, schem):
             out_stream.write("module %s (\n" % modname)
             params = ",\n\t".join(map(pretty_pad, schem.findall(basename="[io]pad-2.sym")))
             out_stream.write("\t" + params)
-            # if we have *pad-2.sym's we already have some parameters from netlisting: ensure we end in a comma
-            if list(schem.findall(basename="[io]pad-2.sym")):
+            # if we have *pad-1.sym's we already have some parameters from netlisting: ensure we end in a comma
+            if list(schem.findall(basename="[io]pad-1.sym")):
                 out_stream.write(",\n")
         elif line == "/* Port directions begin here */\n":
             out_stream.write(line)
