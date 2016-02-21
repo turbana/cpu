@@ -2,6 +2,26 @@
 	"execute_barrel_shifter": {
 		"delay": 162,
 		"inputs": {
+			"_E_A":    {"width": 16, "alias": "n"},
+			"_E_B":    {"width": 16},
+			"D_ALUop": {"width": 3}
+		},
+		"assert": "(D_ALUop & 3) != 3",
+		"internal": {
+			"s": "_E_B & 0xF",
+			"r": "(D_ALUop & 2) >> 1",
+			"a": "D_ALUop & 1"
+		},
+		"outputs": {
+			"_E_S": {
+				"width": 16,
+				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
+			}
+		}
+	},
+	"execute_barrel_shifter_old": {
+		"delay": 162,
+		"inputs": {
 			"ALU_BS_A":  {"width": 16, "alias": "n"},
 			"ALU_BS_S":  {"width": 4,  "alias": "s"},
 			"ALU_BS_R":  {"width": 1,  "alias": "r"},
