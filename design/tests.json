@@ -19,22 +19,6 @@
 			}
 		}
 	},
-	"execute_barrel_shifter_old": {
-		"delay": 162,
-		"inputs": {
-			"ALU_BS_A":  {"width": 16, "alias": "n"},
-			"ALU_BS_S":  {"width": 4,  "alias": "s"},
-			"ALU_BS_R":  {"width": 1,  "alias": "r"},
-			"ALU_BS_SA": {"width": 1,  "alias": "a"}
-		},
-		"assert": "not (r==0 and a==1)",
-		"outputs": {
-			"ALU_BS_D": {
-				"width": 16,
-				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
-			}
-		}
-	},
 	"execute_control": {
 		"delay": 27,
 		"inputs": {
