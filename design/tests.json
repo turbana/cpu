@@ -9,7 +9,7 @@
 		"assert": "(D_ALUop & 3) != 3",
 		"internal": {
 			"s": "_E_B & 0xF",
-			"r": "(D_ALUop & 2) >> 1",
+			"r": "(~D_ALUop & 2) >> 1",
 			"a": "D_ALUop & 1"
 		},
 		"outputs": {
