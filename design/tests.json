@@ -38,7 +38,7 @@
 		}
 	},
 	"execute_forward": {
-		"delay": 84,
+		"delay": 118,
 		"inputs": {
 			"D_A":  {"width": 16},
 			"D_B":  {"width": 16},
@@ -60,9 +60,9 @@
 			"mc": "M_Rd ^ D_Rc == 0"
 		},
 		"outputs": {
-			"F_A": {"width": 16, "formula": "E_D if ea else (M_D if ma else D_A)"},
-			"F_B": {"width": 16, "formula": "E_D if eb else (M_D if mb else D_B)"},
-			"F_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
+			"_E_A": {"width": 16, "formula": "E_D if ea else (M_D if ma else D_A)"},
+			"_E_B": {"width": 16, "formula": "E_D if eb else (M_D if mb else D_B)"},
+			"_E_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
 		}
 	},
 	"execute_alu": {
