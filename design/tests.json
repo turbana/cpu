@@ -68,15 +68,14 @@
 	"execute_alu": {
 		"delay": 1000,
 		"inputs": {
-			"F_A": {"width": 16, "alias": "a"},
-			"F_B": {"width": 16, "alias": "b"},
+			"_E_A": {"width": 16, "alias": "a"},
+			"_E_B": {"width": 16, "alias": "b"},
 			"D_ALUop": {"width": 3, "alias": "op"}
 		},
-		"assert": "op in (0, 1)",
 		"outputs": {
-			"E_D": {
+			"_E_D": {
 				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op ==1 else 0)"
+				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else 0)))"
 			}
 		}
 	},
