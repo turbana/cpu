@@ -11,5 +11,5 @@ if [[ $# -ne 1 ]]; then
     exit 2
 fi
 
-tee $tmp
+2>&1 tee $tmp
 exit $(grep -c "$1" $tmp)
