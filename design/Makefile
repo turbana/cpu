@@ -9,6 +9,7 @@ SYMBOLS=symbols/**/*.v
 
 
 .PHONY: test clean
+.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch
 
 test:
 	echo $(SCHEMS)
