@@ -9,6 +9,7 @@ import pyparsing as pp
 
 
 CONFIG_FILE = "tests.json"
+WAVEFORM_DIR = "waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
 
@@ -62,7 +63,7 @@ def emit_header(stream, module, wires):
 
     e("/* begin test bench */\n")
     e("initial\nbegin\n")
-    e('  $dumpfile("wf_%s.vcd");\n' % module)
+    e('  $dumpfile("%s/%s.vcd");\n' % (WAVEFORM_DIR, module))
     e("  $dumpvars;\n")
     e("  _TB_ERRORS = 0;\n")
     if not SHOW_WAVEFORM: return

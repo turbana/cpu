@@ -1,6 +1,7 @@
 
 BUILD=build
 SCHEM=schem
+WF=waveforms
 
 FAILON = ./failon.sh
 
@@ -9,13 +10,16 @@ SYMBOLS=symbols/**/*.v
 
 
 .PHONY: test clean
-.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch
+.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
 test:
 	echo $(SCHEMS)
 
 $(BUILD):
 	mkdir $(BUILD)
+
+$(WF):
+	mkdir $(WF)
 
 $(BUILD)/%.sch: $(SCHEM)/%.sch $(BUILD)
 	python fix_schematic.py $< $@
@@ -34,10 +38,10 @@ $(BUILD)/tb_%.v: $(BUILD)/%.v
 $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 	iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|(was already declared here)"
 
-wf_%.vcd: $(BUILD)/test_%
+%.vcd: $(BUILD)/test_% $(WF)
 	$< 2>&1 | grep -v "^VCD info" | $(FAILON) "FAILURE"
 
-go: wf_execute_barrel_shifter.vcd
+go: execute_barrel_shifter.vcd
 
 clean:
 	rm -rf $(BUILD)
