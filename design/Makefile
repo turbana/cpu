@@ -9,13 +9,14 @@ SCHEMS=$(SCHEM)/*.sch
 SYMBOLS=symbols/**/*.v
 
 
-.PHONY: clean help netlist testbench run
+.PHONY: clean help netlist testbench test testall
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
 help:
-	@echo "make TARGET=foo run        -- run full netlist and testbench for foo"
+	@echo "make TARGET=foo test       -- run full netlist and testbench for foo"
 	@echo "make TARGET=foo netlist    -- generate netlist for foo"
 	@echo "make TARGET=foo testbench  -- generate testbench for foo"
+	@echo "make testall               -- run full test against all schematics"
 
 $(BUILD):
 	@mkdir $(BUILD)
@@ -51,7 +52,8 @@ $(WF)/%.vcd: $(BUILD)/test_%
 
 netlist: $(BUILD) $(BUILD)/$(TARGET).v
 testbench: $(BUILD) $(BUILD)/tb_$(TARGET).v
-run: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
+test: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
+testall: $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
 
 clean:
 	@rm -rf $(BUILD) $(WF)
