@@ -44,7 +44,7 @@ $(BUILD)/tb_%.v: $(BUILD)/%.v
 
 $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 	@echo "Cmpl TB : $(@F)"
-	@iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|(was already declared here)"
+	@iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
 
 $(WF)/%.vcd: $(BUILD)/test_%
 	@echo "Run TB  : $(@F)"
@@ -53,7 +53,7 @@ $(WF)/%.vcd: $(BUILD)/test_%
 netlist: $(BUILD) $(BUILD)/$(TARGET).v
 testbench: $(BUILD) $(BUILD)/tb_$(TARGET).v
 test: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
-testall: $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
+testall: $(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
 
 clean:
 	@rm -rf $(BUILD) $(WF)
