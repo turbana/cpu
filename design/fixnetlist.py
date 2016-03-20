@@ -45,6 +45,8 @@ def fixup(in_stream, out_stream, modname, schem):
         if checking_wires and wire in wireset:
             continue
         elif line.startswith("module"):
+            if modname[0] in "0123456789":
+                modname = "ic" + modname
             out_stream.write("module %s (\n" % modname)
             params = ",\n\t".join(map(pretty_pad, schem.findall(basename="[io]pad-2.sym")))
             out_stream.write("\t" + params)
