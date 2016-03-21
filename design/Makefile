@@ -34,7 +34,7 @@ $(BUILD)/%.v: $(BUILD)/%.sch
 		grep -v "^Loading schematic" | \
 		grep -v "is not likely a valid Verilog identifier" | \
 		$(FAILON) '.*'
-	@grep unconnected_pin $@ | cut -f2 -d' '
+	@grep unconnected_pin $@ | cut -f2 -d' ' | $(FAILON) '.*'
 	@echo "Fix Netl: $(@F)"
 	@python fixnetlist.py $@ $<
 
