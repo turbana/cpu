@@ -38,7 +38,7 @@ $(BUILD)/%.v: $(BUILD)/%.sch
 	@echo "Fix Netl: $(@F)"
 	@python fixnetlist.py $@ $<
 
-$(BUILD)/tb_%.v: $(BUILD)/%.v
+$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json
 	@echo "Build TB: $(@F)"
 	@python testmod.py $< > $@
 
