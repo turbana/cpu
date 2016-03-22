@@ -9,6 +9,29 @@ SCHEMS=$(SCHEM)/*.sch
 SYMBOLS=symbols/**/*.v
 
 
+FIX_SCH = @echo "Fix Sch : $(@F)"; \
+	python fix_schematic.py $< $@
+
+NETLIST = @echo "Netlist : $(@F)"; \
+	$(GEN_NETLIST); \
+	$(CHK_NETLIST); \
+	echo "Fix Net : $(@F)"; \
+	$(FIX_NETLIST)
+GEN_NETLIST = gnetlist -g verilog $< -o $@ 2>&1 | \
+	grep -v "^Loading schematic" | \
+	grep -v "is not likely a valid Verilog identifier" | \
+	$(FAILON) '.*'
+CHK_NETLIST = grep unconnected_pin $@ | cut -f2 -d' ' | $(FAILON) '.*'
+FIX_NETLIST = python fixnetlist.py $@ $<
+
+GEN_TB = @echo "Build TB: $(@F)"; \
+	python testmod.py $< > $@
+CMP_TB = @echo "Cmpl TB : $(@F)"; \
+	iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
+EXE_TB = @echo "Run TB  : $(@F)"; \
+	$< 2>&1 | grep -v "^VCD info" | tee $(WF)/$(@F).log | $(FAILON) "FAILURE"
+
+
 .PHONY: clean help netlist testbench test testall
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
@@ -25,30 +48,19 @@ $(WF):
 	@mkdir $(WF)
 
 $(BUILD)/%.sch: $(SCHEM)/%.sch
-	@echo "Fix Sch : $(@F)"
-	@python fix_schematic.py $< $@
+	$(FIX_SCH)
 
 $(BUILD)/%.v: $(BUILD)/%.sch
-	@echo "Netlist : $(@F)"
-	@gnetlist -g verilog $< -o $@ 2>&1 | \
-		grep -v "^Loading schematic" | \
-		grep -v "is not likely a valid Verilog identifier" | \
-		$(FAILON) '.*'
-	@grep unconnected_pin $@ | cut -f2 -d' ' | $(FAILON) '.*'
-	@echo "Fix Netl: $(@F)"
-	@python fixnetlist.py $@ $<
+	$(NETLIST)
 
 $(BUILD)/tb_%.v: $(BUILD)/%.v tests.json
-	@echo "Build TB: $(@F)"
-	@python testmod.py $< > $@
+	$(GEN_TB)
 
 $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
-	@echo "Cmpl TB : $(@F)"
-	@iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
+	$(CMP_TB)
 
 $(WF)/%.vcd: $(BUILD)/test_%
-	@echo "Run TB  : $(@F)"
-	@$< 2>&1 | grep -v "^VCD info" | tee $(WF)/$(@F).log | $(FAILON) "FAILURE"
+	$(EXE_TB)
 
 netlist: $(BUILD) $(BUILD)/$(TARGET).v
 testbench: $(BUILD) $(BUILD)/tb_$(TARGET).v
