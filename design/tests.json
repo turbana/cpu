@@ -151,7 +151,7 @@
 		},
 		"outputs": {
 			"X":    {"width": 16, "formula": "A + B + Cin"},
-			"Cout": {"width": 1,  "formula": "(A + B) >> 16"}
+			"Cout": {"width": 1,  "formula": "(A + B + Cin) >> 16"}
 		}
 	},
 	"mux16x4": {
