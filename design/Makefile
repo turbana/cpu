@@ -9,15 +9,20 @@ SCHEMS=$(SCHEM)/*.sch
 SYMBOLS=symbols/**/*.v
 
 
+# multi page schematics
+$(BUILD)/execute_alu.v: $(BUILD)/execute_alu.sch $(BUILD)/execute_barrel_shifter.sch
+
+
+# build commands
 FIX_SCH = @echo "Fix Sch : $(@F)"; \
 	python fix_schematic.py $< $@
 
-NETLIST = @echo "Netlist : $(@F)"; \
+NETLIST = @echo "Netlist : $(@F) ($(^F))"; \
 	$(GEN_NETLIST); \
 	$(CHK_NETLIST); \
 	echo "Fix Net : $(@F)"; \
 	$(FIX_NETLIST)
-GEN_NETLIST = gnetlist -g verilog $< -o $@ 2>&1 | \
+GEN_NETLIST = gnetlist -g verilog $^ -o $@ 2>&1 | \
 	grep -v "^Loading schematic" | \
 	grep -v "is not likely a valid Verilog identifier" | \
 	$(FAILON) '.*'
@@ -32,6 +37,7 @@ EXE_TB = @echo "Run TB  : $(@F)"; \
 	$< 2>&1 | grep -v "^VCD info" | tee $(WF)/$(@F).log | $(FAILON) "FAILURE"
 
 
+# build rules
 .PHONY: clean help netlist testbench test testall
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
@@ -62,10 +68,10 @@ $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 $(WF)/%.vcd: $(BUILD)/test_%
 	$(EXE_TB)
 
-netlist: $(BUILD) $(BUILD)/$(TARGET).v
-testbench: $(BUILD) $(BUILD)/tb_$(TARGET).v
-test: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
-testall: $(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
+netlist:	$(BUILD) $(BUILD)/$(TARGET).v
+testbench:	$(BUILD) $(BUILD)/tb_$(TARGET).v
+test: 		$(BUILD) $(WF) $(WF)/$(TARGET).vcd
+testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
 
 clean:
 	@rm -rf $(BUILD) $(WF)
