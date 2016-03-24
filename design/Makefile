@@ -27,7 +27,7 @@ GEN_NETLIST = gnetlist -g verilog $^ -o $@ 2>&1 | \
 	grep -v "is not likely a valid Verilog identifier" | \
 	$(FAILON) '.*'
 CHK_NETLIST = grep unconnected_pin $@ | cut -f2 -d' ' | $(FAILON) '.*'
-FIX_NETLIST = python fixnetlist.py $@ $<
+FIX_NETLIST = python fix_netlist.py $@ $^
 
 GEN_TB = @echo "Build TB: $(@F)"; \
 	python testmod.py $< > $@
