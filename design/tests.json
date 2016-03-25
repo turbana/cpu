@@ -19,52 +19,6 @@
 			}
 		}
 	},
-	"execute_control": {
-		"delay": 27,
-		"inputs": {
-			"M_S":  {"width": 1},
-			"D_Rd": {"width": 3},
-			"D_J":  {"width": 1},
-			"D_Mr": {"width": 3},
-			"D_Mw": {"width": 3},
-			"D_S":  {"width": 1}
-		},
-		"outputs": {
-			"_E_Rd": {"width": 3, "formula": "0 if M_S else D_Rd"},
-			"_E_J":  {"width": 1, "formula": "0 if M_S else D_J"},
-			"_E_Mr": {"width": 1, "formula": "0 if M_S else D_Mr"},
-			"_E_Mw": {"width": 1, "formula": "0 if M_S else D_Mw"},
-			"_E_S":  {"width": 1, "formula": "0 if M_S else D_S"}
-		}
-	},
-	"execute_forward": {
-		"delay": 118,
-		"inputs": {
-			"D_A":  {"width": 16},
-			"D_B":  {"width": 16},
-			"D_C":  {"width": 16},
-			"D_Ra": {"width": 3},
-			"D_Rb": {"width": 3},
-			"D_Rc": {"width": 3},
-			"E_D":  {"width": 16},
-			"E_Rd": {"width": 3},
-			"M_D":  {"width": 16},
-			"M_Rd": {"width": 3}
-		},
-		"internal": {
-			"ea": "E_Rd ^ D_Ra == 0",
-			"eb": "E_Rd ^ D_Rb == 0",
-			"ec": "E_Rd ^ D_Rc == 0",
-			"ma": "M_Rd ^ D_Ra == 0",
-			"mb": "M_Rd ^ D_Rb == 0",
-			"mc": "M_Rd ^ D_Rc == 0"
-		},
-		"outputs": {
-			"_E_A": {"width": 16, "formula": "E_D if ea else (M_D if ma else D_A)"},
-			"_E_B": {"width": 16, "formula": "E_D if eb else (M_D if mb else D_B)"},
-			"_E_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
-		}
-	},
 	"execute_alu": {
 		"delay": 1000,
 		"inputs": {
@@ -83,26 +37,6 @@
 				"width": 16,
 				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else (((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))))))"
 			}
-		}
-	},
-	"execute_add": {
-		"delay": 320,
-		"inputs": {
-			"F_A":   {"width": 16},
-			"F_B":   {"width": 16}
-		},
-		"outputs": {
-			"_E_add": {"width": 16, "formula": "F_A + F_B"}
-		}
-	},
-	"execute_and": {
-		"delay": 27,
-		"inputs": {
-			"F_A":   {"width": 16},
-			"F_B":   {"width": 16}
-		},
-		"outputs": {
-			"_E_and": {"width": 16, "formula": "F_A & F_B"}
 		}
 	},
 	"ic7408": {
@@ -158,32 +92,6 @@
 		"outputs": {
 			"X":    {"width": 16, "formula": "A + B + Cin"},
 			"Cout": {"width": 1,  "formula": "(A + B + Cin) >> 16"}
-		}
-	},
-	"mux16x4": {
-		"delay": 34,
-		"inputs": {
-			"A": {"width": 16},
-			"B": {"width": 16},
-			"C": {"width": 16},
-			"D": {"width": 16},
-			"S": {"width": 2}
-		},
-		"outputs": {
-			"X": {"width": 16, "formula": "A if S==0 else (B if S==1 else (C if S==2 else D))"}
-		}
-	}
-
-	,"test": {
-		"delay": 1000,
-		"inputs": {
-			"A":   {"width": 4},
-			"B":   {"width": 4},
-			"Cin": {"width": 1}
-		},
-		"outputs": {
-			"X":    {"width": 4, "formula": "A + B + Cin"},
-			"Cout": {"width": 1, "formula": "(A + B + Cin) >> 4"}
 		}
 	}
 }
