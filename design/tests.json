@@ -72,10 +72,16 @@
 			"_E_B": {"width": 16, "alias": "b"},
 			"D_ALUop": {"width": 3, "alias": "op"}
 		},
+		"assert": "D_ALUop != 7",
+		"internal": {
+			"s": "_E_B & 0xF",
+			"r": "(~D_ALUop & 2) >> 1",
+			"ar": "D_ALUop & 1"
+		},
 		"outputs": {
 			"_E_D": {
 				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else 0)))"
+				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else (((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))))))"
 			}
 		}
 	},
