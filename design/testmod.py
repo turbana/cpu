@@ -206,10 +206,12 @@ def generate_test(config):
     # generate inputs
     for name in config["inputs"].keys():
         width = config["inputs"][name]["width"]
-        envname = config["inputs"][name].get("alias", name)
+        alias = config["inputs"][name].get("alias", None)
         value = randbits(width)
         test["inputs"].append({"value": value, "width": width, "name": name})
-        env[envname] = value
+        env[name] = value
+        if alias:
+            env[alias] = value
     # check assertions
     if "assert" in config:
         if not eval(config["assert"], {}, env):
