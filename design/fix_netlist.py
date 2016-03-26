@@ -59,8 +59,11 @@ def fixup(in_stream, out_stream, modname, schems):
 
 
 def ignore_module(stream):
+    port_dirs = False
     for line in stream:
         if line == "/* Port directions begin here */\n":
+            port_dirs = True
+        elif line == "\n" and port_dirs:
             break
 
 
@@ -72,6 +75,7 @@ def emit_module(stream, name, wires):
     stream.write("/* Port directions begin here */\n")
     for name, width, direction in wires:
         stream.write("%s %s %s ;\n" % (direction, width, name))
+    stream.write("\n")
 
 
 def emit_wires(in_stream, out_stream, wires):
