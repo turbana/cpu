@@ -3,19 +3,19 @@ L 200 0 200 400 3 0 0 0 -1 -1
 T 200 100 9 8 0 0 0 0 1
 7408
 L 200 400 600 400 3 0 0 0 -1 -1
-T 100 600 5 10 0 0 0 0 1
-device=7408
 T 100 800 5 10 0 0 0 0 1
-slot=1
+device=7408
 T 100 1000 5 10 0 0 0 0 1
-numslots=4
+slot=1
 T 100 1200 5 10 0 0 0 0 1
-slotdef=1:1,2,3
+numslots=4
 T 100 1400 5 10 0 0 0 0 1
-slotdef=2:4,5,6
+slotdef=1:1,2,3
 T 100 1600 5 10 0 0 0 0 1
-slotdef=3:9,10,8
+slotdef=2:4,5,6
 T 100 1800 5 10 0 0 0 0 1
+slotdef=3:9,10,8
+T 100 2000 5 10 0 0 0 0 1
 slotdef=4:12,13,11
 L 200 0 600 0 3 0 0 0 -1 -1
 A 600 200 200 270 180 3 0 0 0 -1 -1
@@ -54,13 +54,15 @@ pintype=in
 }
 T 200 200 8 10 1 1 0 1 1
 refdes=U?
-T 100 2000 5 10 0 0 0 0 1
-footprint=DIP14
 T 100 2200 5 10 0 0 0 0 1
-description=4 AND gates with 2 inputs
+footprint=SO14
 T 100 2400 5 10 0 0 0 0 1
-net=Vcc:14
+description=4 AND gates with 2 inputs
 T 100 2600 5 10 0 0 0 0 1
-net=GND:7
+net=Vcc:14
 T 100 2800 5 10 0 0 0 0 1
+net=GND:7
+T 100 3000 5 10 0 0 0 0 1
 documentation=http://www-s.ti.com/sc/ds/sn74hc08.pdf
+T 100 600 5 10 0 0 0 0 1
+value=SN74HC08DE4
