@@ -1,0 +1,2 @@
+schematics schem/execute_barrel_shifter.sch schem/proto.sch
+output-name proto

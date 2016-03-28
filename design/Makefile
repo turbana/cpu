@@ -38,7 +38,7 @@ EXE_TB = @echo "Run TB  : $(@F)"; \
 
 
 # build rules
-.PHONY: clean help netlist testbench test testall
+.PHONY: clean help netlist testbench test testall protopcb
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
 help:
@@ -68,10 +68,14 @@ $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 $(WF)/%.vcd: $(BUILD)/test_%
 	$(EXE_TB)
 
+protopcb: project
+	gsch2pcb project
+	pcb proto.pcb
+
 netlist:	$(BUILD) $(BUILD)/$(TARGET).v
 testbench:	$(BUILD) $(BUILD)/tb_$(TARGET).v
 test: 		$(BUILD) $(WF) $(WF)/$(TARGET).vcd
 testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
 
 clean:
-	@rm -rf $(BUILD) $(WF)
+	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb-
