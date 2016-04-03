@@ -39,7 +39,7 @@ refdes=LED?
 T 100 2140 5 10 0 0 0 0 1
 device=LED
 T 100 1940 5 10 0 0 0 0 1
-footprint=DIP8
+footprint=SIP8
 T 100 2350 5 10 0 0 0 0 1
 description=4 Segment LED (Green)
 T 100 2550 5 10 0 0 0 0 1
