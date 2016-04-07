@@ -17,7 +17,7 @@ device=none
 N 63800 56200 64800 56200 4
 {
 T 63800 56200 6 10 1 1 0 0 1
-netname=_E_D15
+netname=_E_S15
 }
 C 63800 56200 1 180 0 busripper-1.sym
 {
@@ -1277,7 +1277,7 @@ N 66600 55800 67100 55800 4
 N 63800 55800 64800 55800 4
 {
 T 63800 55800 6 10 1 1 0 0 1
-netname=_E_D14
+netname=_E_S14
 }
 C 63800 55800 1 180 0 busripper-1.sym
 {
@@ -1287,7 +1287,7 @@ device=none
 N 63800 55400 64800 55400 4
 {
 T 63800 55400 6 10 1 1 0 0 1
-netname=_E_D13
+netname=_E_S13
 }
 C 63800 55400 1 180 0 busripper-1.sym
 {
@@ -1297,7 +1297,7 @@ device=none
 N 63800 55000 64800 55000 4
 {
 T 63800 55000 6 10 1 1 0 0 1
-netname=_E_D12
+netname=_E_S12
 }
 C 63800 55000 1 180 0 busripper-1.sym
 {
@@ -1307,7 +1307,7 @@ device=none
 N 63800 54500 64800 54500 4
 {
 T 63800 54500 6 10 1 1 0 0 1
-netname=_E_D11
+netname=_E_S11
 }
 C 63800 54500 1 180 0 busripper-1.sym
 {
@@ -1317,7 +1317,7 @@ device=none
 N 63800 54100 64800 54100 4
 {
 T 63800 54100 6 10 1 1 0 0 1
-netname=_E_D10
+netname=_E_S10
 }
 C 63800 54100 1 180 0 busripper-1.sym
 {
@@ -1327,7 +1327,7 @@ device=none
 N 63800 53700 64800 53700 4
 {
 T 63800 53700 6 10 1 1 0 0 1
-netname=_E_D9
+netname=_E_S9
 }
 C 63800 53700 1 180 0 busripper-1.sym
 {
@@ -1337,7 +1337,7 @@ device=none
 N 63800 53300 64800 53300 4
 {
 T 63800 53300 6 10 1 1 0 0 1
-netname=_E_D8
+netname=_E_S8
 }
 C 63800 53300 1 180 0 busripper-1.sym
 {
@@ -1347,7 +1347,7 @@ device=none
 N 63800 52800 64800 52800 4
 {
 T 63800 52800 6 10 1 1 0 0 1
-netname=_E_D7
+netname=_E_S7
 }
 C 63800 52800 1 180 0 busripper-1.sym
 {
@@ -1357,7 +1357,7 @@ device=none
 N 63800 52400 64800 52400 4
 {
 T 63800 52400 6 10 1 1 0 0 1
-netname=_E_D6
+netname=_E_S6
 }
 C 63800 52400 1 180 0 busripper-1.sym
 {
@@ -1367,7 +1367,7 @@ device=none
 N 63800 52000 64800 52000 4
 {
 T 63800 52000 6 10 1 1 0 0 1
-netname=_E_D5
+netname=_E_S5
 }
 C 63800 52000 1 180 0 busripper-1.sym
 {
@@ -1377,7 +1377,7 @@ device=none
 N 63800 51600 64800 51600 4
 {
 T 63800 51600 6 10 1 1 0 0 1
-netname=_E_D4
+netname=_E_S4
 }
 C 63800 51600 1 180 0 busripper-1.sym
 {
@@ -1387,7 +1387,7 @@ device=none
 N 63800 51100 64800 51100 4
 {
 T 63800 51100 6 10 1 1 0 0 1
-netname=_E_D3
+netname=_E_S3
 }
 C 63800 51100 1 180 0 busripper-1.sym
 {
@@ -1397,7 +1397,7 @@ device=none
 N 63800 50700 64800 50700 4
 {
 T 63800 50700 6 10 1 1 0 0 1
-netname=_E_D2
+netname=_E_S2
 }
 C 63800 50700 1 180 0 busripper-1.sym
 {
@@ -1407,7 +1407,7 @@ device=none
 N 63800 50300 64800 50300 4
 {
 T 63800 50300 6 10 1 1 0 0 1
-netname=_E_D1
+netname=_E_S1
 }
 C 63800 50300 1 180 0 busripper-1.sym
 {
@@ -1417,7 +1417,7 @@ device=none
 N 63800 49900 64800 49900 4
 {
 T 63800 49900 6 10 1 1 0 0 1
-netname=_E_D0
+netname=_E_S0
 }
 C 63800 49900 1 180 0 busripper-1.sym
 {
