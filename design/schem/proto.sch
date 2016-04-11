@@ -283,7 +283,7 @@ refdes=R16
 T 54200 56600 5 10 0 0 0 0 1
 value=150ohm
 T 54200 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 54600 56600 1 90 0 resistor-1.sym
 {
@@ -294,7 +294,7 @@ refdes=R15
 T 54600 56600 5 10 0 0 0 0 1
 value=150ohm
 T 54600 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 55000 56600 1 90 0 resistor-1.sym
 {
@@ -305,7 +305,7 @@ refdes=R14
 T 55000 56600 5 10 0 0 0 0 1
 value=150ohm
 T 55000 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 55400 56600 1 90 0 resistor-1.sym
 {
@@ -316,7 +316,7 @@ refdes=R13
 T 55400 56600 5 10 0 0 0 0 1
 value=150ohm
 T 55400 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 55900 56600 1 90 0 resistor-1.sym
 {
@@ -327,7 +327,7 @@ refdes=R12
 T 55900 56600 5 10 0 0 0 0 1
 value=150ohm
 T 55900 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 56300 56600 1 90 0 resistor-1.sym
 {
@@ -338,7 +338,7 @@ refdes=R11
 T 56300 56600 5 10 0 0 0 0 1
 value=150ohm
 T 56300 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 56700 56600 1 90 0 resistor-1.sym
 {
@@ -349,7 +349,7 @@ refdes=R10
 T 56700 56600 5 10 0 0 0 0 1
 value=150ohm
 T 56700 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 57100 56600 1 90 0 resistor-1.sym
 {
@@ -360,7 +360,7 @@ refdes=R9
 T 57100 56600 5 10 0 0 0 0 1
 value=150ohm
 T 57100 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 57600 56600 1 90 0 resistor-1.sym
 {
@@ -371,7 +371,7 @@ refdes=R8
 T 57600 56600 5 10 0 0 0 0 1
 value=150ohm
 T 57600 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 58000 56600 1 90 0 resistor-1.sym
 {
@@ -382,7 +382,7 @@ refdes=R7
 T 58000 56600 5 10 0 0 0 0 1
 value=150ohm
 T 58000 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 58400 56600 1 90 0 resistor-1.sym
 {
@@ -393,7 +393,7 @@ refdes=R6
 T 58400 56600 5 10 0 0 0 0 1
 value=150ohm
 T 58400 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 58800 56600 1 90 0 resistor-1.sym
 {
@@ -404,7 +404,7 @@ refdes=R5
 T 58800 56600 5 10 0 0 0 0 1
 value=150ohm
 T 58800 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 59300 56600 1 90 0 resistor-1.sym
 {
@@ -415,7 +415,7 @@ refdes=R4
 T 59300 56600 5 10 0 0 0 0 1
 value=150ohm
 T 59300 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 59700 56600 1 90 0 resistor-1.sym
 {
@@ -426,7 +426,7 @@ refdes=R3
 T 59700 56600 5 10 0 0 0 0 1
 value=150ohm
 T 59700 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 60100 56600 1 90 0 resistor-1.sym
 {
@@ -437,7 +437,7 @@ refdes=R2
 T 60100 56600 5 10 0 0 0 0 1
 value=150ohm
 T 60100 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 60500 56600 1 90 0 resistor-1.sym
 {
@@ -448,7 +448,7 @@ refdes=R1
 T 60500 56600 5 10 0 0 0 0 1
 value=150ohm
 T 60500 56600 5 10 0 0 0 0 1
-footprint=1206
+footprint=0603
 }
 C 60900 58100 1 0 0 gnd-1.sym
 N 60400 58400 60400 58900 4
@@ -517,7 +517,7 @@ refdes=R33
 T 55600 48800 5 10 0 0 180 0 1
 value=150ohm
 T 55600 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 C 55200 48800 1 270 0 resistor-1.sym
 {
@@ -528,7 +528,7 @@ refdes=R34
 T 55200 48800 5 10 0 0 180 0 1
 value=150ohm
 T 55200 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 C 54800 48800 1 270 0 resistor-1.sym
 {
@@ -539,7 +539,7 @@ refdes=R35
 T 54800 48800 5 10 0 0 180 0 1
 value=150ohm
 T 54800 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 C 54400 48800 1 270 0 resistor-1.sym
 {
@@ -550,7 +550,7 @@ refdes=R36
 T 54400 48800 5 10 0 0 180 0 1
 value=150ohm
 T 54400 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 N 54500 48800 54500 51000 4
 N 54900 48800 54900 50800 4
@@ -565,7 +565,7 @@ refdes=R38
 T 56900 48800 5 10 0 0 180 0 1
 value=150ohm
 T 56900 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 C 57300 48800 1 270 0 resistor-1.sym
 {
@@ -576,7 +576,7 @@ refdes=R37
 T 57300 48800 5 10 0 0 180 0 1
 value=150ohm
 T 57300 48800 5 10 0 0 180 0 1
-footprint=1206
+footprint=0603
 }
 N 57000 48800 57000 49800 4
 N 57400 48800 57400 49600 4
@@ -597,7 +597,7 @@ refdes=R32
 T 64800 56100 5 10 0 0 270 0 1
 value=150ohm
 T 64800 56100 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 55700 1 0 0 resistor-1.sym
 {
@@ -608,7 +608,7 @@ refdes=R31
 T 64800 55700 5 10 0 0 270 0 1
 value=150ohm
 T 64800 55700 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 55300 1 0 0 resistor-1.sym
 {
@@ -619,7 +619,7 @@ refdes=R30
 T 64800 55300 5 10 0 0 270 0 1
 value=150ohm
 T 64800 55300 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 54900 1 0 0 resistor-1.sym
 {
@@ -630,7 +630,7 @@ refdes=R29
 T 64800 54900 5 10 0 0 270 0 1
 value=150ohm
 T 64800 54900 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 54400 1 0 0 resistor-1.sym
 {
@@ -641,7 +641,7 @@ refdes=R28
 T 64800 54400 5 10 0 0 270 0 1
 value=150ohm
 T 64800 54400 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 54000 1 0 0 resistor-1.sym
 {
@@ -652,7 +652,7 @@ refdes=R27
 T 64800 54000 5 10 0 0 270 0 1
 value=150ohm
 T 64800 54000 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 53600 1 0 0 resistor-1.sym
 {
@@ -663,7 +663,7 @@ refdes=R26
 T 64800 53600 5 10 0 0 270 0 1
 value=150ohm
 T 64800 53600 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 53200 1 0 0 resistor-1.sym
 {
@@ -674,7 +674,7 @@ refdes=R25
 T 64800 53200 5 10 0 0 270 0 1
 value=150ohm
 T 64800 53200 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 52700 1 0 0 resistor-1.sym
 {
@@ -685,7 +685,7 @@ refdes=R24
 T 64800 52700 5 10 0 0 270 0 1
 value=150ohm
 T 64800 52700 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 52300 1 0 0 resistor-1.sym
 {
@@ -696,7 +696,7 @@ refdes=R23
 T 64800 52300 5 10 0 0 270 0 1
 value=150ohm
 T 64800 52300 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 51900 1 0 0 resistor-1.sym
 {
@@ -707,7 +707,7 @@ refdes=R22
 T 64800 51900 5 10 0 0 270 0 1
 value=150ohm
 T 64800 51900 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 51500 1 0 0 resistor-1.sym
 {
@@ -718,7 +718,7 @@ refdes=R21
 T 64800 51500 5 10 0 0 270 0 1
 value=150ohm
 T 64800 51500 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 51000 1 0 0 resistor-1.sym
 {
@@ -729,7 +729,7 @@ refdes=R20
 T 64800 51000 5 10 0 0 270 0 1
 value=150ohm
 T 64800 51000 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 50600 1 0 0 resistor-1.sym
 {
@@ -740,7 +740,7 @@ refdes=R19
 T 64800 50600 5 10 0 0 270 0 1
 value=150ohm
 T 64800 50600 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 50200 1 0 0 resistor-1.sym
 {
@@ -751,7 +751,7 @@ refdes=R18
 T 64800 50200 5 10 0 0 270 0 1
 value=150ohm
 T 64800 50200 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 C 64800 49800 1 0 0 resistor-1.sym
 {
@@ -762,7 +762,7 @@ refdes=R17
 T 64800 49800 5 10 0 0 270 0 1
 value=150ohm
 T 64800 49800 5 10 0 0 270 0 1
-footprint=1206
+footprint=0603
 }
 N 66600 49900 67100 49900 4
 N 67100 50300 66600 50300 4
