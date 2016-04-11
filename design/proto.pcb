@@ -833,27 +833,6 @@ Element["" "0603" "R39" "150ohm" 170.00mil 590.00mil -31.50mil -31.50mil 0 100 "
 
 	)
 
-Element["" "BX0033" "U51" "BX0033" 1460.00mil 600.00mil 0.0000 0.0000 0 100 ""]
-(
-	Attribute("device" "BX0033")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 25.00mil 20.00mil 31.00mil 3.0000mm "+9v" "1" "hole,edge2"]
-	Pin[-14.0000mm 0.0000 0.5144mm 20.00mil 21.00mil 3.0000mm "GND" "2" "hole,edge2"]
-	Pad[-24.8000mm -250.00mil -24.6000mm -250.00mil 2.0000mm 20.00mil 2.5080mm "GND" "2" ""]
-	Pad[-24.8000mm 250.00mil -24.6000mm 250.00mil 2.0000mm 20.00mil 2.5080mm "+9v" "1" ""]
-	ElementLine [33.0000mm -14.9000mm -25.7000mm -14.9000mm 25.00mil]
-	ElementLine [33.0000mm 14.9000mm 33.0000mm -14.9000mm 25.00mil]
-	ElementLine [-25.7000mm 14.9000mm 33.0000mm 14.9000mm 25.00mil]
-	ElementLine [-25.7000mm -14.9000mm -25.7000mm 14.9000mm 25.00mil]
-	ElementLine [-22.7000mm -250.00mil -19.7000mm -250.00mil 25.00mil]
-	ElementLine [-22.7000mm 250.00mil -19.7000mm 250.00mil 25.00mil]
-	ElementLine [-21.2000mm 4.8500mm -21.2000mm 7.8500mm 25.00mil]
-
-	)
-
 Element["" "0603" "C2" "10uF" 170.00mil 650.00mil 31.50mil 31.50mil 2 100 ""]
 (
 	Attribute("device" "POLARIZED_CAPACITOR")
@@ -918,764 +897,6 @@ Element["" "DIODE_LAY 500" "D1" "1N4001" 310.00mil 60.00mil 83.00mil 354.00mil 3
 	ElementLine [-83.00mil 334.00mil 83.00mil 334.00mil 10.00mil]
 	ElementLine [-83.00mil 334.00mil 0.0000 166.00mil 10.00mil]
 	ElementLine [-83.00mil 166.00mil 83.00mil 166.00mil 10.00mil]
-
-	)
-
-Element["" "SIP8" "LED8" "LTL-2550G" 5650.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED5" "LTL-2550G" 3130.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED7" "LTL-2550G" 4810.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED6" "LTL-2550G" 3970.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "1206" "R17" "150ohm" 160.0441mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R21" "150ohm" 138.7081mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R29" "150ohm" 96.0361mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R30" "150ohm" 3580.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R31" "150ohm" 85.8761mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R32" "150ohm" 80.7961mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R25" "150ohm" 4620.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R26" "150ohm" 4420.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R27" "150ohm" 4220.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R28" "150ohm" 4020.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R22" "150ohm" 133.6281mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R23" "150ohm" 5060.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R24" "150ohm" 4860.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R18" "150ohm" 6100.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R19" "150ohm" 5900.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R20" "150ohm" 144.8041mm 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "SIP8" "LED1" "LTL-2550G" 3130.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED4" "LTL-2550G" 5650.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED3" "LTL-2550G" 4810.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "SIP8" "LED2" "LTL-2550G" 3970.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "1206" "R9" "150ohm" 4620.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R10" "150ohm" 112.2921mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R11" "150ohm" 4220.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R12" "150ohm" 102.1321mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R5" "150ohm" 5460.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R6" "150ohm" 133.6281mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R7" "150ohm" 5060.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R8" "150ohm" 123.4681mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R1" "150ohm" 6300.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R2" "150ohm" 6100.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R3" "150ohm" 149.8841mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R4" "150ohm" 5701.90mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R16" "150ohm" 80.7961mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R15" "150ohm" 85.8761mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R14" "150ohm" 3580.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R13" "150ohm" 96.0361mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R33" "150ohm" 181.3319mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "SIP8" "LED9" "LTL-2550G" 6490.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	Pin[400.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "5" "edge2"]
-	Pin[500.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "6" "edge2"]
-	Pin[600.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "7" "edge2"]
-	Pin[700.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "8" "edge2"]
-	ElementLine [0.0000 50.00mil 700.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 700.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [700.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
-
-	)
-
-Element["" "1206" "R36" "150ohm" 6540.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R35" "150ohm" 171.1719mm 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R34" "150ohm" 6940.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R37" "150ohm" 7140.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "1206" "R38" "150ohm" 6940.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
-(
-	Attribute("device" "RESISTOR")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-59.05mil -11.81mil -59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "1" "1" "square"]
-	Pad[59.05mil -11.81mil 59.05mil 11.81mil 51.18mil 20.00mil 57.18mil "2" "2" "square"]
-	ElementLine [-23.62mil -37.40mil 23.62mil -37.40mil 8.00mil]
-	ElementLine [-23.62mil 37.40mil 23.62mil 37.40mil 8.00mil]
-
-	)
-
-Element["" "SIP4" "LED10" "LTL-2500G" 6890.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
-(
-	Attribute("device" "LED")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pin[0.0000 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "1" "square,edge2"]
-	Pin[100.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "2" "edge2"]
-	Pin[200.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "K" "3" "edge2"]
-	Pin[300.00mil 0.0000 60.00mil 30.00mil 66.00mil 28.00mil "A" "4" "edge2"]
-	ElementLine [0.0000 50.00mil 300.00mil 50.00mil 20.00mil]
-	ElementLine [0.0000 -50.00mil 300.00mil -50.00mil 20.00mil]
-	ElementLine [50.00mil -50.00mil 50.00mil 50.00mil 10.00mil]
-	ElementArc [0.0000 0.0000 50.00mil 50.00mil 270 180 20.00mil]
-	ElementArc [300.00mil 0.0000 50.00mil 50.00mil 90 180 20.00mil]
 
 	)
 
@@ -1805,38 +1026,6 @@ Element["" "SO16" "S3" "A6H-8101" 160.00mil 2110.00mil -20.00mil -60.00mil 0 100
 
 	)
 
-Element["" "SO16" "U1" "SN74HC157D" 1020.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
 Element["" "SO16" "U7" "SN74HC157D" 1020.00mil 2570.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
@@ -1901,38 +1090,6 @@ Element["" "SO16" "U2" "SN74HC157D" 1020.00mil 1770.00mil -60.00mil 20.00mil 1 1
 
 	)
 
-Element["" "SO16" "U4" "SN74HC157D" 1020.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
 Element["" "SO16" "U12" "SN74HC157D" 1820.00mil 2570.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
@@ -1965,71 +1122,7 @@ Element["" "SO16" "U12" "SN74HC157D" 1820.00mil 2570.00mil -60.00mil 20.00mil 1 
 
 	)
 
-Element["" "SO16" "U8" "SN74HC157D" 1820.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
 Element["" "SO16" "U5" "SN74HC157D" 1820.00mil 1770.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
-Element["" "SO16" "U3" "SN74HC157D" 1820.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
 	Attribute("manufacturer" "unknown")
@@ -2125,70 +1218,6 @@ Element["" "SO16" "U16" "SN74HC157D" 2630.00mil 2570.00mil -60.00mil 20.00mil 1 
 
 	)
 
-Element["" "SO16" "U13" "SN74HC157D" 2630.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
-Element["" "SO16" "U6" "SN74HC157D" 2630.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
 Element["" "SO16" "U14" "SN74HC157D" 3430.00mil 1770.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
@@ -2222,70 +1251,6 @@ Element["" "SO16" "U14" "SN74HC157D" 3430.00mil 1770.00mil -60.00mil 20.00mil 1 
 	)
 
 Element["" "SO16" "U19" "SN74HC157D" 3430.00mil 2570.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
-Element["" "SO16" "U17" "SN74HC157D" 3430.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
-Element["" "SO16" "U11" "SN74HC157D" 3430.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
 	Attribute("manufacturer" "unknown")
@@ -2381,70 +1346,6 @@ Element["" "SO16" "U23" "SN74HC157D" 4230.00mil 2570.00mil -60.00mil 20.00mil 1 
 
 	)
 
-Element["" "SO16" "U21" "SN74HC157D" 4230.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
-Element["" "SO16" "U15" "SN74HC157D" 4230.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
-(
-	Attribute("device" "74157")
-	Attribute("manufacturer" "unknown")
-	Attribute("manufacturer_part_number" "unknown")
-	Attribute("vendor" "unknown")
-	Attribute("vendor_part_number" "unknown")
-	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
-	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
-	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
-	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
-	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
-	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
-	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
-	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
-	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
-	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
-	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
-
-	)
-
 Element["" "SO16" "U22" "SN74HC157D" 5020.00mil 1770.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
@@ -2509,7 +1410,28 @@ Element["" "SO16" "U25" "SN74HC157D" 5020.00mil 2570.00mil -60.00mil 20.00mil 1 
 
 	)
 
-Element["" "SO16" "U24" "SN74HC157D" 5020.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+Element["" "BX0033" "U51" "BX0033" 7170.00mil 1500.00mil 0.0000 0.0000 3 100 ""]
+(
+	Attribute("device" "BX0033")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pin[0.0000 0.0000 25.00mil 20.00mil 31.00mil 3.0000mm "+9v" "1" "hole"]
+	Pin[0.0000 -14.0000mm 0.5144mm 20.00mil 21.00mil 3.0000mm "GND" "2" "hole"]
+	Pad[250.00mil -24.8000mm 250.00mil -24.6000mm 2.0000mm 20.00mil 2.5080mm "GND" "2" ""]
+	Pad[-250.00mil -24.8000mm -250.00mil -24.6000mm 2.0000mm 20.00mil 2.5080mm "+9v" "1" ""]
+	ElementLine [14.9000mm -25.7000mm 14.9000mm 33.0000mm 25.00mil]
+	ElementLine [-14.9000mm 33.0000mm 14.9000mm 33.0000mm 25.00mil]
+	ElementLine [-14.9000mm -25.7000mm -14.9000mm 33.0000mm 25.00mil]
+	ElementLine [-14.9000mm -25.7000mm 14.9000mm -25.7000mm 25.00mil]
+	ElementLine [250.00mil -22.7000mm 250.00mil -19.7000mm 25.00mil]
+	ElementLine [-250.00mil -22.7000mm -250.00mil -19.7000mm 25.00mil]
+	ElementLine [-7.8500mm -21.2000mm -4.8500mm -21.2000mm 25.00mil]
+
+	)
+
+Element["" "SO16" "U1" "SN74HC157D" 1420.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
 	Attribute("manufacturer" "unknown")
@@ -2541,7 +1463,7 @@ Element["" "SO16" "U24" "SN74HC157D" 5020.00mil 2170.00mil -60.00mil 20.00mil 1 
 
 	)
 
-Element["" "SO16" "U20" "SN74HC157D" 5020.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
+Element["" "SO16" "U3" "SN74HC157D" 2220.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
 (
 	Attribute("device" "74157")
 	Attribute("manufacturer" "unknown")
@@ -2572,209 +1494,1439 @@ Element["" "SO16" "U20" "SN74HC157D" 5020.00mil 1370.00mil -60.00mil 20.00mil 1 
 	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
 
 	)
-Rat[158.5201mm 12.9080mm 0 895.00mil 1505.00mil 0  ""]
-Rat[895.00mil 1505.00mil 0 1145.00mil 2435.00mil 0  ""]
+
+Element["" "SO16" "U6" "SN74HC157D" 3030.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U11" "SN74HC157D" 3830.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U15" "SN74HC157D" 4630.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U20" "SN74HC157D" 5420.00mil 1370.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U4" "SN74HC157D" 1420.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U8" "SN74HC157D" 2220.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U13" "SN74HC157D" 3030.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U17" "SN74HC157D" 3830.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U21" "SN74HC157D" 4630.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "SO16" "U24" "SN74HC157D" 5420.00mil 2170.00mil -60.00mil 20.00mil 1 100 ""]
+(
+	Attribute("device" "74157")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-175.00mil 70.00mil -175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "S" "1" "square,edge2"]
+	Pad[-125.00mil 70.00mil -125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1A" "2" "square,edge2"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1B" "3" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "1Y" "4" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2A" "5" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2B" "6" "square,edge2"]
+	Pad[125.00mil 70.00mil 125.00mil 135.00mil 20.00mil 10.00mil 30.00mil "2Y" "7" "square,edge2"]
+	Pad[175.00mil 70.00mil 175.00mil 135.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
+	Pad[175.00mil -135.00mil 175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4Y" "9" "square"]
+	Pad[125.00mil -135.00mil 125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4B" "10" "square"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "4A" "11" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3Y" "12" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3B" "13" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "3A" "14" "square"]
+	Pad[-125.00mil -135.00mil -125.00mil -70.00mil 20.00mil 10.00mil 30.00mil "E" "15" "square"]
+	Pad[-175.00mil -135.00mil -175.00mil -70.00mil 20.00mil 10.00mil 30.00mil "16" "16" "square"]
+	ElementLine [-195.00mil 155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [195.00mil -155.00mil 195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil 195.00mil -155.00mil 10.00mil]
+	ElementLine [-195.00mil 25.00mil -195.00mil 155.00mil 10.00mil]
+	ElementLine [-195.00mil -155.00mil -195.00mil -25.00mil 10.00mil]
+	ElementArc [-195.00mil 0.0000 25.00mil 25.00mil 90 180 10.00mil]
+
+	)
+
+Element["" "0603" "LED38" "LG L29K-G2J1-24-Z" 132.3428mm 135.4800mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED37" "LG L29K-G2J1-24-Z" 136.1939mm 4801.50mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED36" "LG L29K-G2J1-24-Z" 129.1578mm 142.0295mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED35" "LG L29K-G2J1-24-Z" 157.0549mm 5743.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED34" "LG L29K-G2J1-24-Z" 140.6032mm 143.1583mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED33" "LG L29K-G2J1-24-Z" 152.3092mm 123.9802mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED17" "LG L29K-G2J1-24-Z" 167.8266mm 114.0466mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED18" "LG L29K-G2J1-24-Z" 6203.70mil 134.3642mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED19" "LG L29K-G2J1-24-Z" 165.2231mm 118.6747mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED20" "LG L29K-G2J1-24-Z" 6482.90mil 149.4388mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED21" "LG L29K-G2J1-24-Z" 174.0241mm 133.2366mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED22" "LG L29K-G2J1-24-Z" 142.0502mm 126.5085mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED23" "LG L29K-G2J1-24-Z" 130.6912mm 148.1005mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED24" "LG L29K-G2J1-24-Z" 176.8208mm 124.2895mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED25" "LG L29K-G2J1-24-Z" 175.4747mm 148.0433mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED26" "LG L29K-G2J1-24-Z" 175.4103mm 5572.20mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED27" "LG L29K-G2J1-24-Z" 142.6396mm 145.3206mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED28" "LG L29K-G2J1-24-Z" 5373.70mil 119.3974mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED29" "LG L29K-G2J1-24-Z" 160.3501mm 127.2634mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED30" "LG L29K-G2J1-24-Z" 138.2696mm 148.5533mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED31" "LG L29K-G2J1-24-Z" 129.5380mm 124.2951mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED32" "LG L29K-G2J1-24-Z" 131.6498mm 131.0809mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED1" "LG L29K-G2J1-24-Z" 460.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED2" "LG L29K-G2J1-24-Z" 1300.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED3" "LG L29K-G2J1-24-Z" 2140.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED4" "LG L29K-G2J1-24-Z" 2980.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED5" "LG L29K-G2J1-24-Z" 460.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED6" "LG L29K-G2J1-24-Z" 1300.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED7" "LG L29K-G2J1-24-Z" 2140.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED8" "LG L29K-G2J1-24-Z" 2980.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED9" "LG L29K-G2J1-24-Z" 3820.00mil 400.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED10" "LG L29K-G2J1-24-Z" 4220.00mil 110.00mil -40.00mil -110.00mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED12" "LG L29K-G2J1-24-Z" 148.2581mm 136.8238mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED13" "LG L29K-G2J1-24-Z" 5450.60mil 110.2812mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED14" "LG L29K-G2J1-24-Z" 128.4984mm 136.8271mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED15" "LG L29K-G2J1-24-Z" 132.7200mm 150.1226mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED16" "LG L29K-G2J1-24-Z" 129.1800mm 108.4866mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "LED39" "LG L29K-G2J1-24-Z" 135.7474mm 107.4712mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "R17" "150ohm" 92.2261mm 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R18" "150ohm" 3430.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R19" "150ohm" 3230.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R20" "150ohm" 76.9861mm 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R21" "150ohm" 70.8901mm 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R22" "150ohm" 65.8101mm 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R23" "150ohm" 2390.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R24" "150ohm" 2190.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R25" "150ohm" 1950.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R26" "150ohm" 1750.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R27" "150ohm" 1550.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R28" "150ohm" 1350.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R29" "150ohm" 28.2181mm 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R30" "150ohm" 910.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R31" "150ohm" 710.95mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R32" "150ohm" 510.95mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R37" "150ohm" 4470.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R38" "150ohm" 4270.00mil 230.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R36" "150ohm" 3870.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R35" "150ohm" 103.3539mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R34" "150ohm" 4270.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R33" "150ohm" 113.5139mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R1" "150ohm" 3630.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R2" "150ohm" 3430.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R3" "150ohm" 82.0661mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R4" "150ohm" 3031.90mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R5" "150ohm" 2790.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R6" "150ohm" 65.8101mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R7" "150ohm" 2390.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R8" "150ohm" 55.6501mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R9" "150ohm" 1950.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R10" "150ohm" 44.4741mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R11" "150ohm" 1550.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R12" "150ohm" 34.3141mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R13" "150ohm" 28.2181mm 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R14" "150ohm" 910.00mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R15" "150ohm" 710.95mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R16" "150ohm" 510.95mil 520.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+Rat[91.5520mm 13.0830mm 0 1295.00mil 1505.00mil 0  ""]
+Rat[1295.00mil 1505.00mil 0 1145.00mil 2435.00mil 0  ""]
 Rat[1145.00mil 2435.00mil 0 295.00mil 2705.00mil 0  ""]
-Rat[153.4401mm 12.9080mm 0 1045.00mil 1505.00mil 0  ""]
-Rat[1045.00mil 1505.00mil 0 995.00mil 2435.00mil 0  ""]
+Rat[86.4720mm 13.0830mm 0 1445.00mil 1505.00mil 0  ""]
+Rat[1445.00mil 1505.00mil 0 995.00mil 2435.00mil 0  ""]
 Rat[995.00mil 2435.00mil 0 295.00mil 2655.00mil 0  ""]
-Rat[5841.90mil 12.9080mm 0 945.00mil 1235.00mil 0  ""]
-Rat[945.00mil 1235.00mil 0 1095.00mil 2705.00mil 0  ""]
+Rat[81.4161mm 13.0830mm 0 1345.00mil 1235.00mil 0  ""]
+Rat[1345.00mil 1235.00mil 0 1095.00mil 2705.00mil 0  ""]
 Rat[1095.00mil 2705.00mil 0 295.00mil 2605.00mil 0  ""]
-Rat[143.3284mm 12.9080mm 0 1095.00mil 1235.00mil 0  ""]
-Rat[1095.00mil 1235.00mil 0 945.00mil 2705.00mil 0  ""]
+Rat[76.3603mm 13.0830mm 0 1495.00mil 1235.00mil 0  ""]
+Rat[1495.00mil 1235.00mil 0 945.00mil 2705.00mil 0  ""]
 Rat[945.00mil 2705.00mil 0 295.00mil 2555.00mil 0  ""]
-Rat[137.1841mm 12.9080mm 0 1145.00mil 2035.00mil 0  ""]
-Rat[1145.00mil 2035.00mil 0 895.00mil 1905.00mil 0  ""]
+Rat[70.2160mm 13.0830mm 0 1545.00mil 2035.00mil 0  ""]
+Rat[1545.00mil 2035.00mil 0 895.00mil 1905.00mil 0  ""]
 Rat[895.00mil 1905.00mil 0 295.00mil 2505.00mil 0  ""]
-Rat[5201.90mil 12.9080mm 0 1045.00mil 1905.00mil 0  ""]
-Rat[1045.00mil 1905.00mil 0 995.00mil 2035.00mil 0  ""]
-Rat[995.00mil 2035.00mil 0 295.00mil 2455.00mil 0  ""]
-Rat[127.0241mm 12.9080mm 0 945.00mil 1635.00mil 0  ""]
-Rat[945.00mil 1635.00mil 0 1095.00mil 2305.00mil 0  ""]
-Rat[1095.00mil 2305.00mil 0 295.00mil 2405.00mil 0  ""]
-Rat[4801.90mil 12.9080mm 0 1095.00mil 1635.00mil 0  ""]
-Rat[1095.00mil 1635.00mil 0 945.00mil 2305.00mil 0  ""]
-Rat[945.00mil 2305.00mil 0 295.00mil 2355.00mil 0  ""]
-Rat[115.8481mm 12.9080mm 0 1145.00mil 1635.00mil 0  ""]
-Rat[1145.00mil 1635.00mil 0 895.00mil 2305.00mil 0  ""]
-Rat[895.00mil 2305.00mil 0 295.00mil 2285.00mil 0  ""]
-Rat[4361.90mil 12.9080mm 0 995.00mil 1635.00mil 0  ""]
-Rat[995.00mil 1635.00mil 0 1045.00mil 2305.00mil 0  ""]
-Rat[1045.00mil 2305.00mil 0 295.00mil 2235.00mil 0  ""]
-Rat[105.6881mm 12.9080mm 0 1095.00mil 1905.00mil 0  ""]
-Rat[1095.00mil 1905.00mil 0 945.00mil 2035.00mil 0  ""]
-Rat[945.00mil 2035.00mil 0 295.00mil 2185.00mil 0  ""]
-Rat[3961.90mil 12.9080mm 0 1095.00mil 2035.00mil 0  ""]
-Rat[1095.00mil 2035.00mil 0 945.00mil 1905.00mil 0  ""]
+Rat[65.1601mm 13.0830mm 0 1395.00mil 2035.00mil 0  ""]
+Rat[1395.00mil 2035.00mil 0 1045.00mil 1905.00mil 0  ""]
+Rat[1045.00mil 1905.00mil 0 295.00mil 2455.00mil 0  ""]
+Rat[60.0560mm 13.0830mm 0 945.00mil 1635.00mil 0  ""]
+Rat[945.00mil 1635.00mil 0 1495.00mil 2305.00mil 0  ""]
+Rat[945.00mil 1635.00mil 0 295.00mil 2405.00mil 0  ""]
+Rat[55.0001mm 13.0830mm 0 1095.00mil 1635.00mil 0  ""]
+Rat[1095.00mil 1635.00mil 0 1345.00mil 2305.00mil 0  ""]
+Rat[1345.00mil 2305.00mil 0 295.00mil 2355.00mil 0  ""]
+Rat[48.8800mm 13.0830mm 0 1145.00mil 1635.00mil 0  ""]
+Rat[1145.00mil 1635.00mil 0 1295.00mil 2305.00mil 0  ""]
+Rat[1295.00mil 2305.00mil 0 295.00mil 2285.00mil 0  ""]
+Rat[43.8241mm 13.0830mm 0 995.00mil 1635.00mil 0  ""]
+Rat[995.00mil 1635.00mil 0 1445.00mil 2305.00mil 0  ""]
+Rat[995.00mil 1635.00mil 0 295.00mil 2235.00mil 0  ""]
+Rat[38.7200mm 13.0830mm 0 1095.00mil 1905.00mil 0  ""]
+Rat[1095.00mil 1905.00mil 0 1345.00mil 2035.00mil 0  ""]
+Rat[1095.00mil 1905.00mil 0 295.00mil 2185.00mil 0  ""]
+Rat[33.6641mm 13.0830mm 0 945.00mil 1905.00mil 0  ""]
+Rat[945.00mil 1905.00mil 0 1495.00mil 2035.00mil 0  ""]
 Rat[945.00mil 1905.00mil 0 295.00mil 2135.00mil 0  ""]
-Rat[3721.90mil 12.9080mm 0 1145.00mil 1235.00mil 0  ""]
-Rat[1145.00mil 1235.00mil 0 295.00mil 2085.00mil 0  ""]
+Rat[27.5681mm 13.0830mm 0 1545.00mil 1235.00mil 0  ""]
+Rat[1545.00mil 1235.00mil 0 295.00mil 2085.00mil 0  ""]
 Rat[295.00mil 2085.00mil 0 895.00mil 2705.00mil 0  ""]
-Rat[89.4321mm 12.9080mm 0 995.00mil 1235.00mil 0  ""]
-Rat[995.00mil 1235.00mil 0 295.00mil 2035.00mil 0  ""]
+Rat[22.4640mm 13.0830mm 0 1395.00mil 1235.00mil 0  ""]
+Rat[1395.00mil 1235.00mil 0 295.00mil 2035.00mil 0  ""]
 Rat[295.00mil 2035.00mil 0 1045.00mil 2705.00mil 0  ""]
-Rat[3321.90mil 12.9080mm 0 1095.00mil 1505.00mil 0  ""]
-Rat[1095.00mil 1505.00mil 0 295.00mil 1985.00mil 0  ""]
-Rat[295.00mil 1985.00mil 0 945.00mil 2435.00mil 0  ""]
-Rat[3121.90mil 12.9080mm 0 945.00mil 1505.00mil 0  ""]
-Rat[945.00mil 1505.00mil 0 330.00mil 1595.00mil 0  ""]
+Rat[685.36mil 13.0830mm 0 1495.00mil 1505.00mil 0  ""]
+Rat[1495.00mil 1505.00mil 0 945.00mil 2435.00mil 0  ""]
+Rat[945.00mil 2435.00mil 0 295.00mil 1985.00mil 0  ""]
+Rat[485.36mil 13.0830mm 0 330.00mil 1595.00mil 0  ""]
 Rat[330.00mil 1595.00mil 0 295.00mil 1935.00mil 0  ""]
-Rat[945.00mil 1505.00mil 0 1095.00mil 2435.00mil 0  ""]
-Rat[7080.00mil 12.9080mm 0 4055.00mil 1505.00mil 0  ""]
-Rat[4055.00mil 1505.00mil 0 4055.00mil 1905.00mil 0  ""]
-Rat[4055.00mil 1905.00mil 0 4055.00mil 2305.00mil 0  ""]
-Rat[4055.00mil 2305.00mil 0 4055.00mil 2705.00mil 0  ""]
-Rat[4055.00mil 1505.00mil 0 295.00mil 1325.00mil 0  ""]
-Rat[174.7761mm 12.9080mm 0 3255.00mil 1505.00mil 0  ""]
-Rat[3255.00mil 1505.00mil 0 3255.00mil 1905.00mil 0  ""]
-Rat[3255.00mil 1905.00mil 0 3255.00mil 2305.00mil 0  ""]
-Rat[3255.00mil 2305.00mil 0 3255.00mil 2705.00mil 0  ""]
-Rat[3255.00mil 1505.00mil 0 295.00mil 1275.00mil 0  ""]
-Rat[6680.00mil 12.9080mm 0 2455.00mil 1505.00mil 0  ""]
-Rat[2455.00mil 1505.00mil 0 2455.00mil 1905.00mil 0  ""]
-Rat[2455.00mil 1905.00mil 0 2455.00mil 2305.00mil 0  ""]
-Rat[2455.00mil 2305.00mil 0 2455.00mil 2705.00mil 0  ""]
-Rat[2455.00mil 1505.00mil 0 295.00mil 1225.00mil 0  ""]
-Rat[164.6161mm 12.9080mm 0 1645.00mil 1505.00mil 0  ""]
-Rat[1645.00mil 1505.00mil 0 1645.00mil 1905.00mil 0  ""]
-Rat[1645.00mil 1905.00mil 0 1645.00mil 2305.00mil 0  ""]
-Rat[1645.00mil 2305.00mil 0 1645.00mil 2705.00mil 0  ""]
-Rat[1645.00mil 1505.00mil 0 295.00mil 1175.00mil 0  ""]
-Rat[6241.90mil 218.19mil 0 5195.00mil 2435.00mil 0  ""]
-Rat[153.4401mm 218.19mil 0 5045.00mil 2435.00mil 0  ""]
-Rat[148.3601mm 218.19mil 0 5145.00mil 2705.00mil 0  ""]
-Rat[5641.90mil 218.19mil 0 4995.00mil 2705.00mil 0  ""]
-Rat[5401.90mil 218.19mil 0 5195.00mil 2035.00mil 0  ""]
-Rat[5201.90mil 218.19mil 0 5045.00mil 2035.00mil 0  ""]
-Rat[127.0241mm 218.19mil 0 5145.00mil 2305.00mil 0  ""]
-Rat[121.9441mm 218.19mil 0 4995.00mil 2305.00mil 0  ""]
-Rat[115.8481mm 218.19mil 0 5195.00mil 1635.00mil 0  ""]
-Rat[110.7681mm 218.19mil 0 5045.00mil 1635.00mil 0  ""]
-Rat[105.6881mm 218.19mil 0 5145.00mil 1905.00mil 0  ""]
-Rat[100.6081mm 218.19mil 0 4995.00mil 1905.00mil 0  ""]
-Rat[3721.90mil 218.19mil 0 5195.00mil 1235.00mil 0  ""]
-Rat[89.4321mm 218.19mil 0 5045.00mil 1235.00mil 0  ""]
-Rat[3321.90mil 218.19mil 0 5145.00mil 1505.00mil 0  ""]
-Rat[3121.90mil 218.19mil 0 4995.00mil 1505.00mil 0  ""]
-Rat[179.8561mm 218.19mil 0 295.00mil 1525.00mil 0  ""]
+Rat[295.00mil 1935.00mil 0 1095.00mil 2435.00mil 0  ""]
+Rat[1095.00mil 2435.00mil 0 1345.00mil 1505.00mil 0  ""]
+Rat[112.8639mm 13.0830mm 0 4455.00mil 1505.00mil 0  ""]
+Rat[4455.00mil 1505.00mil 0 4055.00mil 1905.00mil 0  ""]
+Rat[4055.00mil 1905.00mil 0 4455.00mil 2305.00mil 0  ""]
+Rat[4455.00mil 2305.00mil 0 4055.00mil 2705.00mil 0  ""]
+Rat[4055.00mil 1905.00mil 0 295.00mil 1325.00mil 0  ""]
+Rat[107.8080mm 13.0830mm 0 3655.00mil 1505.00mil 0  ""]
+Rat[3655.00mil 1505.00mil 0 3255.00mil 1905.00mil 0  ""]
+Rat[3255.00mil 1905.00mil 0 3655.00mil 2305.00mil 0  ""]
+Rat[3655.00mil 2305.00mil 0 3255.00mil 2705.00mil 0  ""]
+Rat[3255.00mil 1905.00mil 0 295.00mil 1275.00mil 0  ""]
+Rat[102.7039mm 13.0830mm 0 2855.00mil 1505.00mil 0  ""]
+Rat[2855.00mil 1505.00mil 0 2455.00mil 1905.00mil 0  ""]
+Rat[2455.00mil 1905.00mil 0 2855.00mil 2305.00mil 0  ""]
+Rat[2855.00mil 2305.00mil 0 2455.00mil 2705.00mil 0  ""]
+Rat[2455.00mil 1905.00mil 0 295.00mil 1225.00mil 0  ""]
+Rat[97.6480mm 13.0830mm 0 2045.00mil 1505.00mil 0  ""]
+Rat[2045.00mil 1505.00mil 0 1645.00mil 1905.00mil 0  ""]
+Rat[1645.00mil 1905.00mil 0 2045.00mil 2305.00mil 0  ""]
+Rat[2045.00mil 2305.00mil 0 1645.00mil 2705.00mil 0  ""]
+Rat[1645.00mil 1905.00mil 0 295.00mil 1175.00mil 0  ""]
+Rat[91.5761mm 225.08mil 0 5195.00mil 2435.00mil 0  ""]
+Rat[86.4720mm 225.08mil 0 5045.00mil 2435.00mil 0  ""]
+Rat[81.3920mm 225.08mil 0 5145.00mil 2705.00mil 0  ""]
+Rat[76.3361mm 225.08mil 0 4995.00mil 2705.00mil 0  ""]
+Rat[70.2401mm 225.08mil 0 5595.00mil 2035.00mil 0  ""]
+Rat[65.1601mm 225.08mil 0 5445.00mil 2035.00mil 0  ""]
+Rat[60.0560mm 225.08mil 0 5545.00mil 2305.00mil 0  ""]
+Rat[54.9760mm 225.08mil 0 5395.00mil 2305.00mil 0  ""]
+Rat[48.8800mm 225.08mil 0 5195.00mil 1635.00mil 0  ""]
+Rat[43.8000mm 225.08mil 0 5045.00mil 1635.00mil 0  ""]
+Rat[38.7200mm 225.08mil 0 5145.00mil 1905.00mil 0  ""]
+Rat[33.6400mm 225.08mil 0 4995.00mil 1905.00mil 0  ""]
+Rat[27.5681mm 225.08mil 0 5595.00mil 1235.00mil 0  ""]
+Rat[22.4640mm 225.08mil 0 5445.00mil 1235.00mil 0  ""]
+Rat[685.36mil 225.08mil 0 5545.00mil 1505.00mil 0  ""]
+Rat[485.36mil 225.08mil 0 5395.00mil 1505.00mil 0  ""]
+Rat[112.8880mm 225.08mil 0 295.00mil 1525.00mil 0  ""]
 Rat[295.00mil 1525.00mil 0 280.00mil 1595.00mil 0  ""]
-Rat[174.7761mm 218.19mil 0 4845.00mil 1505.00mil 0  ""]
-Rat[4845.00mil 1505.00mil 0 4845.00mil 1905.00mil 0  ""]
-Rat[4845.00mil 1905.00mil 0 4845.00mil 2305.00mil 0  ""]
-Rat[4845.00mil 2305.00mil 0 4845.00mil 2705.00mil 0  ""]
-Rat[4845.00mil 1505.00mil 0 845.00mil 1505.00mil 0  ""]
-Rat[845.00mil 1505.00mil 0 845.00mil 1905.00mil 0  ""]
-Rat[845.00mil 1905.00mil 0 845.00mil 2305.00mil 0  ""]
-Rat[845.00mil 2305.00mil 0 845.00mil 2705.00mil 0  ""]
-Rat[845.00mil 1505.00mil 0 295.00mil 1475.00mil 0  ""]
+Rat[107.8080mm 225.08mil 0 5245.00mil 1505.00mil 0  ""]
+Rat[5245.00mil 1505.00mil 0 4845.00mil 1905.00mil 0  ""]
+Rat[4845.00mil 1905.00mil 0 5245.00mil 2305.00mil 0  ""]
+Rat[5245.00mil 2305.00mil 0 4845.00mil 2705.00mil 0  ""]
+Rat[107.8080mm 225.08mil 0 1245.00mil 1505.00mil 0  ""]
+Rat[1245.00mil 1505.00mil 0 845.00mil 1905.00mil 0  ""]
+Rat[845.00mil 1905.00mil 0 1245.00mil 2305.00mil 0  ""]
+Rat[1245.00mil 2305.00mil 0 845.00mil 2705.00mil 0  ""]
+Rat[845.00mil 1905.00mil 0 295.00mil 1475.00mil 0  ""]
 Rat[40.95mil 12.1460mm 0 44.41mil 14.8610mm 0  ""]
 Rat[44.41mil 14.8610mm 0 144.41mil 16.3850mm 0  ""]
 Rat[144.41mil 16.3850mm 0 70.00mil 900.00mil 5  ""]
-Rat[144.41mil 16.3850mm 0 12.2840mm 350.00mil 0  ""]
+Rat[144.41mil 16.3850mm 0 12.3340mm 10.0350mm 0  ""]
+Rat[12.3340mm 10.0350mm 0 12.3340mm 105.08mil 0  ""]
 Rat[70.00mil 900.00mil 5 30.00mil 1595.00mil 0  ""]
-Rat[30.00mil 1595.00mil 0 895.00mil 1635.00mil 0  ""]
-Rat[895.00mil 1635.00mil 0 1195.00mil 1505.00mil 0  ""]
-Rat[895.00mil 1635.00mil 0 895.00mil 1235.00mil 0  ""]
-Rat[1195.00mil 1505.00mil 0 1195.00mil 1905.00mil 0  ""]
-Rat[1195.00mil 1905.00mil 0 895.00mil 2035.00mil 0  ""]
-Rat[1195.00mil 1905.00mil 0 1195.00mil 2305.00mil 0  ""]
-Rat[1195.00mil 2305.00mil 0 895.00mil 2435.00mil 0  ""]
-Rat[1195.00mil 2305.00mil 0 1195.00mil 2705.00mil 0  ""]
-Rat[1195.00mil 1505.00mil 0 1695.00mil 1635.00mil 0  ""]
-Rat[1695.00mil 1635.00mil 0 1995.00mil 1505.00mil 0  ""]
-Rat[1695.00mil 1635.00mil 0 1695.00mil 1235.00mil 0  ""]
-Rat[1995.00mil 1505.00mil 0 1995.00mil 1905.00mil 0  ""]
-Rat[1995.00mil 1905.00mil 0 1695.00mil 2035.00mil 0  ""]
-Rat[1995.00mil 1905.00mil 0 1995.00mil 2305.00mil 0  ""]
-Rat[1995.00mil 2305.00mil 0 1695.00mil 2435.00mil 0  ""]
-Rat[1995.00mil 2305.00mil 0 1995.00mil 2705.00mil 0  ""]
-Rat[1995.00mil 1505.00mil 0 2505.00mil 1635.00mil 0  ""]
-Rat[2505.00mil 1635.00mil 0 2805.00mil 1505.00mil 0  ""]
-Rat[2505.00mil 1635.00mil 0 2505.00mil 1235.00mil 0  ""]
-Rat[2805.00mil 1505.00mil 0 2805.00mil 1905.00mil 0  ""]
-Rat[2805.00mil 1905.00mil 0 2505.00mil 2035.00mil 0  ""]
-Rat[2505.00mil 2035.00mil 0 2505.00mil 2435.00mil 0  ""]
-Rat[2505.00mil 2435.00mil 0 2805.00mil 2305.00mil 0  ""]
-Rat[2805.00mil 2305.00mil 0 2805.00mil 2705.00mil 0  ""]
-Rat[2805.00mil 2305.00mil 0 3305.00mil 2435.00mil 0  ""]
-Rat[3305.00mil 2435.00mil 0 3605.00mil 2305.00mil 0  ""]
-Rat[3605.00mil 2305.00mil 0 3605.00mil 1905.00mil 0  ""]
-Rat[3605.00mil 1905.00mil 0 3305.00mil 2035.00mil 0  ""]
-Rat[3605.00mil 1905.00mil 0 3605.00mil 1505.00mil 0  ""]
-Rat[3605.00mil 1505.00mil 0 3305.00mil 1635.00mil 0  ""]
-Rat[3305.00mil 1635.00mil 0 3305.00mil 1235.00mil 0  ""]
-Rat[3605.00mil 2305.00mil 0 3605.00mil 2705.00mil 0  ""]
-Rat[3605.00mil 2305.00mil 0 4105.00mil 2435.00mil 0  ""]
-Rat[4105.00mil 2435.00mil 0 4405.00mil 2305.00mil 0  ""]
-Rat[4405.00mil 2305.00mil 0 4405.00mil 2705.00mil 0  ""]
-Rat[4405.00mil 2305.00mil 0 4405.00mil 1905.00mil 0  ""]
-Rat[4405.00mil 1905.00mil 0 4105.00mil 2035.00mil 0  ""]
-Rat[4405.00mil 1905.00mil 0 4405.00mil 1505.00mil 0  ""]
-Rat[4405.00mil 1505.00mil 0 4105.00mil 1635.00mil 0  ""]
-Rat[4105.00mil 1635.00mil 0 4105.00mil 1235.00mil 0  ""]
-Rat[4405.00mil 2305.00mil 0 4895.00mil 2435.00mil 0  ""]
-Rat[4895.00mil 2435.00mil 0 5195.00mil 2305.00mil 0  ""]
-Rat[4895.00mil 2435.00mil 0 4895.00mil 2035.00mil 0  ""]
-Rat[4895.00mil 2035.00mil 0 5195.00mil 1905.00mil 0  ""]
-Rat[5195.00mil 1905.00mil 0 5195.00mil 1505.00mil 0  ""]
-Rat[5195.00mil 1505.00mil 0 4895.00mil 1635.00mil 0  ""]
-Rat[4895.00mil 1635.00mil 0 4895.00mil 1235.00mil 0  ""]
-Rat[5195.00mil 2305.00mil 0 5195.00mil 2705.00mil 0  ""]
-Rat[3305.00mil 1235.00mil 0 3330.00mil 400.00mil 5  ""]
-Rat[3330.00mil 400.00mil 5 3130.00mil 400.00mil 5  ""]
-Rat[3330.00mil 400.00mil 5 3530.00mil 400.00mil 5  ""]
-Rat[3530.00mil 400.00mil 5 3730.00mil 400.00mil 5  ""]
-Rat[3730.00mil 400.00mil 5 3970.00mil 400.00mil 5  ""]
-Rat[3970.00mil 400.00mil 5 4170.00mil 400.00mil 5  ""]
-Rat[4170.00mil 400.00mil 5 4370.00mil 400.00mil 5  ""]
-Rat[4370.00mil 400.00mil 5 4570.00mil 400.00mil 5  ""]
-Rat[4570.00mil 400.00mil 5 4810.00mil 400.00mil 5  ""]
-Rat[4810.00mil 400.00mil 5 5010.00mil 400.00mil 5  ""]
-Rat[5010.00mil 400.00mil 5 5210.00mil 400.00mil 5  ""]
-Rat[5210.00mil 400.00mil 5 5410.00mil 400.00mil 5  ""]
-Rat[5410.00mil 400.00mil 5 5650.00mil 400.00mil 5  ""]
-Rat[5650.00mil 400.00mil 5 5850.00mil 400.00mil 5  ""]
-Rat[5850.00mil 400.00mil 5 6050.00mil 400.00mil 5  ""]
-Rat[6050.00mil 400.00mil 5 6250.00mil 400.00mil 5  ""]
-Rat[6250.00mil 400.00mil 5 6490.00mil 400.00mil 5  ""]
-Rat[6490.00mil 400.00mil 5 6690.00mil 400.00mil 5  ""]
-Rat[6690.00mil 400.00mil 5 6890.00mil 400.00mil 5  ""]
-Rat[6890.00mil 400.00mil 5 7090.00mil 400.00mil 5  ""]
-Rat[7090.00mil 400.00mil 5 7090.00mil 110.00mil 5  ""]
-Rat[7090.00mil 110.00mil 5 6890.00mil 110.00mil 5  ""]
-Rat[3130.00mil 400.00mil 5 3130.00mil 110.00mil 5  ""]
-Rat[3130.00mil 110.00mil 5 3330.00mil 110.00mil 5  ""]
-Rat[3330.00mil 110.00mil 5 3530.00mil 110.00mil 5  ""]
-Rat[3530.00mil 110.00mil 5 3730.00mil 110.00mil 5  ""]
-Rat[3730.00mil 110.00mil 5 3970.00mil 110.00mil 5  ""]
-Rat[3970.00mil 110.00mil 5 4170.00mil 110.00mil 5  ""]
-Rat[4170.00mil 110.00mil 5 4370.00mil 110.00mil 5  ""]
-Rat[4370.00mil 110.00mil 5 4570.00mil 110.00mil 5  ""]
-Rat[4570.00mil 110.00mil 5 4810.00mil 110.00mil 5  ""]
-Rat[4810.00mil 110.00mil 5 5010.00mil 110.00mil 5  ""]
-Rat[5010.00mil 110.00mil 5 5210.00mil 110.00mil 5  ""]
-Rat[5210.00mil 110.00mil 5 5410.00mil 110.00mil 5  ""]
-Rat[5410.00mil 110.00mil 5 5650.00mil 110.00mil 5  ""]
-Rat[5650.00mil 110.00mil 5 5850.00mil 110.00mil 5  ""]
-Rat[5850.00mil 110.00mil 5 6050.00mil 110.00mil 5  ""]
-Rat[6050.00mil 110.00mil 5 6250.00mil 110.00mil 5  ""]
-Rat[995.00mil 1505.00mil 0 1695.00mil 1505.00mil 0  ""]
-Rat[1145.00mil 1505.00mil 0 1845.00mil 1505.00mil 0  ""]
-Rat[1045.00mil 1235.00mil 0 1745.00mil 1235.00mil 0  ""]
-Rat[1195.00mil 1235.00mil 0 1895.00mil 1235.00mil 0  ""]
+Rat[12.3340mm 10.0350mm 0 33.6700mm 10.0350mm 0  ""]
+Rat[33.6700mm 10.0350mm 0 33.6700mm 105.08mil 0  ""]
+Rat[33.6700mm 10.0350mm 0 55.0060mm 10.0350mm 0  ""]
+Rat[55.0060mm 10.0350mm 0 55.0060mm 105.08mil 0  ""]
+Rat[55.0060mm 10.0350mm 0 76.3420mm 10.0350mm 0  ""]
+Rat[76.3420mm 10.0350mm 0 76.3420mm 105.08mil 0  ""]
+Rat[76.3420mm 10.0350mm 0 97.6780mm 10.0350mm 0  ""]
+Rat[97.6780mm 10.0350mm 0 107.8380mm 105.08mil 0  ""]
+Rat[33.6700mm 10.0350mm 0 1295.00mil 1235.00mil 0  ""]
+Rat[1295.00mil 1235.00mil 0 1595.00mil 1505.00mil 0  ""]
+Rat[1595.00mil 1505.00mil 0 1695.00mil 1635.00mil 0  ""]
+Rat[1695.00mil 1635.00mil 0 1995.00mil 1905.00mil 0  ""]
+Rat[1995.00mil 1905.00mil 0 2095.00mil 2035.00mil 0  ""]
+Rat[2095.00mil 2035.00mil 0 2395.00mil 2305.00mil 0  ""]
+Rat[2395.00mil 2305.00mil 0 2505.00mil 2435.00mil 0  ""]
+Rat[2505.00mil 2435.00mil 0 2805.00mil 2705.00mil 0  ""]
+Rat[1595.00mil 1505.00mil 0 1195.00mil 1905.00mil 0  ""]
+Rat[1195.00mil 1905.00mil 0 1295.00mil 2035.00mil 0  ""]
+Rat[1195.00mil 1905.00mil 0 895.00mil 1635.00mil 0  ""]
+Rat[1295.00mil 2035.00mil 0 1595.00mil 2305.00mil 0  ""]
+Rat[1595.00mil 2305.00mil 0 1695.00mil 2435.00mil 0  ""]
+Rat[1695.00mil 2435.00mil 0 1995.00mil 2705.00mil 0  ""]
+Rat[1995.00mil 1905.00mil 0 2395.00mil 1505.00mil 0  ""]
+Rat[2395.00mil 1505.00mil 0 2505.00mil 1635.00mil 0  ""]
+Rat[2395.00mil 1505.00mil 0 2095.00mil 1235.00mil 0  ""]
+Rat[2505.00mil 1635.00mil 0 2805.00mil 1905.00mil 0  ""]
+Rat[2805.00mil 1905.00mil 0 2905.00mil 2035.00mil 0  ""]
+Rat[2905.00mil 2035.00mil 0 3205.00mil 2305.00mil 0  ""]
+Rat[3205.00mil 2305.00mil 0 3305.00mil 2435.00mil 0  ""]
+Rat[3305.00mil 2435.00mil 0 3605.00mil 2705.00mil 0  ""]
+Rat[3305.00mil 2435.00mil 0 3705.00mil 2035.00mil 0  ""]
+Rat[3705.00mil 2035.00mil 0 3605.00mil 1905.00mil 0  ""]
+Rat[3705.00mil 2035.00mil 0 4005.00mil 2305.00mil 0  ""]
+Rat[4005.00mil 2305.00mil 0 4105.00mil 2435.00mil 0  ""]
+Rat[4105.00mil 2435.00mil 0 4405.00mil 2705.00mil 0  ""]
+Rat[3605.00mil 1905.00mil 0 3305.00mil 1635.00mil 0  ""]
+Rat[3305.00mil 1635.00mil 0 3205.00mil 1505.00mil 0  ""]
+Rat[3205.00mil 1505.00mil 0 2905.00mil 1235.00mil 0  ""]
+Rat[4405.00mil 2705.00mil 0 4895.00mil 2435.00mil 0  ""]
+Rat[4895.00mil 2435.00mil 0 4805.00mil 2305.00mil 0  ""]
+Rat[4895.00mil 2435.00mil 0 5195.00mil 2705.00mil 0  ""]
+Rat[4805.00mil 2305.00mil 0 4505.00mil 2035.00mil 0  ""]
+Rat[4505.00mil 2035.00mil 0 4405.00mil 1905.00mil 0  ""]
+Rat[4405.00mil 1905.00mil 0 4105.00mil 1635.00mil 0  ""]
+Rat[4105.00mil 1635.00mil 0 4005.00mil 1505.00mil 0  ""]
+Rat[4005.00mil 1505.00mil 0 3705.00mil 1235.00mil 0  ""]
+Rat[4505.00mil 2035.00mil 0 4895.00mil 1635.00mil 0  ""]
+Rat[4895.00mil 1635.00mil 0 4805.00mil 1505.00mil 0  ""]
+Rat[4805.00mil 1505.00mil 0 4505.00mil 1235.00mil 0  ""]
+Rat[4895.00mil 1635.00mil 0 5195.00mil 1905.00mil 0  ""]
+Rat[5195.00mil 1905.00mil 0 5295.00mil 2035.00mil 0  ""]
+Rat[5295.00mil 2035.00mil 0 5595.00mil 2305.00mil 0  ""]
+Rat[4805.00mil 1505.00mil 0 5295.00mil 1235.00mil 0  ""]
+Rat[5295.00mil 1235.00mil 0 5595.00mil 1505.00mil 0  ""]
+Rat[1295.00mil 2035.00mil 0 895.00mil 2435.00mil 0  ""]
+Rat[895.00mil 2435.00mil 0 1195.00mil 2705.00mil 0  ""]
+Rat[5195.00mil 2705.00mil 0 136.3974mm 107.3462mm 0  ""]
+Rat[136.3974mm 107.3462mm 0 139.0951mm 110.1562mm 0  ""]
+Rat[136.3974mm 107.3462mm 0 129.8300mm 108.3616mm 0  ""]
+Rat[139.0951mm 110.1562mm 0 137.1421mm 119.2725mm 0  ""]
+Rat[137.1421mm 119.2725mm 0 130.1880mm 124.1702mm 0  ""]
+Rat[130.1880mm 124.1702mm 0 132.2998mm 130.9560mm 0  ""]
+Rat[132.2998mm 130.9560mm 0 129.1484mm 136.7021mm 0  ""]
+Rat[129.1484mm 136.7021mm 0 129.8078mm 141.9045mm 0  ""]
+Rat[129.8078mm 141.9045mm 0 131.3411mm 147.9756mm 0  ""]
+Rat[131.3411mm 147.9756mm 0 133.3700mm 149.9976mm 0  ""]
+Rat[133.3700mm 149.9976mm 0 138.9196mm 148.4283mm 0  ""]
+Rat[138.9196mm 148.4283mm 0 143.2896mm 145.1956mm 0  ""]
+Rat[143.2896mm 145.1956mm 0 141.2532mm 143.0334mm 0  ""]
+Rat[137.1421mm 119.2725mm 0 142.7002mm 126.3836mm 0  ""]
+Rat[141.2532mm 143.0334mm 0 148.9081mm 136.6988mm 0  ""]
+Rat[148.9081mm 136.6988mm 0 158.2240mm 134.2392mm 0  ""]
+Rat[158.2240mm 134.2392mm 0 161.0001mm 127.1384mm 0  ""]
+Rat[161.0001mm 127.1384mm 0 152.9592mm 123.8552mm 0  ""]
+Rat[161.0001mm 127.1384mm 0 165.8731mm 118.5497mm 0  ""]
+Rat[165.8731mm 118.5497mm 0 168.4765mm 4485.10mil 0  ""]
+Rat[158.2240mm 134.2392mm 0 157.7049mm 145.7472mm 0  ""]
+Rat[157.7049mm 145.7472mm 0 165.3156mm 5878.50mil 0  ""]
+Rat[165.3156mm 5878.50mil 0 176.1247mm 147.9183mm 0  ""]
+Rat[176.1247mm 147.9183mm 0 176.0603mm 141.4090mm 0  ""]
+Rat[176.0603mm 141.4090mm 0 174.6741mm 133.1116mm 0  ""]
+Rat[174.6741mm 133.1116mm 0 177.4708mm 124.1646mm 0  ""]
+Rat[5595.00mil 1505.00mil 0 7420.00mil 13.3000mm 0  ""]
+Rat[1395.00mil 1505.00mil 0 2095.00mil 1505.00mil 0  ""]
+Rat[1545.00mil 1505.00mil 0 2245.00mil 1505.00mil 0  ""]
+Rat[1445.00mil 1235.00mil 0 2145.00mil 1235.00mil 0  ""]
+Rat[1595.00mil 1235.00mil 0 2295.00mil 1235.00mil 0  ""]
 Rat[995.00mil 1905.00mil 0 1695.00mil 1905.00mil 0  ""]
 Rat[1145.00mil 1905.00mil 0 1845.00mil 1905.00mil 0  ""]
 Rat[1045.00mil 1635.00mil 0 1745.00mil 1635.00mil 0  ""]
 Rat[1195.00mil 1635.00mil 0 1895.00mil 1635.00mil 0  ""]
-Rat[1745.00mil 1505.00mil 0 1695.00mil 2305.00mil 0  ""]
-Rat[1695.00mil 2305.00mil 0 995.00mil 2305.00mil 0  ""]
-Rat[1895.00mil 1505.00mil 0 1845.00mil 2305.00mil 0  ""]
-Rat[1845.00mil 2305.00mil 0 1145.00mil 2305.00mil 0  ""]
-Rat[1795.00mil 1235.00mil 0 1745.00mil 2035.00mil 0  ""]
-Rat[1745.00mil 2035.00mil 0 1045.00mil 2035.00mil 0  ""]
-Rat[1945.00mil 1235.00mil 0 1895.00mil 2035.00mil 0  ""]
-Rat[1895.00mil 2035.00mil 0 1195.00mil 2035.00mil 0  ""]
+Rat[2145.00mil 1505.00mil 0 2095.00mil 2305.00mil 0  ""]
+Rat[2095.00mil 2305.00mil 0 1395.00mil 2305.00mil 0  ""]
+Rat[2295.00mil 1505.00mil 0 2245.00mil 2305.00mil 0  ""]
+Rat[2245.00mil 2305.00mil 0 1545.00mil 2305.00mil 0  ""]
+Rat[2195.00mil 1235.00mil 0 2145.00mil 2035.00mil 0  ""]
+Rat[2145.00mil 2035.00mil 0 1445.00mil 2035.00mil 0  ""]
+Rat[2345.00mil 1235.00mil 0 2295.00mil 2035.00mil 0  ""]
+Rat[2295.00mil 2035.00mil 0 1595.00mil 2035.00mil 0  ""]
 Rat[1745.00mil 1905.00mil 0 1695.00mil 2705.00mil 0  ""]
 Rat[1695.00mil 2705.00mil 0 995.00mil 2705.00mil 0  ""]
 Rat[1895.00mil 1905.00mil 0 1845.00mil 2705.00mil 0  ""]
@@ -2783,96 +2935,96 @@ Rat[1795.00mil 1635.00mil 0 1745.00mil 2435.00mil 0  ""]
 Rat[1745.00mil 2435.00mil 0 1045.00mil 2435.00mil 0  ""]
 Rat[1945.00mil 1635.00mil 0 1895.00mil 2435.00mil 0  ""]
 Rat[1895.00mil 2435.00mil 0 1195.00mil 2435.00mil 0  ""]
-Rat[1795.00mil 1505.00mil 0 2505.00mil 1505.00mil 0  ""]
-Rat[1945.00mil 1505.00mil 0 2655.00mil 1505.00mil 0  ""]
-Rat[1845.00mil 1235.00mil 0 2555.00mil 1235.00mil 0  ""]
-Rat[1995.00mil 1235.00mil 0 2705.00mil 1235.00mil 0  ""]
+Rat[2195.00mil 1505.00mil 0 2905.00mil 1505.00mil 0  ""]
+Rat[2345.00mil 1505.00mil 0 3055.00mil 1505.00mil 0  ""]
+Rat[2245.00mil 1235.00mil 0 2955.00mil 1235.00mil 0  ""]
+Rat[2395.00mil 1235.00mil 0 3105.00mil 1235.00mil 0  ""]
 Rat[1795.00mil 1905.00mil 0 2505.00mil 1905.00mil 0  ""]
-Rat[2505.00mil 1905.00mil 0 2555.00mil 1505.00mil 0  ""]
+Rat[2505.00mil 1905.00mil 0 2955.00mil 1505.00mil 0  ""]
 Rat[1945.00mil 1905.00mil 0 2655.00mil 1905.00mil 0  ""]
-Rat[2655.00mil 1905.00mil 0 2705.00mil 1505.00mil 0  ""]
+Rat[2655.00mil 1905.00mil 0 3105.00mil 1505.00mil 0  ""]
 Rat[1845.00mil 1635.00mil 0 2555.00mil 1635.00mil 0  ""]
-Rat[2555.00mil 1635.00mil 0 2605.00mil 1235.00mil 0  ""]
+Rat[2555.00mil 1635.00mil 0 3005.00mil 1235.00mil 0  ""]
 Rat[1995.00mil 1635.00mil 0 2705.00mil 1635.00mil 0  ""]
-Rat[2705.00mil 1635.00mil 0 2755.00mil 1235.00mil 0  ""]
-Rat[1795.00mil 2305.00mil 0 2505.00mil 2305.00mil 0  ""]
-Rat[2505.00mil 2305.00mil 0 2555.00mil 1905.00mil 0  ""]
-Rat[1745.00mil 2305.00mil 0 1795.00mil 2435.00mil 0  ""]
-Rat[1745.00mil 2305.00mil 0 1895.00mil 2305.00mil 0  ""]
-Rat[1895.00mil 2305.00mil 0 1945.00mil 2435.00mil 0  ""]
-Rat[1895.00mil 2305.00mil 0 1945.00mil 2035.00mil 0  ""]
-Rat[1945.00mil 2035.00mil 0 1795.00mil 2035.00mil 0  ""]
+Rat[2705.00mil 1635.00mil 0 3155.00mil 1235.00mil 0  ""]
+Rat[2195.00mil 2305.00mil 0 2555.00mil 1905.00mil 0  ""]
+Rat[2555.00mil 1905.00mil 0 2905.00mil 2305.00mil 0  ""]
+Rat[2145.00mil 2305.00mil 0 2295.00mil 2305.00mil 0  ""]
+Rat[2145.00mil 2305.00mil 0 1945.00mil 2435.00mil 0  ""]
+Rat[1945.00mil 2435.00mil 0 1795.00mil 2435.00mil 0  ""]
+Rat[2295.00mil 2305.00mil 0 2345.00mil 2035.00mil 0  ""]
+Rat[2345.00mil 2035.00mil 0 2195.00mil 2035.00mil 0  ""]
 Rat[1795.00mil 2435.00mil 0 1745.00mil 2705.00mil 0  ""]
 Rat[1745.00mil 2705.00mil 0 1895.00mil 2705.00mil 0  ""]
-Rat[1945.00mil 2435.00mil 0 2605.00mil 2435.00mil 0  ""]
+Rat[2295.00mil 2305.00mil 0 2605.00mil 2435.00mil 0  ""]
 Rat[2605.00mil 2435.00mil 0 2755.00mil 2435.00mil 0  ""]
 Rat[2755.00mil 2435.00mil 0 2705.00mil 2705.00mil 0  ""]
 Rat[2705.00mil 2705.00mil 0 2555.00mil 2705.00mil 0  ""]
 Rat[2755.00mil 2435.00mil 0 3405.00mil 2435.00mil 0  ""]
 Rat[3405.00mil 2435.00mil 0 3555.00mil 2435.00mil 0  ""]
 Rat[3555.00mil 2435.00mil 0 4355.00mil 2435.00mil 0  ""]
-Rat[1795.00mil 2035.00mil 0 230.00mil 1595.00mil 0  ""]
-Rat[1945.00mil 2305.00mil 0 2655.00mil 2305.00mil 0  ""]
-Rat[2655.00mil 2305.00mil 0 2705.00mil 1905.00mil 0  ""]
-Rat[1845.00mil 2035.00mil 0 2555.00mil 2035.00mil 0  ""]
-Rat[2555.00mil 2035.00mil 0 2605.00mil 1635.00mil 0  ""]
-Rat[1995.00mil 2035.00mil 0 2705.00mil 2035.00mil 0  ""]
-Rat[2705.00mil 2035.00mil 0 2755.00mil 1635.00mil 0  ""]
+Rat[1795.00mil 2435.00mil 0 230.00mil 1595.00mil 0  ""]
+Rat[2345.00mil 2305.00mil 0 2705.00mil 1905.00mil 0  ""]
+Rat[2705.00mil 1905.00mil 0 3055.00mil 2305.00mil 0  ""]
+Rat[2245.00mil 2035.00mil 0 2605.00mil 1635.00mil 0  ""]
+Rat[2605.00mil 1635.00mil 0 2955.00mil 2035.00mil 0  ""]
+Rat[2395.00mil 2035.00mil 0 2755.00mil 1635.00mil 0  ""]
+Rat[2755.00mil 1635.00mil 0 3105.00mil 2035.00mil 0  ""]
 Rat[1795.00mil 2705.00mil 0 2505.00mil 2705.00mil 0  ""]
-Rat[2505.00mil 2705.00mil 0 2555.00mil 2305.00mil 0  ""]
+Rat[2505.00mil 2705.00mil 0 2955.00mil 2305.00mil 0  ""]
 Rat[1945.00mil 2705.00mil 0 2655.00mil 2705.00mil 0  ""]
-Rat[2655.00mil 2705.00mil 0 2705.00mil 2305.00mil 0  ""]
+Rat[2655.00mil 2705.00mil 0 3105.00mil 2305.00mil 0  ""]
 Rat[1845.00mil 2435.00mil 0 2555.00mil 2435.00mil 0  ""]
-Rat[2555.00mil 2435.00mil 0 2605.00mil 2035.00mil 0  ""]
+Rat[2555.00mil 2435.00mil 0 3005.00mil 2035.00mil 0  ""]
 Rat[1995.00mil 2435.00mil 0 2705.00mil 2435.00mil 0  ""]
-Rat[2705.00mil 2435.00mil 0 2755.00mil 2035.00mil 0  ""]
-Rat[2605.00mil 1505.00mil 0 3305.00mil 1505.00mil 0  ""]
-Rat[2755.00mil 1505.00mil 0 3455.00mil 1505.00mil 0  ""]
-Rat[2655.00mil 1235.00mil 0 3355.00mil 1235.00mil 0  ""]
-Rat[3355.00mil 1235.00mil 0 3355.00mil 1505.00mil 0  ""]
-Rat[2805.00mil 1235.00mil 0 3505.00mil 1235.00mil 0  ""]
-Rat[3505.00mil 1235.00mil 0 3505.00mil 1505.00mil 0  ""]
-Rat[2605.00mil 2305.00mil 0 3305.00mil 2305.00mil 0  ""]
-Rat[3305.00mil 2305.00mil 0 3405.00mil 1635.00mil 0  ""]
-Rat[2755.00mil 2305.00mil 0 3455.00mil 2305.00mil 0  ""]
-Rat[3455.00mil 2305.00mil 0 3555.00mil 1635.00mil 0  ""]
-Rat[2655.00mil 2035.00mil 0 3355.00mil 2035.00mil 0  ""]
-Rat[3355.00mil 2035.00mil 0 3355.00mil 2305.00mil 0  ""]
-Rat[2805.00mil 2035.00mil 0 3505.00mil 2035.00mil 0  ""]
-Rat[3505.00mil 2035.00mil 0 3505.00mil 2305.00mil 0  ""]
+Rat[2705.00mil 2435.00mil 0 3155.00mil 2035.00mil 0  ""]
+Rat[3005.00mil 1505.00mil 0 3705.00mil 1505.00mil 0  ""]
+Rat[3155.00mil 1505.00mil 0 3855.00mil 1505.00mil 0  ""]
+Rat[3055.00mil 1235.00mil 0 3755.00mil 1235.00mil 0  ""]
+Rat[3755.00mil 1235.00mil 0 3755.00mil 1505.00mil 0  ""]
+Rat[3205.00mil 1235.00mil 0 3905.00mil 1235.00mil 0  ""]
+Rat[3905.00mil 1235.00mil 0 3905.00mil 1505.00mil 0  ""]
+Rat[3005.00mil 2305.00mil 0 3705.00mil 2305.00mil 0  ""]
+Rat[3705.00mil 2305.00mil 0 3405.00mil 1635.00mil 0  ""]
+Rat[3155.00mil 2305.00mil 0 3855.00mil 2305.00mil 0  ""]
+Rat[3855.00mil 2305.00mil 0 3555.00mil 1635.00mil 0  ""]
+Rat[3055.00mil 2035.00mil 0 3755.00mil 2035.00mil 0  ""]
+Rat[3755.00mil 2035.00mil 0 3755.00mil 2305.00mil 0  ""]
+Rat[3205.00mil 2035.00mil 0 3905.00mil 2035.00mil 0  ""]
+Rat[3905.00mil 2035.00mil 0 3905.00mil 2305.00mil 0  ""]
 Rat[2605.00mil 2705.00mil 0 3305.00mil 2705.00mil 0  ""]
-Rat[3305.00mil 2705.00mil 0 3405.00mil 2035.00mil 0  ""]
+Rat[3305.00mil 2705.00mil 0 3805.00mil 2035.00mil 0  ""]
 Rat[2755.00mil 2705.00mil 0 3455.00mil 2705.00mil 0  ""]
-Rat[3455.00mil 2705.00mil 0 3555.00mil 2035.00mil 0  ""]
+Rat[3455.00mil 2705.00mil 0 3955.00mil 2035.00mil 0  ""]
 Rat[2655.00mil 2435.00mil 0 3355.00mil 2435.00mil 0  ""]
 Rat[3355.00mil 2435.00mil 0 3355.00mil 2705.00mil 0  ""]
 Rat[2805.00mil 2435.00mil 0 3505.00mil 2435.00mil 0  ""]
 Rat[3505.00mil 2435.00mil 0 3505.00mil 2705.00mil 0  ""]
 Rat[2605.00mil 1905.00mil 0 3305.00mil 1905.00mil 0  ""]
-Rat[3305.00mil 1905.00mil 0 3405.00mil 1235.00mil 0  ""]
+Rat[3305.00mil 1905.00mil 0 3805.00mil 1235.00mil 0  ""]
 Rat[2755.00mil 1905.00mil 0 3455.00mil 1905.00mil 0  ""]
-Rat[3455.00mil 1905.00mil 0 3555.00mil 1235.00mil 0  ""]
+Rat[3455.00mil 1905.00mil 0 3955.00mil 1235.00mil 0  ""]
 Rat[2655.00mil 1635.00mil 0 3355.00mil 1635.00mil 0  ""]
 Rat[3355.00mil 1635.00mil 0 3355.00mil 1905.00mil 0  ""]
 Rat[2805.00mil 1635.00mil 0 3505.00mil 1635.00mil 0  ""]
 Rat[3505.00mil 1635.00mil 0 3505.00mil 1905.00mil 0  ""]
-Rat[3405.00mil 1505.00mil 0 4105.00mil 1505.00mil 0  ""]
-Rat[3555.00mil 1505.00mil 0 4155.00mil 1505.00mil 0  ""]
-Rat[4155.00mil 1505.00mil 0 4255.00mil 1505.00mil 0  ""]
-Rat[3455.00mil 1235.00mil 0 4155.00mil 1235.00mil 0  ""]
-Rat[4155.00mil 1235.00mil 0 4305.00mil 1505.00mil 0  ""]
-Rat[3605.00mil 1235.00mil 0 4205.00mil 1235.00mil 0  ""]
-Rat[4205.00mil 1235.00mil 0 4305.00mil 1235.00mil 0  ""]
-Rat[3405.00mil 2305.00mil 0 4105.00mil 2305.00mil 0  ""]
-Rat[4105.00mil 2305.00mil 0 4355.00mil 1635.00mil 0  ""]
-Rat[3555.00mil 2305.00mil 0 4155.00mil 2305.00mil 0  ""]
-Rat[4155.00mil 2305.00mil 0 4255.00mil 2305.00mil 0  ""]
-Rat[3455.00mil 2035.00mil 0 4155.00mil 2035.00mil 0  ""]
-Rat[4155.00mil 2035.00mil 0 4305.00mil 2305.00mil 0  ""]
-Rat[3605.00mil 2035.00mil 0 4205.00mil 2035.00mil 0  ""]
-Rat[4205.00mil 2035.00mil 0 4305.00mil 2035.00mil 0  ""]
+Rat[3805.00mil 1505.00mil 0 4505.00mil 1505.00mil 0  ""]
+Rat[3955.00mil 1505.00mil 0 4555.00mil 1505.00mil 0  ""]
+Rat[4555.00mil 1505.00mil 0 4655.00mil 1505.00mil 0  ""]
+Rat[3855.00mil 1235.00mil 0 4555.00mil 1235.00mil 0  ""]
+Rat[4555.00mil 1235.00mil 0 4705.00mil 1505.00mil 0  ""]
+Rat[4005.00mil 1235.00mil 0 4605.00mil 1235.00mil 0  ""]
+Rat[4605.00mil 1235.00mil 0 4705.00mil 1235.00mil 0  ""]
+Rat[3805.00mil 2305.00mil 0 4505.00mil 2305.00mil 0  ""]
+Rat[4505.00mil 2305.00mil 0 4355.00mil 1635.00mil 0  ""]
+Rat[3955.00mil 2305.00mil 0 4555.00mil 2305.00mil 0  ""]
+Rat[4555.00mil 2305.00mil 0 4655.00mil 2305.00mil 0  ""]
+Rat[3855.00mil 2035.00mil 0 4555.00mil 2035.00mil 0  ""]
+Rat[4555.00mil 2035.00mil 0 4705.00mil 2305.00mil 0  ""]
+Rat[4005.00mil 2035.00mil 0 4605.00mil 2035.00mil 0  ""]
+Rat[4605.00mil 2035.00mil 0 4705.00mil 2035.00mil 0  ""]
 Rat[3405.00mil 2705.00mil 0 4105.00mil 2705.00mil 0  ""]
-Rat[4105.00mil 2705.00mil 0 4355.00mil 2035.00mil 0  ""]
+Rat[4105.00mil 2705.00mil 0 4755.00mil 2035.00mil 0  ""]
 Rat[3555.00mil 2705.00mil 0 4155.00mil 2705.00mil 0  ""]
 Rat[4155.00mil 2705.00mil 0 4255.00mil 2705.00mil 0  ""]
 Rat[3455.00mil 2435.00mil 0 4155.00mil 2435.00mil 0  ""]
@@ -2880,88 +3032,86 @@ Rat[4155.00mil 2435.00mil 0 4305.00mil 2705.00mil 0  ""]
 Rat[3605.00mil 2435.00mil 0 4205.00mil 2435.00mil 0  ""]
 Rat[4205.00mil 2435.00mil 0 4305.00mil 2435.00mil 0  ""]
 Rat[3405.00mil 1905.00mil 0 4105.00mil 1905.00mil 0  ""]
-Rat[4105.00mil 1905.00mil 0 4355.00mil 1235.00mil 0  ""]
+Rat[4105.00mil 1905.00mil 0 4755.00mil 1235.00mil 0  ""]
 Rat[3555.00mil 1905.00mil 0 4155.00mil 1905.00mil 0  ""]
 Rat[4155.00mil 1905.00mil 0 4255.00mil 1905.00mil 0  ""]
 Rat[3455.00mil 1635.00mil 0 4155.00mil 1635.00mil 0  ""]
 Rat[4155.00mil 1635.00mil 0 4305.00mil 1905.00mil 0  ""]
 Rat[3605.00mil 1635.00mil 0 4205.00mil 1635.00mil 0  ""]
 Rat[4205.00mil 1635.00mil 0 4305.00mil 1635.00mil 0  ""]
-Rat[4205.00mil 1505.00mil 0 4945.00mil 1505.00mil 0  ""]
-Rat[4945.00mil 1505.00mil 0 5095.00mil 2435.00mil 0  ""]
-Rat[4355.00mil 1505.00mil 0 5095.00mil 1505.00mil 0  ""]
-Rat[5095.00mil 1505.00mil 0 4945.00mil 2435.00mil 0  ""]
-Rat[4255.00mil 1235.00mil 0 4995.00mil 1235.00mil 0  ""]
-Rat[4995.00mil 1235.00mil 0 5045.00mil 2705.00mil 0  ""]
-Rat[4405.00mil 1235.00mil 0 5145.00mil 1235.00mil 0  ""]
-Rat[5145.00mil 1235.00mil 0 4895.00mil 2705.00mil 0  ""]
-Rat[4205.00mil 2305.00mil 0 4945.00mil 2305.00mil 0  ""]
-Rat[4945.00mil 2305.00mil 0 5095.00mil 1635.00mil 0  ""]
-Rat[4355.00mil 2305.00mil 0 5095.00mil 2305.00mil 0  ""]
-Rat[5095.00mil 2305.00mil 0 4945.00mil 1635.00mil 0  ""]
-Rat[4255.00mil 2035.00mil 0 4995.00mil 2035.00mil 0  ""]
-Rat[4995.00mil 2035.00mil 0 5045.00mil 1905.00mil 0  ""]
-Rat[4405.00mil 2035.00mil 0 4895.00mil 1905.00mil 0  ""]
-Rat[4895.00mil 1905.00mil 0 5145.00mil 2035.00mil 0  ""]
-Rat[5095.00mil 1235.00mil 0 4945.00mil 2705.00mil 0  ""]
+Rat[4605.00mil 1505.00mil 0 5345.00mil 1505.00mil 0  ""]
+Rat[5345.00mil 1505.00mil 0 5095.00mil 2435.00mil 0  ""]
+Rat[4755.00mil 1505.00mil 0 5495.00mil 1505.00mil 0  ""]
+Rat[4755.00mil 1505.00mil 0 4945.00mil 2435.00mil 0  ""]
+Rat[4655.00mil 1235.00mil 0 5395.00mil 1235.00mil 0  ""]
+Rat[5395.00mil 1235.00mil 0 5045.00mil 2705.00mil 0  ""]
+Rat[4805.00mil 1235.00mil 0 5545.00mil 1235.00mil 0  ""]
+Rat[4805.00mil 1235.00mil 0 4895.00mil 2705.00mil 0  ""]
+Rat[4605.00mil 2305.00mil 0 5345.00mil 2305.00mil 0  ""]
+Rat[5345.00mil 2305.00mil 0 5095.00mil 1635.00mil 0  ""]
+Rat[4755.00mil 2305.00mil 0 4945.00mil 1635.00mil 0  ""]
+Rat[4755.00mil 2305.00mil 0 5495.00mil 2305.00mil 0  ""]
+Rat[4655.00mil 2035.00mil 0 5045.00mil 1905.00mil 0  ""]
+Rat[5045.00mil 1905.00mil 0 5395.00mil 2035.00mil 0  ""]
+Rat[4805.00mil 2035.00mil 0 4895.00mil 1905.00mil 0  ""]
+Rat[4895.00mil 1905.00mil 0 5545.00mil 2035.00mil 0  ""]
+Rat[5495.00mil 1235.00mil 0 4945.00mil 2705.00mil 0  ""]
 Rat[4945.00mil 2705.00mil 0 4205.00mil 2705.00mil 0  ""]
-Rat[4945.00mil 1235.00mil 0 5095.00mil 2705.00mil 0  ""]
+Rat[5345.00mil 1235.00mil 0 5095.00mil 2705.00mil 0  ""]
 Rat[5095.00mil 2705.00mil 0 4355.00mil 2705.00mil 0  ""]
-Rat[5045.00mil 1505.00mil 0 4995.00mil 2435.00mil 0  ""]
+Rat[5445.00mil 1505.00mil 0 4995.00mil 2435.00mil 0  ""]
 Rat[4995.00mil 2435.00mil 0 4255.00mil 2435.00mil 0  ""]
-Rat[4895.00mil 1505.00mil 0 5145.00mil 2435.00mil 0  ""]
+Rat[5295.00mil 1505.00mil 0 5145.00mil 2435.00mil 0  ""]
 Rat[5145.00mil 2435.00mil 0 4405.00mil 2435.00mil 0  ""]
 Rat[4205.00mil 1905.00mil 0 4945.00mil 1905.00mil 0  ""]
-Rat[4945.00mil 1905.00mil 0 5095.00mil 2035.00mil 0  ""]
-Rat[4355.00mil 1905.00mil 0 4945.00mil 2035.00mil 0  ""]
-Rat[4945.00mil 2035.00mil 0 5095.00mil 1905.00mil 0  ""]
+Rat[4945.00mil 1905.00mil 0 5495.00mil 2035.00mil 0  ""]
+Rat[4355.00mil 1905.00mil 0 5095.00mil 1905.00mil 0  ""]
+Rat[5095.00mil 1905.00mil 0 5345.00mil 2035.00mil 0  ""]
 Rat[4255.00mil 1635.00mil 0 4995.00mil 1635.00mil 0  ""]
-Rat[4995.00mil 1635.00mil 0 5045.00mil 2305.00mil 0  ""]
+Rat[4995.00mil 1635.00mil 0 5445.00mil 2305.00mil 0  ""]
 Rat[4405.00mil 1635.00mil 0 5145.00mil 1635.00mil 0  ""]
-Rat[5145.00mil 1635.00mil 0 4895.00mil 2305.00mil 0  ""]
-Rat[3230.00mil 400.00mil 5 3240.00mil 12.9080mm 0  ""]
-Rat[3430.00mil 400.00mil 5 3440.00mil 12.9080mm 0  ""]
-Rat[3630.00mil 400.00mil 5 92.4319mm 12.9080mm 0  ""]
-Rat[3830.00mil 400.00mil 5 3840.00mil 12.9080mm 0  ""]
-Rat[4070.00mil 400.00mil 5 4080.00mil 12.9080mm 0  ""]
-Rat[4270.00mil 400.00mil 5 108.6879mm 12.9080mm 0  ""]
-Rat[4470.00mil 400.00mil 5 4480.00mil 12.9080mm 0  ""]
-Rat[4670.00mil 400.00mil 5 118.8479mm 12.9080mm 0  ""]
-Rat[4910.00mil 400.00mil 5 4920.00mil 12.9080mm 0  ""]
-Rat[5110.00mil 400.00mil 5 130.0239mm 12.9080mm 0  ""]
-Rat[5310.00mil 400.00mil 5 5320.00mil 12.9080mm 0  ""]
-Rat[5510.00mil 400.00mil 5 140.1839mm 12.9080mm 0  ""]
-Rat[5750.00mil 400.00mil 5 146.3281mm 12.9080mm 0  ""]
-Rat[5950.00mil 400.00mil 5 5960.00mil 12.9080mm 0  ""]
-Rat[6150.00mil 400.00mil 5 156.4399mm 12.9080mm 0  ""]
-Rat[6350.00mil 400.00mil 5 161.5199mm 12.9080mm 0  ""]
-Rat[7190.00mil 400.00mil 5 7198.10mil 12.9080mm 0  ""]
-Rat[6990.00mil 400.00mil 5 177.7759mm 12.9080mm 0  ""]
-Rat[6790.00mil 400.00mil 5 6798.10mil 12.9080mm 0  ""]
-Rat[6590.00mil 400.00mil 5 167.6159mm 12.9080mm 0  ""]
-Rat[6990.00mil 110.00mil 5 177.7759mm 218.19mil 0  ""]
-Rat[7190.00mil 110.00mil 5 182.8559mm 218.19mil 0  ""]
-Rat[3230.00mil 110.00mil 5 3240.00mil 218.19mil 0  ""]
-Rat[3430.00mil 110.00mil 5 3440.00mil 218.19mil 0  ""]
-Rat[3630.00mil 110.00mil 5 92.4319mm 218.19mil 0  ""]
-Rat[3830.00mil 110.00mil 5 3840.00mil 218.19mil 0  ""]
-Rat[4070.00mil 110.00mil 5 103.6079mm 218.19mil 0  ""]
-Rat[4270.00mil 110.00mil 5 108.6879mm 218.19mil 0  ""]
-Rat[4470.00mil 110.00mil 5 113.7679mm 218.19mil 0  ""]
-Rat[4670.00mil 110.00mil 5 118.8479mm 218.19mil 0  ""]
-Rat[4910.00mil 110.00mil 5 124.9439mm 218.19mil 0  ""]
-Rat[5110.00mil 110.00mil 5 130.0239mm 218.19mil 0  ""]
-Rat[5310.00mil 110.00mil 5 5320.00mil 218.19mil 0  ""]
-Rat[5510.00mil 110.00mil 5 5520.00mil 218.19mil 0  ""]
-Rat[5750.00mil 110.00mil 5 5760.00mil 218.19mil 0  ""]
-Rat[5950.00mil 110.00mil 5 151.3599mm 218.19mil 0  ""]
-Rat[6150.00mil 110.00mil 5 156.4399mm 218.19mil 0  ""]
-Rat[6350.00mil 110.00mil 5 6360.00mil 218.19mil 0  ""]
+Rat[5145.00mil 1635.00mil 0 5295.00mil 2305.00mil 0  ""]
+Rat[128.5301mm 108.3616mm 0 536.54mil 13.0830mm 0  ""]
+Rat[132.0700mm 149.9976mm 0 736.54mil 13.0830mm 0  ""]
+Rat[5033.40mil 136.7021mm 0 23.7640mm 13.0830mm 0  ""]
+Rat[137.7952mm 110.1562mm 0 28.8681mm 13.0830mm 0  ""]
+Rat[147.6081mm 136.6988mm 0 34.9641mm 13.0830mm 0  ""]
+Rat[95.59mil 14.8610mm 0 40.0200mm 13.0830mm 0  ""]
+Rat[106.5380mm 105.08mil 0 45.1241mm 13.0830mm 0  ""]
+Rat[96.3780mm 10.0350mm 0 50.1800mm 13.0830mm 0  ""]
+Rat[75.0420mm 105.08mil 0 56.3001mm 13.0830mm 0  ""]
+Rat[53.7060mm 105.08mil 0 61.3560mm 13.0830mm 0  ""]
+Rat[32.3700mm 105.08mil 0 66.4601mm 13.0830mm 0  ""]
+Rat[11.0340mm 105.08mil 0 71.5160mm 13.0830mm 0  ""]
+Rat[75.0420mm 10.0350mm 0 77.6602mm 13.0830mm 0  ""]
+Rat[53.7060mm 10.0350mm 0 82.7161mm 13.0830mm 0  ""]
+Rat[32.3700mm 10.0350mm 0 87.7720mm 13.0830mm 0  ""]
+Rat[11.0340mm 10.0350mm 0 92.8520mm 13.0830mm 0  ""]
+Rat[151.6592mm 123.8552mm 0 114.1639mm 13.0830mm 0  ""]
+Rat[139.9532mm 143.0334mm 0 109.1080mm 13.0830mm 0  ""]
+Rat[156.4049mm 145.7472mm 0 104.0039mm 13.0830mm 0  ""]
+Rat[128.5078mm 141.9045mm 0 98.9480mm 13.0830mm 0  ""]
+Rat[130.9998mm 130.9560mm 0 536.54mil 225.08mil 0  ""]
+Rat[128.8880mm 124.1702mm 0 736.54mil 225.08mil 0  ""]
+Rat[137.6196mm 148.4283mm 0 23.7640mm 225.08mil 0  ""]
+Rat[159.7001mm 127.1384mm 0 28.8681mm 225.08mil 0  ""]
+Rat[135.8421mm 119.2725mm 0 34.9400mm 225.08mil 0  ""]
+Rat[141.9897mm 145.1956mm 0 40.0200mm 225.08mil 0  ""]
+Rat[174.7603mm 141.4090mm 0 45.1000mm 225.08mil 0  ""]
+Rat[174.8248mm 147.9183mm 0 50.1800mm 225.08mil 0  ""]
+Rat[176.1709mm 124.1646mm 0 56.2760mm 225.08mil 0  ""]
+Rat[130.0412mm 147.9756mm 0 61.3560mm 225.08mil 0  ""]
+Rat[141.4002mm 126.3836mm 0 66.4601mm 225.08mil 0  ""]
+Rat[173.3741mm 133.1116mm 0 71.5401mm 225.08mil 0  ""]
+Rat[164.0156mm 5878.50mil 0 77.6361mm 225.08mil 0  ""]
+Rat[164.5731mm 118.5497mm 0 82.6920mm 225.08mil 0  ""]
+Rat[156.9240mm 134.2392mm 0 87.7720mm 225.08mil 0  ""]
+Rat[167.1766mm 4485.10mil 0 92.8761mm 225.08mil 0  ""]
 Rat[310.00mil 60.00mil 5 110.00mil 110.00mil 5  ""]
 Rat[159.05mil 12.1460mm 0 310.00mil 560.00mil 5  ""]
 Rat[159.05mil 12.1460mm 0 70.00mil 800.00mil 5  ""]
-Rat[110.00mil 310.00mil 5 12.2840mm 850.00mil 0  ""]
-Rat[95.59mil 14.8610mm 0 144.41mil 14.8610mm 0  ""]
+Rat[110.00mil 310.00mil 5 6920.00mil 13.3000mm 0  ""]
+Rat[5318.80mil 107.3462mm 0 144.41mil 14.8610mm 0  ""]
 Rat[195.59mil 16.3850mm 0 195.59mil 14.8610mm 0  ""]
 Rat[195.59mil 16.3850mm 0 70.00mil 1000.00mil 5  ""]
 Rat[70.00mil 1000.00mil 5 25.00mil 1175.00mil 0  ""]
@@ -2987,30 +3137,30 @@ Rat[25.00mil 2555.00mil 0 25.00mil 2605.00mil 0  ""]
 Rat[25.00mil 2605.00mil 0 25.00mil 2655.00mil 0  ""]
 Rat[25.00mil 2655.00mil 0 25.00mil 2705.00mil 0  ""]
 Rat[25.00mil 1935.00mil 0 330.00mil 1865.00mil 0  ""]
-Rat[330.00mil 1865.00mil 0 845.00mil 2035.00mil 0  ""]
-Rat[845.00mil 2035.00mil 0 845.00mil 1635.00mil 0  ""]
-Rat[845.00mil 2035.00mil 0 845.00mil 2435.00mil 0  ""]
-Rat[845.00mil 1635.00mil 0 845.00mil 1235.00mil 0  ""]
-Rat[845.00mil 2035.00mil 0 1645.00mil 2035.00mil 0  ""]
-Rat[1645.00mil 2035.00mil 0 1645.00mil 2435.00mil 0  ""]
-Rat[1645.00mil 2035.00mil 0 1645.00mil 1635.00mil 0  ""]
-Rat[1645.00mil 1635.00mil 0 1645.00mil 1235.00mil 0  ""]
-Rat[1645.00mil 1635.00mil 0 2455.00mil 1635.00mil 0  ""]
-Rat[2455.00mil 1635.00mil 0 2455.00mil 1235.00mil 0  ""]
-Rat[2455.00mil 1635.00mil 0 2455.00mil 2035.00mil 0  ""]
-Rat[2455.00mil 2035.00mil 0 2455.00mil 2435.00mil 0  ""]
-Rat[2455.00mil 2435.00mil 0 3255.00mil 2435.00mil 0  ""]
-Rat[3255.00mil 2435.00mil 0 3255.00mil 2035.00mil 0  ""]
-Rat[3255.00mil 2035.00mil 0 3255.00mil 1635.00mil 0  ""]
-Rat[3255.00mil 1635.00mil 0 3255.00mil 1235.00mil 0  ""]
-Rat[3255.00mil 2435.00mil 0 4055.00mil 2435.00mil 0  ""]
-Rat[4055.00mil 2435.00mil 0 4055.00mil 2035.00mil 0  ""]
-Rat[4055.00mil 2035.00mil 0 4055.00mil 1635.00mil 0  ""]
-Rat[4055.00mil 1635.00mil 0 4055.00mil 1235.00mil 0  ""]
-Rat[4055.00mil 2435.00mil 0 4845.00mil 2435.00mil 0  ""]
-Rat[4845.00mil 2435.00mil 0 4845.00mil 2035.00mil 0  ""]
-Rat[4845.00mil 2035.00mil 0 4845.00mil 1635.00mil 0  ""]
-Rat[4845.00mil 1635.00mil 0 4845.00mil 1235.00mil 0  ""]
+Rat[330.00mil 1865.00mil 0 845.00mil 1635.00mil 0  ""]
+Rat[845.00mil 1635.00mil 0 1245.00mil 1235.00mil 0  ""]
+Rat[1245.00mil 1235.00mil 0 1645.00mil 1635.00mil 0  ""]
+Rat[1645.00mil 1635.00mil 0 2045.00mil 2035.00mil 0  ""]
+Rat[2045.00mil 2035.00mil 0 1645.00mil 2435.00mil 0  ""]
+Rat[1645.00mil 2435.00mil 0 1245.00mil 2035.00mil 0  ""]
+Rat[1245.00mil 2035.00mil 0 845.00mil 2435.00mil 0  ""]
+Rat[1645.00mil 1635.00mil 0 2045.00mil 1235.00mil 0  ""]
+Rat[2045.00mil 1235.00mil 0 2455.00mil 1635.00mil 0  ""]
+Rat[2455.00mil 1635.00mil 0 2855.00mil 2035.00mil 0  ""]
+Rat[2855.00mil 2035.00mil 0 3255.00mil 2435.00mil 0  ""]
+Rat[3255.00mil 2435.00mil 0 3655.00mil 2035.00mil 0  ""]
+Rat[3655.00mil 2035.00mil 0 4055.00mil 2435.00mil 0  ""]
+Rat[2455.00mil 1635.00mil 0 2855.00mil 1235.00mil 0  ""]
+Rat[2855.00mil 2035.00mil 0 2455.00mil 2435.00mil 0  ""]
+Rat[2855.00mil 1235.00mil 0 3255.00mil 1635.00mil 0  ""]
+Rat[3655.00mil 2035.00mil 0 4055.00mil 1635.00mil 0  ""]
+Rat[4055.00mil 1635.00mil 0 3655.00mil 1235.00mil 0  ""]
+Rat[4055.00mil 1635.00mil 0 4455.00mil 1235.00mil 0  ""]
+Rat[4455.00mil 1235.00mil 0 4845.00mil 1635.00mil 0  ""]
+Rat[4845.00mil 1635.00mil 0 4455.00mil 2035.00mil 0  ""]
+Rat[4455.00mil 2035.00mil 0 4845.00mil 2435.00mil 0  ""]
+Rat[4845.00mil 1635.00mil 0 5245.00mil 1235.00mil 0  ""]
+Rat[4845.00mil 2435.00mil 0 5245.00mil 2035.00mil 0  ""]
 Layer(1 "top")
 (
 )
@@ -3295,45 +3445,43 @@ NetList()
 	(
 		Connect("C1-2")
 		Connect("C2-2")
-		Connect("LED1-1")
-		Connect("LED1-3")
-		Connect("LED1-5")
-		Connect("LED1-7")
-		Connect("LED2-1")
-		Connect("LED2-3")
-		Connect("LED2-5")
-		Connect("LED2-7")
-		Connect("LED3-1")
-		Connect("LED3-3")
-		Connect("LED3-5")
-		Connect("LED3-7")
-		Connect("LED4-1")
-		Connect("LED4-3")
-		Connect("LED4-5")
-		Connect("LED4-7")
-		Connect("LED5-1")
-		Connect("LED5-3")
-		Connect("LED5-5")
-		Connect("LED5-7")
-		Connect("LED6-1")
-		Connect("LED6-3")
-		Connect("LED6-5")
-		Connect("LED6-7")
-		Connect("LED7-1")
-		Connect("LED7-3")
-		Connect("LED7-5")
-		Connect("LED7-7")
-		Connect("LED8-1")
-		Connect("LED8-3")
-		Connect("LED8-5")
-		Connect("LED8-7")
-		Connect("LED9-1")
-		Connect("LED9-3")
-		Connect("LED9-5")
-		Connect("LED9-7")
-		Connect("LED10-1")
-		Connect("LED10-3")
+		Connect("LED1-2")
+		Connect("LED2-2")
+		Connect("LED3-2")
+		Connect("LED4-2")
+		Connect("LED5-2")
+		Connect("LED6-2")
+		Connect("LED7-2")
+		Connect("LED8-2")
+		Connect("LED9-2")
+		Connect("LED10-2")
 		Connect("LED11-2")
+		Connect("LED12-2")
+		Connect("LED13-2")
+		Connect("LED14-2")
+		Connect("LED15-2")
+		Connect("LED16-2")
+		Connect("LED17-2")
+		Connect("LED18-2")
+		Connect("LED19-2")
+		Connect("LED20-2")
+		Connect("LED21-2")
+		Connect("LED22-2")
+		Connect("LED23-2")
+		Connect("LED24-2")
+		Connect("LED25-2")
+		Connect("LED26-2")
+		Connect("LED27-2")
+		Connect("LED28-2")
+		Connect("LED29-2")
+		Connect("LED30-2")
+		Connect("LED31-2")
+		Connect("LED32-2")
+		Connect("LED33-2")
+		Connect("LED34-2")
+		Connect("LED35-2")
+		Connect("LED36-2")
+		Connect("LED39-2")
 		Connect("U1-8")
 		Connect("U1-15")
 		Connect("U2-8")
@@ -3872,213 +4020,203 @@ NetList()
 	)
 	Net("unnamed_net82" "(unknown)")
 	(
-		Connect("LED1-2")
+		Connect("LED16-1")
 		Connect("R16-2")
 	)
 	Net("unnamed_net83" "(unknown)")
 	(
-		Connect("LED1-4")
+		Connect("LED15-1")
 		Connect("R15-2")
 	)
 	Net("unnamed_net84" "(unknown)")
 	(
-		Connect("LED1-6")
+		Connect("LED14-1")
 		Connect("R14-2")
 	)
 	Net("unnamed_net85" "(unknown)")
 	(
-		Connect("LED1-8")
+		Connect("LED13-1")
 		Connect("R13-2")
 	)
 	Net("unnamed_net86" "(unknown)")
 	(
-		Connect("LED2-2")
+		Connect("LED12-1")
 		Connect("R12-2")
 	)
 	Net("unnamed_net87" "(unknown)")
 	(
-		Connect("LED2-4")
+		Connect("LED11-1")
 		Connect("R11-2")
 	)
 	Net("unnamed_net88" "(unknown)")
 	(
-		Connect("LED2-6")
+		Connect("LED10-1")
 		Connect("R10-2")
 	)
 	Net("unnamed_net89" "(unknown)")
 	(
-		Connect("LED2-8")
+		Connect("LED9-1")
 		Connect("R9-2")
 	)
 	Net("unnamed_net90" "(unknown)")
 	(
-		Connect("LED3-2")
+		Connect("LED8-1")
 		Connect("R8-2")
 	)
 	Net("unnamed_net91" "(unknown)")
 	(
-		Connect("LED3-4")
+		Connect("LED7-1")
 		Connect("R7-2")
 	)
 	Net("unnamed_net92" "(unknown)")
 	(
-		Connect("LED3-6")
+		Connect("LED6-1")
 		Connect("R6-2")
 	)
 	Net("unnamed_net93" "(unknown)")
 	(
-		Connect("LED3-8")
+		Connect("LED5-1")
 		Connect("R5-2")
 	)
 	Net("unnamed_net94" "(unknown)")
 	(
-		Connect("LED4-2")
+		Connect("LED4-1")
 		Connect("R4-2")
 	)
 	Net("unnamed_net95" "(unknown)")
 	(
-		Connect("LED4-4")
+		Connect("LED3-1")
 		Connect("R3-2")
 	)
 	Net("unnamed_net96" "(unknown)")
 	(
-		Connect("LED4-6")
+		Connect("LED2-1")
 		Connect("R2-2")
 	)
 	Net("unnamed_net97" "(unknown)")
 	(
-		Connect("LED4-8")
+		Connect("LED1-1")
 		Connect("R1-2")
 	)
 	Net("unnamed_net98" "(unknown)")
 	(
-		Connect("LED9-8")
+		Connect("LED33-1")
 		Connect("R33-2")
 	)
 	Net("unnamed_net99" "(unknown)")
 	(
-		Connect("LED9-6")
+		Connect("LED34-1")
 		Connect("R34-2")
 	)
 	Net("unnamed_net100" "(unknown)")
 	(
-		Connect("LED9-4")
+		Connect("LED35-1")
 		Connect("R35-2")
 	)
 	Net("unnamed_net101" "(unknown)")
 	(
-		Connect("LED9-2")
+		Connect("LED36-1")
 		Connect("R36-2")
 	)
 	Net("unnamed_net102" "(unknown)")
 	(
-		Connect("LED10-2")
-		Connect("R38-2")
+		Connect("LED32-1")
+		Connect("R32-2")
 	)
 	Net("unnamed_net103" "(unknown)")
 	(
-		Connect("LED10-4")
-		Connect("R37-2")
+		Connect("LED31-1")
+		Connect("R31-2")
 	)
 	Net("unnamed_net104" "(unknown)")
 	(
-		Connect("LED5-2")
-		Connect("R32-2")
+		Connect("LED30-1")
+		Connect("R30-2")
 	)
 	Net("unnamed_net105" "(unknown)")
 	(
-		Connect("LED5-4")
-		Connect("R31-2")
+		Connect("LED29-1")
+		Connect("R29-2")
 	)
 	Net("unnamed_net106" "(unknown)")
 	(
-		Connect("LED5-6")
-		Connect("R30-2")
+		Connect("LED28-1")
+		Connect("R28-2")
 	)
 	Net("unnamed_net107" "(unknown)")
 	(
-		Connect("LED5-8")
-		Connect("R29-2")
+		Connect("LED27-1")
+		Connect("R27-2")
 	)
 	Net("unnamed_net108" "(unknown)")
 	(
-		Connect("LED6-2")
-		Connect("R28-2")
+		Connect("LED26-1")
+		Connect("R26-2")
 	)
 	Net("unnamed_net109" "(unknown)")
 	(
-		Connect("LED6-4")
-		Connect("R27-2")
+		Connect("LED25-1")
+		Connect("R25-2")
 	)
 	Net("unnamed_net110" "(unknown)")
 	(
-		Connect("LED6-6")
-		Connect("R26-2")
+		Connect("LED24-1")
+		Connect("R24-2")
 	)
 	Net("unnamed_net111" "(unknown)")
 	(
-		Connect("LED6-8")
-		Connect("R25-2")
+		Connect("LED23-1")
+		Connect("R23-2")
 	)
 	Net("unnamed_net112" "(unknown)")
 	(
-		Connect("LED7-2")
-		Connect("R24-2")
+		Connect("LED22-1")
+		Connect("R22-2")
 	)
 	Net("unnamed_net113" "(unknown)")
 	(
-		Connect("LED7-4")
-		Connect("R23-2")
+		Connect("LED21-1")
+		Connect("R21-2")
 	)
 	Net("unnamed_net114" "(unknown)")
 	(
-		Connect("LED7-6")
-		Connect("R22-2")
+		Connect("LED20-1")
+		Connect("R20-2")
 	)
 	Net("unnamed_net115" "(unknown)")
 	(
-		Connect("LED7-8")
-		Connect("R21-2")
+		Connect("LED19-1")
+		Connect("R19-2")
 	)
 	Net("unnamed_net116" "(unknown)")
 	(
-		Connect("LED8-2")
-		Connect("R20-2")
+		Connect("LED18-1")
+		Connect("R18-2")
 	)
 	Net("unnamed_net117" "(unknown)")
 	(
-		Connect("LED8-4")
-		Connect("R19-2")
-	)
-	Net("unnamed_net118" "(unknown)")
-	(
-		Connect("LED8-6")
-		Connect("R18-2")
-	)
-	Net("unnamed_net119" "(unknown)")
-	(
-		Connect("LED8-8")
+		Connect("LED17-1")
 		Connect("R17-2")
 	)
-	Net("unnamed_net120" "(unknown)")
+	Net("unnamed_net118" "(unknown)")
 	(
 		Connect("D1-1")
 		Connect("S4-2")
 	)
-	Net("unnamed_net121" "(unknown)")
+	Net("unnamed_net119" "(unknown)")
 	(
 		Connect("C1-1")
 		Connect("D1-2")
 		Connect("U50-1")
 	)
-	Net("unnamed_net122" "(unknown)")
+	Net("unnamed_net120" "(unknown)")
 	(
 		Connect("S4-1")
 		Connect("U51-1")
 	)
-	Net("unnamed_net123" "(unknown)")
+	Net("unnamed_net121" "(unknown)")
 	(
-		Connect("LED11-1")
+		Connect("LED39-1")
 		Connect("R39-1")
 	)
 	Net("Vcc" "(unknown)")
