@@ -67,6 +67,20 @@
 			}
 		}
 	},
+	"proto_alu": {
+		"delay": 1000,
+		"inputs": {
+			"A":  {"width": 4, "alias": "a"},
+			"B":  {"width": 4, "alias": "b"},
+			"Op": {"width": 2, "alias": "op"}
+		},
+		"outputs": {
+			"D": {
+				"width": 4,
+				"formula": "a+b if op==0 else (a&b if op==1 else (a|b if op==2 else a^b))"
+			}
+		}
+	},
 	"ic7408": {
 		"delay": 27,
 		"inputs": {
