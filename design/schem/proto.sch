@@ -107,7 +107,7 @@ C 43700 59400 1 0 0 switch-spst-1.sym
 T 44100 60100 5 10 0 0 0 0 1
 device=SPST
 T 44000 59700 5 10 1 1 0 0 1
-refdes=S4
+refdes=S3
 T 43700 59400 5 10 0 0 0 0 1
 footprint=TO220ACS
 T 43700 59400 5 10 0 0 0 0 1

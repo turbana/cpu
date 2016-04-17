@@ -51,7 +51,7 @@ pintype=out
 T 200 600 8 10 1 1 0 5 1
 refdes=U?
 T 600 2400 5 10 0 0 0 0 1
-footprint=DIP14
+footprint=SO14
 T 600 2600 5 10 0 0 0 0 1
 description=4 OR gates with 2 inputs
 T 600 2800 5 10 0 0 0 0 1
