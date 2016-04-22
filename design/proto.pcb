@@ -5,7 +5,7 @@ FileVersion[20091103]
 
 PCB["proto" 100.0000mm 50.0000mm]
 
-Grid[1000.000000 0.0000 0.0000 1]
+Grid[500.000000 0.0000 0.0000 1]
 PolyArea[3100.006200]
 Thermal[0.500000]
 DRC[10.00mil 10.00mil 8.00mil 6.00mil 12.00mil 6.00mil]
@@ -788,13 +788,18 @@ Symbol['~' 12.00mil]
 Attribute("import::src0" "/home/ian/src/cpu/design/schem/proto.sch")
 Attribute("import::src1" "/home/ian/src/cpu/design/schem/proto_alu.sch")
 Attribute("PCB::grid::unit" "mil")
-Attribute("PCB::grid::size" "10.00mil")
+Attribute("PCB::grid::size" "5.00mil")
 Via[485.00mil 455.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 Via[485.00mil 505.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 Via[485.00mil 135.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 Via[485.00mil 85.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 Via[485.00mil 335.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 Via[350.00mil 38.5839mm 36.00mil 20.00mil 0.0000 20.00mil "" ""]
+Via[485.00mil 385.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
+Via[485.00mil 285.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
+Via[485.00mil 235.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
+Via[485.00mil 185.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
+Via[485.00mil 35.00mil 36.00mil 20.00mil 0.0000 20.00mil "" ""]
 
 Element["onsolder" "SO16" "U5" "SN74HC157D" 60.1195mm 1432.50mil -60.00mil -20.00mil 1 100 "auto"]
 (
