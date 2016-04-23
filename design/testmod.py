@@ -13,6 +13,8 @@ WAVEFORM_DIR = "waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
 
+DONTCARE = object()
+
 
 class FatalTestException(Exception):
     pass
@@ -202,7 +204,7 @@ def randbits(bits):
 
 def generate_test(config):
     test = {"inputs": [], "outputs": []}
-    env = {}
+    env = {"DONTCARE": DONTCARE}
     # generate inputs
     for name in config["inputs"].keys():
         width = config["inputs"][name]["width"]
@@ -226,18 +228,28 @@ def generate_test(config):
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
         value = eval_formula(formula, env, config["name"], width)
+        # don't add condition when result is a don't care
+        if value is DONTCARE:
+            continue
         test["outputs"].append({"value": value, "width": width, "name": name})
+    # generate a new test if we only had don't cares
+    if not test["outputs"]:
+        return generate_test(config)
     return test
 
 
 def eval_formula(formula, env, name, width=64):
-    formula = "(%s) & %d" % (formula, (2**width)-1)
     try:
-        return eval(formula, {}, env)
+        value = eval(formula, {}, env)
+        # if we have an actual value constrain it to it's width
+        if value is not DONTCARE:
+            formula = "(%s) & %d" % (value, (2**width)-1)
+            value = eval(formula, {}, env)
     except Exception, e:
         message = "Error evaluating formula for %s: %s\n" % (name, formula)
         message += str(e) + "\n"
         raise FatalTestException(message)
+    return value
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
