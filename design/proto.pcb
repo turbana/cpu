@@ -1549,6 +1549,54 @@ Element["" "0603" "R12" "150ohm" 1665.00mil 85.00mil -31.50mil -31.50mil 0 100 "
 	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
 
 	)
+
+Element["" "0603" "LED17" "LG L29K-G2J1-24-Z" 35.7990mm 345.00mil -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
+
+Element["" "0603" "R17" "150ohm" 42.2672mm 7.5652mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R16" "150ohm" 31.9525mm 11.7771mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "RESISTOR")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "1" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "2" "2" "square"]
+
+	)
+
+Element["" "0603" "LED16" "LG L29K-G2J1-24-Z" 31.9267mm 9.3749mm -31.50mil -31.50mil 0 100 ""]
+(
+	Attribute("device" "LED")
+	Attribute("manufacturer" "unknown")
+	Attribute("manufacturer_part_number" "unknown")
+	Attribute("vendor" "unknown")
+	Attribute("vendor_part_number" "unknown")
+	Pad[-25.59mil -4.92mil -25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "A" "1" "square"]
+	Pad[25.59mil -4.92mil 25.59mil 4.92mil 29.52mil 20.00mil 35.52mil "K" "2" "square"]
+
+	)
 Rat[13.4470mm 185.00mil 0 720.00mil 625.00mil 5  ""]
 Rat[720.00mil 625.00mil 5 1255.00mil 625.00mil 5  ""]
 Rat[1255.00mil 625.00mil 5 1820.00mil 625.00mil 5  ""]
@@ -1581,6 +1629,7 @@ Rat[13.4470mm 235.00mil 0 770.00mil 895.00mil 5  ""]
 Rat[770.00mil 895.00mil 5 1305.00mil 895.00mil 5  ""]
 Rat[1305.00mil 895.00mil 5 1870.00mil 895.00mil 5  ""]
 Rat[1870.00mil 895.00mil 5 2470.00mil 895.00mil 5  ""]
+Rat[31.3026mm 11.6522mm 0 435.00mil 555.00mil 0  ""]
 Rat[1640.00mil 230.08mil 0 59.4845mm 1297.50mil 5  ""]
 Rat[1640.00mil 180.08mil 0 63.2945mm 1297.50mil 5  ""]
 Rat[1640.00mil 130.08mil 0 60.7545mm 1567.50mil 5  ""]
@@ -1588,15 +1637,15 @@ Rat[41.6410mm 80.08mil 0 64.5645mm 1567.50mil 5  ""]
 Rat[13.3000mm 885.00mil 0 520.00mil 895.00mil 5  ""]
 Rat[350.00mil 38.5839mm 5 825.00mil 1565.00mil 5  ""]
 Rat[825.00mil 1565.00mil 5 1125.00mil 1295.00mil 5  ""]
-Rat[1125.00mil 1295.00mil 5 1405.00mil 895.00mil 5  ""]
-Rat[1405.00mil 895.00mil 5 1620.00mil 895.00mil 5  ""]
-Rat[1405.00mil 895.00mil 5 1405.00mil 625.00mil 5  ""]
-Rat[1405.00mil 625.00mil 5 1355.00mil 625.00mil 5  ""]
-Rat[1355.00mil 625.00mil 5 28.0820mm 430.00mil 0  ""]
-Rat[1620.00mil 895.00mil 5 1865.00mil 1295.00mil 5  ""]
-Rat[1865.00mil 1295.00mil 5 1565.00mil 1565.00mil 5  ""]
+Rat[1125.00mil 1295.00mil 5 1565.00mil 1565.00mil 5  ""]
+Rat[1565.00mil 1565.00mil 5 1865.00mil 1295.00mil 5  ""]
 Rat[1865.00mil 1295.00mil 5 56.9445mm 1567.50mil 5  ""]
 Rat[56.9445mm 1567.50mil 5 64.5645mm 1297.50mil 5  ""]
+Rat[1865.00mil 1295.00mil 5 1620.00mil 895.00mil 5  ""]
+Rat[1620.00mil 895.00mil 5 1405.00mil 625.00mil 5  ""]
+Rat[1405.00mil 625.00mil 5 1435.00mil 340.08mil 0  ""]
+Rat[1435.00mil 340.08mil 0 36.2100mm 235.00mil 0  ""]
+Rat[32.1460mm 264.41mil 0 32.5766mm 9.2499mm 0  ""]
 Rat[64.5645mm 1297.50mil 5 2220.00mil 895.00mil 5  ""]
 Rat[13.4470mm 505.00mil 0 775.00mil 1295.00mil 5  ""]
 Rat[775.00mil 1295.00mil 5 1515.00mil 1295.00mil 5  ""]
@@ -1607,6 +1656,8 @@ Rat[34.8950mm 80.08mil 0 42.9410mm 80.08mil 0  ""]
 Rat[34.9100mm 130.08mil 0 42.9560mm 130.08mil 0  ""]
 Rat[34.9100mm 180.08mil 0 42.9560mm 180.08mil 0  ""]
 Rat[34.9100mm 230.08mil 0 42.9560mm 230.08mil 0  ""]
+Rat[31.2767mm 9.2499mm 0 32.6025mm 11.6522mm 0  ""]
+Rat[35.1490mm 340.08mil 0 42.9172mm 7.4403mm 0  ""]
 Rat[1205.00mil 625.00mil 5 825.00mil 1295.00mil 5  ""]
 Rat[1055.00mil 625.00mil 5 975.00mil 1295.00mil 5  ""]
 Rat[1205.00mil 895.00mil 5 875.00mil 1565.00mil 5  ""]
@@ -1631,6 +1682,7 @@ Rat[58.2145mm 1297.50mil 5 1665.00mil 1295.00mil 5  ""]
 Rat[62.0245mm 1297.50mil 5 1815.00mil 1295.00mil 5  ""]
 Rat[59.4845mm 1567.50mil 5 1715.00mil 1565.00mil 5  ""]
 Rat[63.2945mm 1567.50mil 5 1865.00mil 1565.00mil 5  ""]
+Rat[165.00mil 505.00mil 0 165.00mil 555.00mil 0  ""]
 Rat[260.00mil 540.00mil 0 820.00mil 625.00mil 5  ""]
 Rat[820.00mil 625.00mil 5 1055.00mil 895.00mil 5  ""]
 Rat[305.59mil 29.0680mm 0 775.00mil 1565.00mil 5  ""]
@@ -1856,6 +1908,15 @@ NetList()
 		Connect("U4-2")
 		Connect("U6-2")
 	)
+	Net("Cin" "(unknown)")
+	(
+		Connect("R16-1")
+		Connect("S2-14")
+	)
+	Net("Cout" "(unknown)")
+	(
+		Connect("R17-1")
+	)
 	Net("D0" "(unknown)")
 	(
 		Connect("R9-1")
@@ -1895,9 +1956,9 @@ NetList()
 		Connect("LED13-2")
 		Connect("LED14-2")
 		Connect("LED15-2")
-		Connect("U1-7")
+		Connect("LED16-2")
+		Connect("LED17-2")
 		Connect("U1-8")
-		Connect("U1-9")
 		Connect("U2-7")
 		Connect("U3-8")
 		Connect("U3-15")
@@ -2016,120 +2077,138 @@ NetList()
 	)
 	Net("unnamed_net19" "(unknown)")
 	(
+		Connect("LED16-1")
+		Connect("R16-2")
+	)
+	Net("unnamed_net20" "(unknown)")
+	(
+		Connect("LED17-1")
+		Connect("R17-2")
+	)
+	Net("unnamed_net21" "(unknown)")
+	(
 		Connect("U1-4")
 		Connect("U3-2")
 	)
-	Net("unnamed_net20" "(unknown)")
+	Net("unnamed_net22" "(unknown)")
 	(
 		Connect("U1-1")
 		Connect("U3-5")
 	)
-	Net("unnamed_net21" "(unknown)")
+	Net("unnamed_net23" "(unknown)")
 	(
 		Connect("U1-13")
 		Connect("U3-14")
 	)
-	Net("unnamed_net22" "(unknown)")
+	Net("unnamed_net24" "(unknown)")
 	(
 		Connect("U1-10")
 		Connect("U3-11")
 	)
-	Net("unnamed_net23" "(unknown)")
+	Net("unnamed_net25" "(unknown)")
+	(
+		Connect("U1-9")
+	)
+	Net("unnamed_net26" "(unknown)")
+	(
+		Connect("U1-7")
+	)
+	Net("unnamed_net27" "(unknown)")
 	(
 		Connect("U4-3")
 		Connect("U7-11")
 	)
-	Net("unnamed_net24" "(unknown)")
+	Net("unnamed_net28" "(unknown)")
 	(
 		Connect("U4-6")
 		Connect("U7-14")
 	)
-	Net("unnamed_net25" "(unknown)")
+	Net("unnamed_net29" "(unknown)")
 	(
 		Connect("U4-8")
 		Connect("U7-5")
 	)
-	Net("unnamed_net26" "(unknown)")
+	Net("unnamed_net30" "(unknown)")
 	(
 		Connect("U4-11")
 		Connect("U7-2")
 	)
-	Net("unnamed_net27" "(unknown)")
+	Net("unnamed_net31" "(unknown)")
 	(
 		Connect("U6-3")
 		Connect("U7-10")
 	)
-	Net("unnamed_net28" "(unknown)")
+	Net("unnamed_net32" "(unknown)")
 	(
 		Connect("U6-6")
 		Connect("U7-13")
 	)
-	Net("unnamed_net29" "(unknown)")
+	Net("unnamed_net33" "(unknown)")
 	(
 		Connect("U6-8")
 		Connect("U7-6")
 	)
-	Net("unnamed_net30" "(unknown)")
+	Net("unnamed_net34" "(unknown)")
 	(
 		Connect("U6-11")
 		Connect("U7-3")
 	)
-	Net("unnamed_net31" "(unknown)")
+	Net("unnamed_net35" "(unknown)")
 	(
 		Connect("U2-3")
 		Connect("U3-10")
 	)
-	Net("unnamed_net32" "(unknown)")
+	Net("unnamed_net36" "(unknown)")
 	(
 		Connect("U2-6")
 		Connect("U3-13")
 	)
-	Net("unnamed_net33" "(unknown)")
+	Net("unnamed_net37" "(unknown)")
 	(
 		Connect("U2-8")
 		Connect("U3-6")
 	)
-	Net("unnamed_net34" "(unknown)")
+	Net("unnamed_net38" "(unknown)")
 	(
 		Connect("U2-11")
 		Connect("U3-3")
 	)
-	Net("unnamed_net35" "(unknown)")
+	Net("unnamed_net39" "(unknown)")
 	(
 		Connect("U3-4")
 		Connect("U5-2")
 	)
-	Net("unnamed_net36" "(unknown)")
+	Net("unnamed_net40" "(unknown)")
 	(
 		Connect("U3-7")
 		Connect("U5-5")
 	)
-	Net("unnamed_net37" "(unknown)")
+	Net("unnamed_net41" "(unknown)")
 	(
 		Connect("U3-12")
 		Connect("U5-14")
 	)
-	Net("unnamed_net38" "(unknown)")
+	Net("unnamed_net42" "(unknown)")
 	(
 		Connect("U3-9")
 		Connect("U5-11")
 	)
-	Net("unnamed_net39" "(unknown)")
+	Net("unnamed_net43" "(unknown)")
 	(
 		Connect("U5-3")
 		Connect("U7-4")
 	)
-	Net("unnamed_net40" "(unknown)")
+	Net("unnamed_net44" "(unknown)")
 	(
 		Connect("U5-6")
 		Connect("U7-7")
 	)
-	Net("unnamed_net41" "(unknown)")
+	Net("unnamed_net45" "(unknown)")
 	(
 		Connect("U5-13")
 		Connect("U7-12")
 	)
-	Net("unnamed_net42" "(unknown)")
+	Net("unnamed_net46" "(unknown)")
 	(
 		Connect("U5-10")
 		Connect("U7-9")
@@ -2148,6 +2227,7 @@ NetList()
 		Connect("S1-8")
 		Connect("S2-1")
 		Connect("S2-2")
+		Connect("S2-3")
 		Connect("U1-16")
 		Connect("U2-14")
 		Connect("U3-16")
