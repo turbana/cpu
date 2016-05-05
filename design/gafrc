@@ -5,7 +5,6 @@
 (component-library "/home/ian/src/cpu/design/symbols/74xxx")
 (component-library "/home/ian/src/cpu/design/symbols/misc")
 (component-library "/home/ian/src/cpu/design/symbols/modules")
-(source-library "/home/ian/src/cpu/design/schem")
 
-(component-library ".")
-(source-library ".")
+(source-library "/home/ian/src/cpu/design/schem")
+(source-library "/home/ian/src/cpu/design/footprints")
