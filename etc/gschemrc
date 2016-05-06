@@ -1,0 +1,4 @@
+;; Used by gschem
+;; Needs to be symlinked to ~/.gEDA/gschemrc
+
+(log-window "later")
