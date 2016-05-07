@@ -35,10 +35,11 @@ CMP_TB = @echo "Cmpl TB : $(@F)"; \
 	iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
 EXE_TB = @echo "Run TB  : $(@F)"; \
 	$< 2>&1 | grep -v "^VCD info" | tee $(WF)/$(@F).log | $(FAILON) "FAILURE"
+GAF_PNG = @gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
 
 
 # build rules
-.PHONY: clean help netlist testbench test testall protopcb
+.PHONY: clean help netlist testbench test testall protopcb doc
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
 help:
@@ -46,6 +47,7 @@ help:
 	@echo "make TARGET=foo netlist    -- generate netlist for foo"
 	@echo "make TARGET=foo testbench  -- generate testbench for foo"
 	@echo "make testall               -- run full test against all schematics"
+	@echo "make doc                   -- generate documentation"
 
 $(BUILD):
 	@mkdir $(BUILD)
@@ -68,6 +70,9 @@ $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 $(WF)/%.vcd: $(BUILD)/test_%
 	$(EXE_TB)
 
+%.png: %.sch
+	$(GAF_PNG)
+
 protopcb: project
 	gsch2pcb project
 	pcb proto.pcb
@@ -76,6 +81,7 @@ netlist:	$(BUILD) $(BUILD)/$(TARGET).v
 testbench:	$(BUILD) $(BUILD)/tb_$(TARGET).v
 test: 		$(BUILD) $(WF) $(WF)/$(TARGET).vcd
 testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
+doc:		design.png
 
 clean:
-	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb-
+	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb- design.png
