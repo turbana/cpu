@@ -1,0 +1,54 @@
+** Instruction Set
+| Inst     | Form                  | Meaning                                       |
+|----------+-----------------------+-----------------------------------------------|
+| add      | r1, r2, [r3\vert{}sp] | r1 := r2 + r3                                 |
+| sub      | r1, r2, [r3\vert{}sp] | r1 := r2 - r3                                 |
+| and      | r1, r2, [r3\vert{}sp] | r1 := r2 & r3                                 |
+| or       | r1, r2, [r3\vert{}sp] | r1 := r2 \vert r3                             |
+| shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                |
+| shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                |
+| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 <<< r3                               |
+| xor      | r1, r2, [r3\vert{}sp] | r1 := r2 ^ r3                                 |
+| s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                   |
+| as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0           |
+| as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0           |
+| jmp      | [r1\vert{}sp](r2)     | pc := r1 + r2                                 |
+| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                             |
+| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                             |
+| ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                             |
+| stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                             |
+| ldw      | r1, imm7(r2)          | r1 := Md[r2 + I]                              |
+| stw      | imm7(r1), r2          | Md[r1 + I] := r2                              |
+| lcr      | r1, cr1               | r1 := cr1                                     |
+| scr      | cr1, r1               | cr1 := r1                                     |
+| lui      | r1, uimm8             | r1 := I << 8                                  |
+| addi     | r1, uimm8             | r1 := r1 + I                                  |
+| jmp      | imm11                 | pc := pc + I                                  |
+| trap     |                       | Enter supervisor mode; jump to kernel routine |
+| halt     |                       | Execution halts                               |
+| iret     |                       | Enter user mode; jump to $epc                 |
+
+** Registers
+*** General Purpose Registers
+| Register | Alias | Writable | Meaning                          |
+|----------+-------+----------+----------------------------------|
+| $0       |       | No       | Always reads 0                   |
+| $1       |       | Yes      | General Purpose                  |
+| $2       |       | Yes      | General Purpose                  |
+| $3       |       | Yes      | General Purpose                  |
+| $4       |       | Yes      | General Purpose                  |
+| $5       |       | Yes      | General Purpose                  |
+| $6       | $fp   | Yes      | Frame/Link Pointer by convention |
+| $7       | $sp   | Yes      | Stack Pointer by convention      |
+*** Control Registers
+Control Registers can only be accessed with LCR/SCR instructions. With the exception of $pc, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
+| Register | Alias  | Writable | Mode       | Meaning                                          |
+|----------+--------+----------+------------+--------------------------------------------------|
+| $cr0     | $pc    | No       | Any        | Program Counter                                  |
+| $cr1     | $ds    | Yes      | Supervisor | Data Segment (prepended to data memory accesses) |
+| $cr2     | $cs    | Yes      | Supervisor | Code Segment (prepended to code memory accesses) |
+| $cr3     | $flags | Yes      | Supervisor | Processor Flags                                  |
+| $cr4     | $epc   | Yes      | Supervisor | Exceptional Program Counter                      |
+| $cr5     | $eds   | Yes      | Supervisor | Exceptional Data Segment                         |
+| $cr6     | $ecs   | Yes      | Supervisor | Exceptional Code Segment                         |
+| $cr7     | $isr   | No       | Supervisor | Interrupt Service Routine                        |
