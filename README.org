@@ -17,16 +17,28 @@
 | stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                             |
 | ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                             |
 | stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                             |
-| ldw      | r1, imm7(r2)          | r1 := Md[r2 + I]                              |
-| stw      | imm7(r1), r2          | Md[r1 + I] := r2                              |
+| ldw      | r1, imm7(r2)          | r1 := Md[r2 + imm]                            |
+| stw      | imm7(r1), r2          | Md[r1 + imm] := r2                            |
 | lcr      | r1, cr1               | r1 := cr1                                     |
 | scr      | cr1, r1               | cr1 := r1                                     |
-| lui      | r1, uimm8             | r1 := I << 8                                  |
-| addi     | r1, uimm8             | r1 := r1 + I                                  |
-| jmp      | imm11                 | pc := pc + I                                  |
+| lui      | r1, uimm8             | r1 := imm << 8                                |
+| addi     | r1, uimm8             | r1 := r1 + imm                                |
+| jmp      | imm11                 | pc := pc + imm                                |
 | trap     |                       | Enter supervisor mode; jump to kernel routine |
 | halt     |                       | Execution halts                               |
 | iret     |                       | Enter user mode; jump to $epc                 |
+
+***** Special Immediates
+8 possible values: 1, 2, 4, 8, -1, -2, -4, -8
+***** Conditionals
+| s.eq   | ==          |
+| s.ne   | !=          |
+| s.gt   | >           |
+| s.gte  | >=          |
+| s.lt   | <           |
+| s.lte  | <=          |
+| s.ult  | unsigned <  |
+| s.ulte | unsigned <= |
 
 ** Registers
 *** General Purpose Registers
@@ -40,6 +52,7 @@
 | $5       |       | Yes      | General Purpose                  |
 | $6       | $fp   | Yes      | Frame/Link Pointer by convention |
 | $7       | $sp   | Yes      | Stack Pointer by convention      |
+
 *** Control Registers
 Control Registers can only be accessed with LCR/SCR instructions. With the exception of $pc, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
 | Register | Alias  | Writable | Mode       | Meaning                                          |
@@ -52,3 +65,11 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 | $cr5     | $eds   | Yes      | Supervisor | Exceptional Data Segment                         |
 | $cr6     | $ecs   | Yes      | Supervisor | Exceptional Code Segment                         |
 | $cr7     | $isr   | No       | Supervisor | Interrupt Service Routine                        |
+
+**** Flags Register
+|  Bit | Name | Meaning                                     |
+|------+------+---------------------------------------------|
+|    0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enables |
+|    1 | M    | 0=Supervisor Mode; 1=User Mode              |
+| 2-15 |      | Reserved                                    |
+
