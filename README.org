@@ -73,3 +73,31 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 |    1 | M    | 0=Supervisor Mode; 1=User Mode              |
 | 2-15 |      | Reserved                                    |
 
+** Memory Layout
+All devices use memory mapped IO. The mapping is done in segment 0 giving access only to supervisor code.
+
+*** Data Memory
+| 0x00 0000 | RAM      |
+| 0x00 FF7F |          |
+| 0x00 FF80 | PIC      |
+| 0x00 FF8F |          |
+| 0x00 FF90 | UART0    |
+| 0x00 FF9F |          |
+| 0x00 FFA0 | UART1    |
+| 0x00 FFAF |          |
+| 0x00 FFB0 | 555      |
+| 0x00 FFBF |          |
+| 0x00 FFC0 | IDE      |
+| 0x00 FFCF |          |
+| 0x00 FFD0 | Reserved |
+| 0x00 FFFF |          |
+| 0x01 0000 | RAM      |
+| 0xFF FFFF |          |
+
+*** Instruction Memory
+| 0x00 0000 | RAM    |
+| 0x00 DFFF |        |
+| 0x00 E000 | EEPROM |
+| 0x00 FFFF |        |
+| 0x01 0000 | RAM    |
+| 0xFF FFFF |        |
