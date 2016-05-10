@@ -73,10 +73,10 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 |    1 | M    | 0=Supervisor Mode; 1=User Mode              |
 | 2-15 |      | Reserved                                    |
 
-** Memory Layout
-All devices use memory mapped IO. The mapping is done in segment 0 giving access only to supervisor code.
+** Memory
+Segmentation is used for memory protection. The corresponding segment register is prepended to the logical address, forming the physical address that is sent across the bus. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto this segment. Each process is assigned it's own code and data segments. Segment registers can only be accessed from supervisor mode, isolating processes from one another.
 
-*** Data Memory
+*** Data Memory Layout
 | 0x00 0000 | RAM      |
 | 0x00 FF7F |          |
 | 0x00 FF80 | PIC      |
@@ -94,7 +94,7 @@ All devices use memory mapped IO. The mapping is done in segment 0 giving access
 | 0x01 0000 | RAM      |
 | 0xFF FFFF |          |
 
-*** Instruction Memory
+*** Instruction Memory Layout
 | 0x00 0000 | RAM    |
 | 0x00 DFFF |        |
 | 0x00 E000 | EEPROM |
