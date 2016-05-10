@@ -16,34 +16,34 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - 22 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
 
 ** Instruction Set
-| Inst     | Form                  | Meaning                                       |
-|----------+-----------------------+-----------------------------------------------|
-| add      | r1, r2, [r3\vert{}sp] | r1 := r2 + r3                                 |
-| sub      | r1, r2, [r3\vert{}sp] | r1 := r2 - r3                                 |
-| and      | r1, r2, [r3\vert{}sp] | r1 := r2 & r3                                 |
-| or       | r1, r2, [r3\vert{}sp] | r1 := r2 \vert r3                             |
-| shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                |
-| shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                |
-| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 <<< r3                               |
-| xor      | r1, r2, [r3\vert{}sp] | r1 := r2 ^ r3                                 |
-| s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                   |
-| as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0           |
-| as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0           |
-| jmp      | [r1\vert{}sp](r2)     | pc := r1 + r2                                 |
-| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                             |
-| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                             |
-| ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                             |
-| stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                             |
-| ldw      | r1, imm7(r2)          | r1 := Md[r2 + imm]                            |
-| stw      | imm7(r1), r2          | Md[r1 + imm] := r2                            |
-| lcr      | r1, cr1               | r1 := cr1                                     |
-| scr      | cr1, r1               | cr1 := r1                                     |
-| lui      | r1, uimm8             | r1 := imm << 8                                |
-| addi     | r1, uimm8             | r1 := r1 + imm                                |
-| jmp      | imm11                 | pc := pc + imm                                |
-| trap     |                       | Enter supervisor mode; jump to kernel routine |
-| halt     |                       | Execution halts                               |
-| iret     |                       | Enter user mode; jump to $epc                 |
+| Inst     | Form                  | Meaning                                                           |
+|----------+-----------------------+-------------------------------------------------------------------|
+| add      | r1, r2, [r3\vert{}sp] | r1 := r2 + r3                                                     |
+| sub      | r1, r2, [r3\vert{}sp] | r1 := r2 - r3                                                     |
+| and      | r1, r2, [r3\vert{}sp] | r1 := r2 & r3                                                     |
+| or       | r1, r2, [r3\vert{}sp] | r1 := r2 \vert r3                                                 |
+| shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                                    |
+| shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                                    |
+| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 <<< r3                                                   |
+| xor      | r1, r2, [r3\vert{}sp] | r1 := r2 ^ r3                                                     |
+| s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                                       |
+| as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0                               |
+| as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0                               |
+| jmp      | [r1\vert{}sp](r2)     | pc := r1 + r2                                                     |
+| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                                                 |
+| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                                                 |
+| ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                                                 |
+| stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                                                 |
+| ldw      | r1, imm7(r2)          | r1 := Md[r2 + imm]                                                |
+| stw      | imm7(r1), r2          | Md[r1 + imm] := r2                                                |
+| lcr      | r1, cr1               | r1 := cr1                                                         |
+| scr      | cr1, r1               | cr1 := r1                                                         |
+| lui      | r1, uimm8             | r1 := imm << 8                                                    |
+| addi     | r1, uimm8             | r1 := r1 + imm                                                    |
+| jmp      | imm11                 | pc := pc + imm                                                    |
+| trap     |                       | Enter supervisor mode; disable interrupts; jump to kernel routine |
+| halt     |                       | Execution halts                                                   |
+| iret     |                       | Enter user mode; enable interrupts; jump to $epc                  |
 
 ***** Special Immediates
 8 possible values: 1, 2, 4, 8, -1, -2, -4, -8
@@ -93,7 +93,7 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 | 2-15 |      | Reserved                                    |
 
 ** Memory
-Segmentation is used for memory protection. The corresponding segment register ($cs/$ds) is prepended to the logical address, forming the physical address that is sent across the bus. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto this segment. Each process is assigned it's own code and data segments. Segment registers can only be accessed from supervisor mode, isolating processes from one another.
+Segmentation is used for memory protection. The corresponding segment register ($cs/$ds) is concatenated with the logical address, forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segment registers can only be accessed from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped into data segment 0
 
 *** Data Memory Layout
 | 0x00 0000 | RAM      |
@@ -111,7 +111,7 @@ Segmentation is used for memory protection. The corresponding segment register (
 | 0x00 FFD0 | Reserved |
 | 0x00 FFFF |          |
 | 0x01 0000 | RAM      |
-| 0xFF FFFF |          |
+| 0x3F FFFF |          |
 
 *** Instruction Memory Layout
 | 0x00 0000 | RAM    |
@@ -119,4 +119,4 @@ Segmentation is used for memory protection. The corresponding segment register (
 | 0x00 E000 | EEPROM |
 | 0x00 FFFF |        |
 | 0x01 0000 | RAM    |
-| 0xFF FFFF |        |
+| 0x3F FFFF |        |
