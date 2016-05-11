@@ -20,7 +20,7 @@ Most instructions are 3 register instructions with support for a special immedia
 
 Effort was made to use relative addressing modes to encourage PC independent code. Two jump instructions support both base + index and PC-relative addressing. Data accesses support base + index and base + offset, while instruction accesses support only base + index. Absolute addressing must first load an address into a register.
 
-TIM does not have a conditional jump instruction. Instead, jumps placed in the shadow of a skip are used for conditional execution.
+TIM does not have a conditional jump instruction or condition codes. Instead, jumps placed in the shadow of a skip are used for conditional execution.
 
 Two instructions are required to load a 16 immediate value. lui is used to load the upper 8 bits of a register followed by an addi to populate the lower 8 bits.
 
@@ -34,16 +34,16 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 | shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                                    |
 | shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                                    |
 | sar      | r1, r2, [r3\vert{}sp] | r1 := r2 <<< r3                                                   |
-| s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                                       |
 | as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0                               |
 | as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0                               |
+| s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                                       |
 | jmp      | [r1\vert{}sp](r2)     | pc := r1 + r2                                                     |
 | jmp      | imm11                 | pc := pc + imm                                                    |
-| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                                                 |
 | ldw      | r1, imm7(r2)          | r1 := Md[r2 + imm]                                                |
+| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                                                 |
 | ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                                                 |
-| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                                                 |
 | stw      | imm7(r1), r2          | Md[r1 + imm] := r2                                                |
+| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                                                 |
 | stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                                                 |
 | lui      | r1, uimm8             | r1 := imm << 8                                                    |
 | addi     | r1, uimm8             | r1 := r1 + imm                                                    |
@@ -104,22 +104,24 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 Segmentation is used for memory protection. The corresponding segment register ($cs/$ds) is concatenated with the logical address, forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segment registers can only be accessed from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped into data segment 0
 
 *** Data Memory Layout
-| 0x00 0000 | RAM      |
-| 0x00 FF7F |          |
-| 0x00 FF80 | PIC      |
-| 0x00 FF8F |          |
-| 0x00 FF90 | UART0    |
-| 0x00 FF9F |          |
-| 0x00 FFA0 | UART1    |
-| 0x00 FFAF |          |
-| 0x00 FFB0 | 555      |
-| 0x00 FFBF |          |
-| 0x00 FFC0 | IDE      |
-| 0x00 FFCF |          |
-| 0x00 FFD0 | Reserved |
-| 0x00 FFFF |          |
-| 0x01 0000 | RAM      |
-| 0x3F FFFF |          |
+| 0x00 0000 | RAM         |
+| 0x00 FF7F |             |
+| 0x00 FF80 | PIC         |
+| 0x00 FF8F |             |
+| 0x00 FF90 | UART0       |
+| 0x00 FF9F |             |
+| 0x00 FFA0 | UART1       |
+| 0x00 FFAF |             |
+| 0x00 FFB0 | 555         |
+| 0x00 FFBF |             |
+| 0x00 FFC0 | IDE         |
+| 0x00 FFCF |             |
+| 0x00 FFD0 | Front Panel |
+| 0x00 FFDF |             |
+| 0x00 FFE0 | Reserved    |
+| 0x00 FFFF |             |
+| 0x01 0000 | RAM         |
+| 0x3F FFFF |             |
 
 *** Instruction Memory Layout
 | 0x00 0000 | RAM    |
