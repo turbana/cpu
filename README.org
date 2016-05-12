@@ -38,7 +38,7 @@ Effort was made to use relative addressing modes to encourage PC independent cod
 
 TIM does not have a conditional jump instruction or condition codes. Instead, jumps placed in the shadow of a skip are used for conditional execution.
 
-Two instructions are required to load a 16 immediate value. lui is used to load the upper 8 bits of a register followed by an addi to populate the lower 8 bits.
+Two instructions are required to load a 16 immediate value. lui is used to load the upper 8 bits of a register followed by an addi to populate the lower 8 bits. addi takes a signed number so care must be taken when the high bit of the low order byte is set. The assembler macro .ldi performs the necessary steps.
 
 | Inst     | Form                  | Meaning                                                           |
 |----------+-----------------------+-------------------------------------------------------------------|
@@ -62,7 +62,7 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 | stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                                                 |
 | stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                                                 |
 | lui      | r1, uimm8             | r1 := imm << 8                                                    |
-| addi     | r1, uimm8             | r1 := r1 + imm                                                    |
+| addi     | r1, imm8              | r1 := r1 + imm (sign extended)                                    |
 | lcr      | r1, cr1               | r1 := cr1                                                         |
 | scr      | cr1, r1               | cr1 := r1                                                         |
 | trap     |                       | Enter supervisor mode; disable interrupts; jump to kernel routine |
