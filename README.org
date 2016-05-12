@@ -4,7 +4,18 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - [[#architecture][Architecture]]
  - [[#instruction-set][Instruction Set]]
  - [[#registers][Registers]]
- - [[#memory][Memory]]
+ - [[#memory][Memory Layout]]
+
+***** Progress
+ - Architecture ~[Mostly Done]~ Always reviewing. Mostly static, but still have changes occasionally
+ - Instruction Set ~[Done]~
+ - Assembler ~[Done]~ Needs minor updates
+ - Functional Simulator ~[Done]~ Needs minor updates
+ - Assembler Tests ~[Mostly Done]~ Need to add additional tests
+ - Schematic Capture ~[In Progress]~ Currently have a handful of modules complete. Still have the bulk to go
+ - Behavioral Simulator ~[Started]~ Fuzz tests for captured schematics. Full simulator will be written once capture is complete.
+ - Verification ~[Started]~ Will be able to use assembler tests, but additional tests should be written
+ - Construction ~[Not Started]~
 
 ** Architecture
  - 5 stage pipelined RISC architecture
