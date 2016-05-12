@@ -1,6 +1,7 @@
 
 BUILD=build
 SCHEM=schem
+DOC=../doc
 WF=waveforms
 
 FAILON = ./failon.sh
@@ -70,7 +71,7 @@ $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
 $(WF)/%.vcd: $(BUILD)/test_%
 	$(EXE_TB)
 
-%.png: %.sch
+$(DOC)/%.png: %.sch
 	$(GAF_PNG)
 
 protopcb: project
@@ -81,7 +82,7 @@ netlist:	$(BUILD) $(BUILD)/$(TARGET).v
 testbench:	$(BUILD) $(BUILD)/tb_$(TARGET).v
 test: 		$(BUILD) $(WF) $(WF)/$(TARGET).vcd
 testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
-doc:		design.png
+doc:		$(DOC)/block_diagram.png
 
 clean:
-	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb- design.png
+	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb-
