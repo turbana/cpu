@@ -1,11 +1,16 @@
 * TIM-16
 TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips.
 
+ - [[#architecture][Architecture]]
+ - [[#instruction-set][Instruction Set]]
+ - [[#registers][Registers]]
+ - [[#memory][Memory]]
+
 ** Architecture
  - 5 stage pipelined RISC architecture
  - 16 bit ALU
- - 8 16 bit general purpose registers
- - 8 control registers
+ - 8x 16 bit general purpose registers
+ - 8x control registers
  - 22 bit word addressed memory (8MB)
  - Precise external interrupts using an 8259A PIC
  - No support for exceptions or control codes
@@ -96,7 +101,7 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 **** $cr3 - Flags Register
 |  Bit | Name | Meaning                                     |
 |------+------+---------------------------------------------|
-|    0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enables |
+|    0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enabled |
 |    1 | M    | 0=Supervisor Mode; 1=User Mode              |
 | 2-15 |      | Reserved                                    |
 
