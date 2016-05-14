@@ -40,16 +40,11 @@ class Instruction(Token):
 
 		# construct special tokens
 		for arg in self.args:
-			if arg.type in ("ir", "epc"):
+			if arg.type == "ir":
 				break
 			if arg.type == "ireg":
 				ir = not isinstance(arg, Register)
 				tok = Bit(ir, "ir")
-				tok.type = "bit"
-				self.args.append(tok)
-			elif arg.type == "jreg":
-				cr = str(arg) == "$cr2"
-				tok = Bit(cr, "epc")
 				tok.type = "bit"
 				self.args.append(tok)
 		self._arguments =  dict((a.name, a.value) for a in self.args)
@@ -118,7 +113,7 @@ class Register(Token):
 	def __init__(self, reg, name=""):
 		self.name = name
 		self.value = reg
-	
+
 	def binary(self):
 		return self.value
 
@@ -131,8 +126,6 @@ class Register(Token):
 
 class ControlRegister(Register):
 	def __init__(self, reg, name=""):
-		if reg == "epc":
-			reg = 2
 		self.name = name
 		self.value = reg
 
@@ -148,7 +141,7 @@ class Immediate(Token):
 		self.number = value
 		self.name = name
 		self.value = self.number.value
-	
+
 	def binary(self):
 		return isa.immediates[self.number.value]
 
@@ -163,7 +156,7 @@ class Condition(Token):
 	def __init__(self, value, name):
 		self.value = value
 		self.name = name
-	
+
 	def binary(self):
 		return isa.conditions[self.value]
 
@@ -179,7 +172,7 @@ class Macro(Token):
 		self.name = args[0]
 		self.args = args[1:]
 		self.callback = kwargs["callback"]
-	
+
 	def __str__(self):
 		if self.args:
 			args = " " + ", ".join(["%s=%s" % (a.name,repr(a)) for a in self.args])

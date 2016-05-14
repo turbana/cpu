@@ -2,10 +2,10 @@
 encodings = []
 
 def _arg_sort_cmp(left, right):
-	# ensure epc and ir come first in the argument list (helps decoding)
-	if left[0] in ("epc", "ir"):
+	# ensure ir come first in the argument list (helps decoding)
+	if left[0] == "ie":
 		return -1
-	if right[0] in ("epc", "ir"):
+	if right[0] == "ir":
 		return 1
 	return cmp(left[0], right[0])
 

@@ -125,9 +125,7 @@ spec_imm = number(5, True).addParseAction(_check_range)
 
 label = label_name + colon
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
-epc = Suppress("$") + Literal("epc").setParseAction(_build(tokens.ControlRegister))
 ireg = reg | spec_imm
-jreg = reg | epc
 creg = Suppress("$cr") + Word("012").setParseAction(to_int)
 cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)

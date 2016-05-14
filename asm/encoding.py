@@ -81,7 +81,7 @@ def decode(opcode, _cache={}):
 			arg = Register(value, aname)
 		elif type == "creg":
 			arg = ControlRegister(value, aname)
-		elif type in ("ir", "epc"):
+		elif type == "ir":
 			arg = Bit(value, aname)
 		elif type == "cond":
 			arg = Condition(isa.conditions_rev[value], aname)
@@ -89,11 +89,6 @@ def decode(opcode, _cache={}):
 			if tok_args[0].value == 1:
 				n = Number((isa.immediates_rev[value], 10), 5, True)
 				arg = Immediate(n, aname)
-			else:
-				arg = Register(value, aname)
-		elif type == "jreg":
-			if tok_args[0].value == 1:
-				arg = ControlRegister(value, aname)
 			else:
 				arg = Register(value, aname)
 		elif type.startswith("s"):
