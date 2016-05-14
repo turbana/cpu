@@ -128,22 +128,20 @@ def apply_labels(chunks, labels):
 
 
 def label_apply(labels, tok, pos, signed=True, pc_relative=False):
+        if tok.name == "jmp":
+		pc_relative = True
+        enc = encoding.encoding(tok)
 	for j, arg in enumerate(tok.args):
-		if tok.name == "jmp":
-			pc_relative = True
 		if isinstance(arg, tokens.Expression):
 			label_apply(labels, arg, pos, False, pc_relative)
 		elif isinstance(arg, tokens.Label):
-			if tok.name == "jmp":
-				bits = 11
-			elif tok.name in ("ldw", "stw"):
-				bits = 7
-			elif tok.name in ("lui", "addi"):
-				bits = 8
-			elif isinstance(tok, tokens.Expression):
-				# expressions will do their own bit checks and we need to ensure
-				# label values aren't truncated
-				bits = 64
+                        # If we found an encoding then we're materializing a label within an instruction and we want to ensure the proper size/sign. Otherwise, we're inside an expression, so use a bit value that won't truncate as expression do their own bit checking.
+			bits = 64
+			if enc:
+				target = enc["args"][j][0]
+				syntax = enc["types"][target]
+				signed = syntax.startswith("s")
+				bits = int(syntax[1:])
 			tok.args[j] = label_find(labels, arg, pos, bits, signed, pc_relative)
 
 
