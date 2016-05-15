@@ -65,7 +65,7 @@ def decode(opcode, _cache={}):
 	tok_args = []
 	for arg in args:
 		aname, start, end = arg
-		type = aname if aname in ("ir", "epc") else code["types"][aname]
+		type = aname if aname == "ir" else code["types"][aname]
 		mask = ((2**(start - end + 1) - 1) << end)
 		value = (opcode & mask) >> end
 		def twoc(n, bits):
