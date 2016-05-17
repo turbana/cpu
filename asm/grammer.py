@@ -123,14 +123,6 @@ spec_imm = number(5, True).addParseAction(_check_range)
 
 #
 
-label = label_name + colon
-reg = Suppress("$") + Word("01234567").setParseAction(to_int)
-ireg = reg | spec_imm
-creg = Suppress("$cr") + Word("012").setParseAction(to_int)
-cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
-string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)
-string.setParseAction(lambda s,l,t: t[0].replace("\\n", "\n"))
-
 u1  = number( 1, False)
 u2  = number( 2, False)
 u3  = number( 3, False)
@@ -163,6 +155,14 @@ s13 = number(13, True)
 s14 = number(14, True)
 s15 = number(15, True)
 s16 = number(16, True)
+
+label = label_name + colon
+reg = Suppress("$") + Word("01234567").setParseAction(to_int)
+ireg = reg | s4
+creg = Suppress("$cr") + Word("012").setParseAction(to_int)
+cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
+string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)
+string.setParseAction(lambda s,l,t: t[0].replace("\\n", "\n"))
 
 comment = ";" + restOfLine
 
