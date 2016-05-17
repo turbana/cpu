@@ -120,7 +120,7 @@ add("jmp offset:s11",
 conditions = {"eq": 0, "ne": 1, "gt": 2, "gte": 3, "lt": 4, "lte":5, "ult": 6, "ulte": 7}
 conditions_rev = dict(zip(conditions.values(), conditions.keys()))
 # unused code for special immediates
-## positive special immediates are decremented by one before being encoded
-## imm_val = lambda n: 16+n if n < 0 else n-1
-## immediates = dict((n, imm_val(n)) for n in range(-8, 9) if n != 0)
-## immediates_rev = dict(zip(immediates.values(), immediates.keys()))
+# positive special immediates are decremented by one before being encoded
+imm_val = lambda n: 16+n if n < 0 else n-1
+immediates = dict((n, imm_val(n)) for n in range(-8, 9) if n != 0)
+immediates_rev = dict(zip(immediates.values(), immediates.keys()))
