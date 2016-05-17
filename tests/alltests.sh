@@ -72,13 +72,13 @@ mkdir -p $BUILD
 run test_asm test1.asm
 
 # main tests
-run_tests bigintadd.asm
-run_tests bigintsub.asm
+#run_tests bigintadd.asm
+#run_tests bigintsub.asm
 #run_tests echo.asm
-run_tests fib.asm
-run_tests immediates.asm
-run_tests macros.asm
-run_tests pow.asm
+#run_tests fib.asm
+#run_tests immediates.asm
+#run_tests macros.asm
+#run_tests pow.asm
 #run_tests screen.asm
 #run_tests sections.asm
 #run_tests test1.asm
@@ -86,7 +86,7 @@ run_tests pow.asm
 #run_tests test3.asm
 #run_tests testimem2.asm
 #run_tests testimem.asm
-run_tests testisa.asm
+#run_tests testisa.asm
 #run_tests timer.asm
 
 exit $status
