@@ -70,7 +70,10 @@ def _build(typ, **kwargs):
 	def _parse_action(s, l, toks):
 		name = toks.keys()[0] if toks.keys() else ""
 		kwargs["name"] = name
-		return typ(*toks, **kwargs)
+		try:
+			return typ(*toks, **kwargs)
+		except Exception, e:
+			raise ParseException(s, l, msg=str(e))
 	return _parse_action
 
 
