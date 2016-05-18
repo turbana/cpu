@@ -54,7 +54,7 @@ def decode(opcode, _cache={}):
 	if not _cache:
 		_load_cache(_cache)
 	mask5 = opcode >> 11
-	mask3 = mask5 & 0x1D
+	mask3 = mask5 & 0x1C
 	code = _cache.get(mask5, None)
 	if code is None:
 		code = _cache.get(mask3, None)
