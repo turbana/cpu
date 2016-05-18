@@ -1,13 +1,11 @@
 
 encodings = []
 
-def _arg_sort_cmp(left, right):
+
+def _arg_sort_key(arg):
 	# ensure ir come first in the argument list (helps decoding)
-	if left[0] == "ie":
-		return -1
-	if right[0] == "ir":
-		return 1
-	return cmp(left[0], right[0])
+        name = arg[0]
+        return "0"+name if name == "ir" else name
 
 
 def add(syntax, prelude, prelude_end, *args):
@@ -21,7 +19,7 @@ def add(syntax, prelude, prelude_end, *args):
 		"syntax": syntax,
 		"prelude": prelude,
 		"prelude_end": prelude_end,
-		"args": sorted(args, cmp=_arg_sort_cmp),
+		"args": sorted(args, key=_arg_sort_key),
 		"types": None,
 	})
 
