@@ -2,7 +2,7 @@
 ;; Test macros in seperate file
 ;;
 
-; |@| 111 ($1=00FF $2=0023 $3=0004)
+; |@| 117 ($1=00FF $2=0023 $3=0004)
 
 	.set	count, 0
 	.set	latest, 0

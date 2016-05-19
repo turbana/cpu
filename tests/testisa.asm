@@ -2,6 +2,7 @@
 ;; Test ISA
 ;;
 ; TODO add memory tests
+; TODO update reading PC is no longer + 1
 ;
 ; final check |@| 346 ($1=F00D $cr0=005A)
 
