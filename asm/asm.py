@@ -137,9 +137,9 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
 		elif isinstance(arg, tokens.Label):
                         # If we found an encoding then we're materializing a label within an instruction and we want to ensure the proper size/sign. Otherwise, we're inside an expression, so use a bit value that won't truncate as expression do their own bit checking.
 			bits = 64
+                        signed = True
 			if enc:
-				target = enc["args"][j][0]
-				syntax = enc["types"][target]
+				syntax = [x[1] for x in enc["ast"] if len(x) == 2][j]
 				signed = syntax.startswith("s")
 				bits = int(syntax[1:])
 			tok.args[j] = label_find(labels, arg, pos, bits, signed, pc_relative)
