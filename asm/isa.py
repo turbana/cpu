@@ -72,11 +72,11 @@ add("as.nz tgt:reg, op1:reg, op2:ireg",
 add("jmp index:ireg(base:reg)",
 	0b01011, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3))
 
-add("ldw tgt:reg, imm:s7(base:reg)",
-	0b100, 13, ("imm", 12, 6), ("base", 5, 3), ("tgt", 2, 0))
+add("ldw tgt:reg, offset:s7(base:reg)",
+	0b100, 13, ("offset", 12, 6), ("base", 5, 3), ("tgt", 2, 0))
 
-add("stw imm:s7(base:reg), src:reg",
-	0b101, 13, ("imm", 12, 6), ("base", 5, 3), ("src", 2, 0))
+add("stw offset:s7(base:reg), src:reg",
+	0b101, 13, ("offset", 12, 6), ("base", 5, 3), ("src", 2, 0))
 
 add("ldw tgt:reg, index:ireg(base:reg)",
 	0b01100, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))

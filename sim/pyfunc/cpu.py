@@ -110,15 +110,9 @@ def jmp(cpu, offset):
 	cpu.stall(2)
 
 @op
-def jmp(cpu, epc, tgt):
-	cpu.reg[PC] = cpu.crget(EPC-8) if epc else cpu.rget(tgt)
-	cpu.stall(2)
-
-@op
-def jal(cpu, tgt, index, base, ir):
+def jmp(cpu, index, base, ir):
 	base = cpu.rget(base)
 	if not ir: index = cpu.rget(index)
-	cpu.rset(tgt, cpu.reg[PC])
 	cpu.reg[PC] = base + index
 	cpu.stall(2)
 
@@ -233,18 +227,6 @@ def scr(cpu, cr, src):
 	cpu.crset(cr, cpu.rget(src))
 
 @op
-def inb(cpu, tgt, src):
-	addr = cpu.rget(src)
-	val = cpu.io(addr)
-	cpu.rset(tgt, val)
-
-@op
-def outb(cpu, tgt, src):
-	val = cpu.rget(src)
-	addr = cpu.rget(tgt)
-	cpu.io(addr, val & 0x00FF)
-
-@op
 def ldiw(cpu, tgt, src):
 	inst = cpu.iget(cpu.rget(src) * 2)
 	cpu.rset(tgt, inst)
@@ -253,6 +235,9 @@ def ldiw(cpu, tgt, src):
 def stiw(cpu, tgt, src):
 	inst = cpu.rget(src)
 	cpu.iset(cpu.rget(tgt) * 2, inst)
+
+
+# TODO add halt and trap instructions
 
 
 #
