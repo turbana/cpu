@@ -104,8 +104,7 @@ def stw(cpu, base, src, index, ir):
 
 @op
 def jmp(cpu, offset):
-	# jmp is PC + offset + 1, but we've already incremented PC in cpu.fetch(),
-	# and offset is also incremented by 1 in decode()
+	# jmp is PC + offset, but we've already incremented PC in cpu.fetch()
 	cpu.reg[PC] += offset - 1
 	cpu.stall(2)
 
@@ -399,7 +398,8 @@ class CPU(object):
 	@send_listeners
 	def crget(self, cr):
 		val = self.reg[8 + cr]
-		if cr == 0: val += 1
+		# decrement when reading PC as we've already incremented in fetch()
+		if cr == 0: val -= 1
 		return val
 
 	@send_listeners
