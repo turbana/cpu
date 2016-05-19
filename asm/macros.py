@@ -106,6 +106,7 @@ def call(addr):
 		sub $7, $7, 1
 		stw 0($7), $6
 		lcr $6, $cr0
+		add $6, $6, 3
 		jmp {addr}
 		ldw $6, 0($7)
 		add $7, $7, 1
@@ -126,5 +127,5 @@ def leave():
 	return """
 		add $7, $0, $6
 		ldw $6, -1($6)
-		jal $0, $0($6)
+		jmp $0($6)
 	"""
