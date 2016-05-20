@@ -330,7 +330,7 @@ class CPU(object):
 		read_args = [str(arg) for arg in token.args if not arg.dest]
 		if self.mem_write_reg in read_args:
 			self.clock += 1
-		self.mem_write_reg = str(token.tgt) if token.name == "ldw" else None
+		self.mem_write_reg = str(token.tgt) if token.name in ("ldw", "ldiw") else None
 
 	@send_listeners
 	def do_interrupt(self, irq):
