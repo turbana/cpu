@@ -208,10 +208,6 @@ def sar(cpu, ir, op1, op2, tgt):
 	cpu.rset(tgt, res | mask)
 
 @op
-def xor(cpu, tgt, src):
-	cpu.rset(tgt, cpu.rget(tgt) ^ cpu.rget(src))
-
-@op
 def iret(cpu):
 	cpu.reg[PC] = cpu.crget(EPC-8)
 	cpu.reg[FLAGS] |= IE
