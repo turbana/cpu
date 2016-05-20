@@ -56,8 +56,8 @@ sbp:
 	.push	$1			; push 0xF171			|@|  75 ($7=0021)
 					;				<memory test>
 	sub	$7, $7, 1		; .call count_bits		|@|  77 ($7=0020)
-	lcr	$5, $cr0		;				|@|  78 ($5=002C)
-	add	$5, $5, 2		;				|@|  79 ($5=002E)
+	lcr	$5, $cr0		;				|@|  78 ($5=002A)
+	add	$5, $5, 4		;				|@|  79 ($5=002E)
 	stw	0($7), $5		;				<memory test>
 	jmp	count_bits		;
 	.pop	$2			; $2 = result = 9		|@| 236 ($2=0009)
@@ -65,8 +65,8 @@ sbp:
 	xor	$3, $1, $2		; $3 = $1 ^ $2 = 0xF178		|@| 238 ($3=F178)
 					;
 	.ldi	$1, test		; $1 = &test			|@| 240 ($1=0035)
-	lcr	$2, $cr0		; $2 = PC + 2 (&test)		|@| 241 ($2=0035)
-	add	$0, $0, $0		; noop
+	lcr	$2, $cr0		; 				|@| 241 ($2=0033)
+	add	$2, $2, 2		; $2 = &test			|@| 242 ($2=0035)
 test:	s.eq	$1, $2			; skip if same address
 	add	$3, $3, $1		; scramble $3
 					;				|@| 244 ($3=F178)

@@ -88,7 +88,7 @@ run_tests pow.asm
 ## run_tests test3.asm
 ## run_tests testimem.asm
 ## run_tests testimem2.asm
-# run_tests testisa.asm
+run_tests testisa.asm
 ## run_tests timer.asm
 
 exit $status
