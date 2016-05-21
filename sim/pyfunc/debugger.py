@@ -8,6 +8,9 @@ FLAGS = 9
 EPC   = 10
 REGISTER_COUNT = 10
 
+ADDR_TYPE_D = 0
+ADDR_TYPE_I = 1
+
 
 def hex_word(n):
 	h = hex(n)[2:].upper().zfill(4)
@@ -33,13 +36,12 @@ def show(*strs):
 
 def dump(mem, mstart=None, mend=None):
 	if mstart is not None and mend is not None:
-		for i, addr in enumerate(range(mstart*2, mend*2, 2)):
+		for i, addr in enumerate(range(mstart, mend)):
 			if (i % 8) == 0:
 				if i > 0:
 					show("\n")
-				show("%04X | " % (addr/2))
-			word = (mem[addr] << 8) | mem[addr+1]
-			show("%04X " % word)
+				show("%04X | " % (addr))
+			show("%04X " % mem[addr])
 		show("\n")
 
 
@@ -59,11 +61,11 @@ class Debugger(object):
 		self.brk_addrs = set()
 		self.brk_opcodes = set()
 
-	def before_dload(self, bytes):
-		self.drange[1] = len(bytes) / 2
+	def before_dload(self, words):
+		self.drange[1] = len(words)
 
-	def before_iload(self, bytes):
-		self.irange[1] = len(bytes) / 2
+	def before_iload(self, words):
+		self.irange[1] = len(words)
 
 	def before_fetch(self):
 		if self.cpu.reg[PC] in self.brk_addrs:
@@ -79,7 +81,8 @@ class Debugger(object):
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
 			show("\n")
-			dump(self.cpu.dmem, *self.drange)
+			mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_D]
+			dump(mem, *self.drange)
 		show("\n")
 		if token is not None:
 			words = asm.encoding.encode(token)
@@ -124,11 +127,13 @@ class Debugger(object):
 				elif cmd[0] == "mem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					dump(self.cpu.dmem, addr1, addr2 + 1)
+					mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_D]
+					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "imem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					dump(self.cpu.imem, addr1, addr2 + 1)
+					mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_I]
+					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "memr":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
@@ -140,35 +145,27 @@ class Debugger(object):
 				elif cmd[0] == "mem!":
 					addr = int(cmd[1], 16)
 					val = int(cmd[2], 16)
-					self.cpu.mset(addr*2, val, byte=False)
+					self.cpu.mset(addr, val)
 				elif cmd[0] == "imem!":
 					addr = int(cmd[1], 16)
 					val = int(cmd[2], 16)
-					self.cpu.iset(addr*2, val, byte=False)
+					self.cpu.iset(addr, val)
 				elif cmd[0] == "dis":
 					if len(cmd) == 1:
 						addr1, addr2 = self.irange
 					else:
 						addr1 = int(cmd[1], 16)
 						addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					for addr in range(addr1*2, (addr2+1)*2, 2):
+					for addr in range(addr1, addr2+1):
 						opcode = self.cpu.iget(addr)
 						inst = asm.encoding.decode(opcode)
-						show("%04X | (%04X)\t%s\n" % (addr/2, opcode, inst))
+						show("%04X | (%04X)\t%s\n" % (addr, opcode, inst))
 				elif cmd[0] == "reg!":
 					reg_mapping = {"$1":1, "$2":2, "$3":3, "$4":4, "$5":5, "$6":6, "$7":7,
 					               "$cr0": 8, "$cr1": 9, "$cr2": 10}
 					reg = reg_mapping[cmd[1]] if cmd[1] in reg_mapping else int(reg[1])
 					val = int(cmd[2], 16)
 					self.cpu.rset(reg, val)
-				elif cmd[0] == "io":
-					port = int(cmd[1], 16)
-					val = self.cpu.io(port)
-					show("%02X | %02X\n" % (port, val))
-				elif cmd[0] == "io!":
-					port = int(cmd[1], 16)
-					val = int(cmd[2], 16)
-					self.cpu.io(port, val)
 				elif cmd[0] in ("?", "h", "help"):
 					show("q|quit            halts\n")
 					show("s|step            step\n")
@@ -184,8 +181,6 @@ class Debugger(object):
 					show("mem! addr val     set data mem @addr to val\n")
 					show("imem! addr val    set instruction mem @addr to val\n")
 					show("reg! reg val      set register to val\n")
-					show("io addr           read from io port @addr\n")
-					show("io! addr val      write val to io port @addr\n")
 					show("dis addr [addr]   disassemble imem\n")
 				else:
 					show("unknown command:", " ".join(cmd), "\n")
