@@ -26,11 +26,20 @@ SCR_ADDR = 0x0020
 KB_ADDR  = 0x0030
 EOI_VAL = 0x00AB
 
-PC    = 8 # register
-FLAGS = 9
-EPC   = 10
+# registers
+R_ZERO		= 0
+R_PC		= 8
+R_DS		= 9
+R_CS		= 10
+R_FLAGS		= 11
+R_EPC		= 12
+R_EDS		= 13
+R_ECS		= 14
+R_EFLAGS	= 15
 
-IE = 1 # interrupts enabled flag bit
+# $flags register (bit masks)
+FLAGS_IE	= 0x1
+FLAGS_M		= 0x2
 
 
 def sbin(n, x=0):
@@ -104,15 +113,15 @@ def stw(cpu, base, src, index, ir):
 
 @op
 def jmp(cpu, offset):
-	# jmp is PC + offset, but we've already incremented PC in cpu.fetch()
-	cpu.reg[PC] += offset - 1
+	# decrement PC as we've already incremented it in cpu.fetch()
+	cpu.reg[R_PC] += offset - 1
 	cpu.stall(2)
 
 @op
 def jmp(cpu, index, base, ir):
 	base = cpu.rget(base)
 	if not ir: index = cpu.rget(index)
-	cpu.reg[PC] = base + index
+	cpu.reg[R_PC] = base + index
 	cpu.stall(2)
 
 @op
@@ -152,7 +161,7 @@ def s(cpu, cond, op1, op2, ir):
 	if not ir: op2 = cpu.rget(op2)
 	func = condition_func[cond]
 	if func(op1, op2):
-		cpu.reg[PC] += 1
+		cpu.reg[R_PC] += 1
 		cpu.stall()
 
 @op
@@ -162,7 +171,7 @@ def as_z(cpu, ir, op1, op2, tgt):
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res == 0:
-		cpu.reg[PC] += 1
+		cpu.reg[R_PC] += 1
 		cpu.stall()
 
 @op
@@ -172,7 +181,7 @@ def as_nz(cpu, ir, op1, op2, tgt):
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res != 0:
-		cpu.reg[PC] += 1
+		cpu.reg[R_PC] += 1
 		cpu.stall()
 
 @op
@@ -209,9 +218,11 @@ def sar(cpu, ir, op1, op2, tgt):
 
 @op
 def iret(cpu):
-	cpu.reg[PC] = cpu.crget(EPC-8)
-	cpu.reg[FLAGS] |= IE
-	cpu.stall(2)
+	cpu.reg[R_PC] = cpu.reg[R_EPC]
+	cpu.reg[R_CS] = cpu.reg[R_ECS]
+	cpu.reg[R_DS] = cpu.reg[R_EDS]
+	cpu.reg[R_FLAGS] = cpu.reg[R_EFLAGS] | (1 << FLAGS_IE)
+	cpu.stall(2)				# TODO check stall value
 
 @op
 def lcr(cpu, tgt, cr):
@@ -293,18 +304,18 @@ class CPU(object):
 		while not self.halt:
 			self.cycle()
 
-	@ send_listeners
+	@send_listeners
 	def reset(self):
-		self.reg[PC] = 0
-		self.reg[EPC] = 0
-		self.reg[FLAGS] = 0
+		self.reg[R_PC] = 0
+		self.reg[R_CS] = 0
+		self.reg[R_DS] = 0
+		self.reg[R_FLAGS] = 0
 
 	@send_listeners
 	def cycle(self):
 		self.pic.tick()
-		if (self.reg[FLAGS] & IE) and self.pic.int_line:
-			irq = self.pic.get_interrupt()
-			self.do_interrupt(irq)
+		if (self.reg[R_FLAGS] & FLAGS_IE) and self.pic.int_line:
+			self.do_interrupt()
 		if self.stalls:
 			self.stalls -= 1
 			tok = None
@@ -334,14 +345,20 @@ class CPU(object):
 
 	@send_listeners
 	def do_interrupt(self, irq):
-		self.reg[EPC] = self.reg[PC]
-		self.reg[PC] = IDT_ADDR | irq
-		self.reg[FLAGS] &= ~IE
+		# save state
+		self.reg[R_EPC] = self.reg[R_PC]
+		self.reg[R_EDS] = self.reg[R_DS]
+		self.reg[R_ECS] = self.reg[R_CS]
+		self.reg[R_EFLAGS] = self.reg[R_FLAGS]
+		# disable interrupts
+		self.reg[FLAGS] &= ~FLAGS_IE
+		# jump to isr
+		self.reg[PC] = self.pic.read(DEV_PIC_DATA)
 
 	@send_listeners
 	def fetch(self):
-		pc = self.reg[PC]
-		self.reg[PC] = (pc + 1) & 0xFFFF
+		pc = self.reg[R_PC]
+		self.reg[R_PC] = (pc + 1) & 0xFFFF
 		return self.iget(pc * 2)
 
 	@send_listeners
@@ -388,8 +405,10 @@ class CPU(object):
 
 	@send_listeners
 	def rset(self, reg, value):
-		if reg != 0:
-			self.reg[reg] = (value & 0xFFFF)
+		# ignore writes to $0 and (when in user mode) writes to control registers
+		if reg == R_ZERO or (reg >= 8 and self.reg[R_FLAGS] & FLAGS_M):
+			return
+		self.reg[reg] = (value & 0xFFFF)
 
 	@send_listeners
 	def crget(self, cr):
