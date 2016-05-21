@@ -26,20 +26,28 @@ SCR_ADDR = 0x0020
 KB_ADDR  = 0x0030
 EOI_VAL = 0x00AB
 
+# address bus is 23 bits: segment (6), data/instruction (1), addr (16)
+ADDR_BUS_WIDTH = 23
+REGISTER_COUNT = 16
+
+# segment register width in bits
+SEGMENT_WIDTH = 6
+SEGMENT_COUNT = 2**SEGMENT_WIDTH
+
+ADDR_TYPE_D = 0
+ADDR_TYPE_I = 1
+
 # registers
 R_ZERO		= 0
 R_PC		= 8
-R_DS		= 9
-R_CS		= 10
-R_FLAGS		= 11
-R_EPC		= 12
-R_EDS		= 13
-R_ECS		= 14
-R_EFLAGS	= 15
+R_FLAGS		= 9
+R_EPC		= 10
+R_EFLAGS	= 11
 
 # $flags register (bit masks)
-FLAGS_IE	= 0x1
-FLAGS_M		= 0x2
+FLAGS_IE	= 0x0001
+FLAGS_M		= 0x0002
+FLAGS_SEG	= 0x3F00
 
 
 def sbin(n, x=0):
@@ -93,23 +101,23 @@ def lookup_op(tok):
 
 @op
 def ldw(cpu, tgt, base, offset):
-	cpu.rset(tgt, cpu.mget((cpu.rget(base) + offset) * 2))
+	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset))
 
 @op
 def ldw(cpu, tgt, base, index, ir):
 	base = cpu.rget(base)
 	if not ir: index = cpu.rget(index)
-	cpu.rset(tgt, cpu.mget((base + index) * 2))
+	cpu.rset(tgt, cpu.mget(base + index))
 
 @op
 def stw(cpu, base, src, offset):
-	cpu.mset((offset + cpu.rget(base)) * 2, cpu.rget(src))
+	cpu.mset((offset + cpu.rget(base)), cpu.rget(src))
 
 @op
 def stw(cpu, base, src, index, ir):
 	base = cpu.rget(base)
 	if not ir: index = cpu.rget(index)
-	cpu.mset((index + base) * 2, cpu.rget(src))
+	cpu.mset(index + base, cpu.rget(src))
 
 @op
 def jmp(cpu, offset):
@@ -219,8 +227,6 @@ def sar(cpu, ir, op1, op2, tgt):
 @op
 def iret(cpu):
 	cpu.reg[R_PC] = cpu.reg[R_EPC]
-	cpu.reg[R_CS] = cpu.reg[R_ECS]
-	cpu.reg[R_DS] = cpu.reg[R_EDS]
 	cpu.reg[R_FLAGS] = cpu.reg[R_EFLAGS] | (1 << FLAGS_IE)
 	cpu.stall(2)				# TODO check stall value
 
@@ -234,13 +240,13 @@ def scr(cpu, cr, src):
 
 @op
 def ldiw(cpu, tgt, src):
-	inst = cpu.iget(cpu.rget(src) * 2)
+	inst = cpu.iget(cpu.rget(src))
 	cpu.rset(tgt, inst)
 
 @op
 def stiw(cpu, tgt, src):
 	inst = cpu.rget(src)
-	cpu.iset(cpu.rget(tgt) * 2, inst)
+	cpu.iset(cpu.rget(tgt), inst)
 
 
 # TODO add halt and trap instructions
@@ -263,9 +269,8 @@ def send_listeners(fn):
 
 class CPU(object):
 	def __init__(self, real_clock):
-		self.reg  = [0] * 16
-		self.imem = [0] * 2**17 # memory is 2**16 words therefore 2**17 bytes
-		self.dmem = [0] * 2**17 # ...
+		self.reg = [0] * REGISTER_COUNT
+		self.mem = [None] * SEGMENT_COUNT
 		self.dev = [None] * 2**16
 		self.pic = None
 		self.halt = False
@@ -274,29 +279,41 @@ class CPU(object):
 		self.listeners = collections.defaultdict(list)
 		self.mem_write_reg = None
 		self.stalls = 0
+		self._randomize = False
+		self._loaded_segments = set()
 
 	def randomize(self):
-		word = lambda _: random.randint(0, 2**16-1)
-		byte = lambda _: random.randint(0, 2**8-1)
-		for r in range(1, 8): self.reg[r] = word(0)
-		self.imem = map(byte, self.imem)
-		self.dmem = map(byte, self.dmem)
+		self._randomize = True
+		word = lambda: random.randint(0, 2**16-1)
+		self.reg = [word() for _ in range(REGISTER_COUNT)]
+
+	@property
+	def segment(self):
+		seg = (self.reg[R_FLAGS] & FLAGS_SEG) >> 8
+		if seg not in self._loaded_segments:
+			if self._randomize:
+				word = lambda: random.randint(0, 2**16-1)
+			else:
+				word = lambda: 0
+			self.mem[seg] = [
+				[word() for _ in range(2**16)], # data
+				[word() for _ in range(2**16)], # instruction
+			]
+			self._loaded_segments.add(seg)
+		return seg
 
 	@send_listeners
 	def dload(self, chunk):
-		self._load(self.dmem, chunk)
+		self._load(chunk, ADDR_TYPE_D)
 
 	@send_listeners
 	def iload(self, chunk):
-		self._load(self.imem, chunk)
+		self._load(chunk, ADDR_TYPE_I)
 
-	def _load(self, mem, (addr, words)):
+	def _load(self, (addr, words), addr_type):
+		seg = self.segment
 		for i, word in enumerate(words):
-			high = word >> 8
-			low = word & 0x00FF
-			j = (addr + i) * 2
-			mem[j] = high
-			mem[j+1] = low
+			self.mem[seg][addr_type][addr + i] = word
 
 	@send_listeners
 	def run(self):
@@ -307,8 +324,6 @@ class CPU(object):
 	@send_listeners
 	def reset(self):
 		self.reg[R_PC] = 0
-		self.reg[R_CS] = 0
-		self.reg[R_DS] = 0
 		self.reg[R_FLAGS] = 0
 
 	@send_listeners
@@ -347,11 +362,9 @@ class CPU(object):
 	def do_interrupt(self, irq):
 		# save state
 		self.reg[R_EPC] = self.reg[R_PC]
-		self.reg[R_EDS] = self.reg[R_DS]
-		self.reg[R_ECS] = self.reg[R_CS]
 		self.reg[R_EFLAGS] = self.reg[R_FLAGS]
-		# disable interrupts
-		self.reg[FLAGS] &= ~FLAGS_IE
+		# disable interrupts, enter supervisor mode
+		self.reg[R_FLAGS] = 0
 		# jump to isr
 		self.reg[PC] = self.pic.read(DEV_PIC_DATA)
 
@@ -359,48 +372,36 @@ class CPU(object):
 	def fetch(self):
 		pc = self.reg[R_PC]
 		self.reg[R_PC] = (pc + 1) & 0xFFFF
-		return self.iget(pc * 2)
+		return self.iget(pc)
 
 	@send_listeners
 	def iget(self, addr):
 		self._check_addr(addr)
-		high = self.imem[addr]
-		low = self.imem[addr + 1]
-		byte = (high << 8) | low
-		return byte
+		return self.mem[self.segment][ADDR_TYPE_I][addr]
 
 	@send_listeners
-	def iset(self, addr, val, byte=False):
+	def iset(self, addr, word):
 		self._check_addr(addr)
-		high = (val & 0xFF) if byte else (val >> 8)
-		low  = 0            if byte else (val & 0xFF)
-		self.imem[addr] = high
-		if not byte:
-			self.imem[addr + 1] = low
+		self.mem[self.segment][ADDR_TYPE_I][addr] = word
 
 	@send_listeners
 	def mget(self, addr):
 		self._check_addr(addr)
-		high = self.dmem[addr]
-		low = self.dmem[addr + 1]
-		byte = (high << 8) | low
-		return byte
+		return self.mem[self.segment][ADDR_TYPE_D][addr]
 
 	@send_listeners
-	def mset(self, addr, val, byte=False):
+	def mset(self, addr, word):
 		self._check_addr(addr)
-		high = (val & 0xFF) if byte else (val >> 8)
-		low  = 0            if byte else (val & 0xFF)
-		self.dmem[addr] = high
-		if not byte:
-			self.dmem[addr + 1] = low
+		self.mem[self.segment][ADDR_TYPE_D][addr] = word
 
 	def _check_addr(self, addr):
-		if addr >= 2**17:
+		if addr >= 2**16:
 			raise Exception("Invalid memory access: %04X" % addr)
 
 	@send_listeners
 	def rget(self, reg):
+		if reg == R_ZERO:
+			return 0
 		return self.reg[reg]
 
 	@send_listeners
@@ -412,22 +413,22 @@ class CPU(object):
 
 	@send_listeners
 	def crget(self, cr):
-		val = self.reg[8 + cr]
+		cr += 8
+		val = self.reg[cr]
 		# decrement when reading PC as we've already incremented in fetch()
-		if cr == 0: val -= 1
+		if cr == R_PC: val -= 1
+		# control register reads from user mode return 0
+		if self.reg[R_FLAGS] & FLAGS_M:
+			return 0
 		return val
 
 	@send_listeners
 	def crset(self, cr, value):
-		if cr != 0:
-			self.reg[8 + cr] = (value & 0xFFFF)
-
-	@send_listeners
-	def io(self, addr, val=None):
-		dev = self.dev[addr]
-		if dev is not None:
-			return dev.read(val)
-		raise Exception("error: read to invalid io port: %02X (%s)" % (addr, val))
+		cr += 8
+		# ignore writes to $pc and (when in user mode) writes to control registers
+		if cr == R_PC or self.reg[R_FLAGS] & FLAGS_M:
+			return
+		self.reg[cr] = (value & 0xFFFF)
 
 	def add_listener(self, listener):
 		for attr in dir(listener):
@@ -711,6 +712,7 @@ def main(args):
 
 	if opts.exe:
 		chunks = parse_file(opts.exe)
+		cpu.reset()
 		map(cpu.dload, chunks[0])
 		map(cpu.iload, chunks[1])
 
