@@ -21,7 +21,7 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - 5 stage pipelined RISC architecture
  - 16 bit ALU
  - 8x 16 bit general purpose registers
- - 8x control registers
+ - 4x control registers
  - 22 bit word addressed memory (8MB)
  - Precise external interrupts using an 8259A PIC
  - No support for exceptions or control codes
@@ -29,7 +29,7 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - User/Supervisor modes 
  - Segmentation as a memory protection scheme
  - Separate data and instruction memories
- - 22 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
+ - 23 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
 
 ** Instruction Set
 Most instructions are 3 register instructions with support for a special immediate. Special immediates are 1, 2, 4, 8, -1, -2, -4, and -8.
@@ -98,26 +98,35 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 *** Control Registers
 Control Registers can only be accessed with LCR/SCR instructions. With the exception of $pc, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
 
-| Register | Alias  | Writable | Mode       | Meaning                                          |
-|----------+--------+----------+------------+--------------------------------------------------|
-| $cr0     | $pc    | No       | Any        | Program Counter                                  |
-| $cr1     | $ds    | Yes      | Supervisor | Data Segment (prepended to data memory accesses) |
-| $cr2     | $cs    | Yes      | Supervisor | Code Segment (prepended to code memory accesses) |
-| $cr3     | $flags | Yes      | Supervisor | Processor Flags (see below)                      |
-| $cr4     | $epc   | Yes      | Supervisor | Exceptional Program Counter                      |
-| $cr5     | $eds   | Yes      | Supervisor | Exceptional Data Segment                         |
-| $cr6     | $ecs   | Yes      | Supervisor | Exceptional Code Segment                         |
-| $cr7     | $isr   | No       | Supervisor | Interrupt Service Routine                        |
+| Register | Alias   | Writable | Mode       | Meaning                     |
+|----------+---------+----------+------------+-----------------------------|
+| $cr0     | $pc     | No       | Any        | Program Counter             |
+| $cr1     | $flags  | Yes      | Supervisor | Processor Flags (see below) |
+| $cr2     | $epc    | Yes      | Supervisor | Exceptional Program Counter |
+| $cr3     | $eflags | Yes      | Supervisor | Exceptional Flags           |
 
-**** $cr3 - Flags Register
-|  Bit | Name | Meaning                                     |
-|------+------+---------------------------------------------|
-|    0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enabled |
-|    1 | M    | 0=Supervisor Mode; 1=User Mode              |
-| 2-15 |      | Reserved                                    |
+**** $cr1 - Flags Register
+| Bit | Name | Meaning                                     |
+|-----+------+---------------------------------------------|
+|   0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enabled |
+|   1 | M    | 0=Supervisor Mode; 1=User Mode              |
+|   2 |      | Reserved                                    |
+|   3 |      | Reserved                                    |
+|   4 |      | Reserved                                    |
+|   5 |      | Reserved                                    |
+|   6 |      | Reserved                                    |
+|   7 |      | Reserved                                    |
+|   8 | SEG0 | Segment (low bit)                           |
+|   9 | SEG1 | \vert{}                                     |
+|  10 | SEG2 | \vert{}                                     |
+|  11 | SEG3 | \vert{}                                     |
+|  12 | SEG4 | \vert{}                                     |
+|  13 | SEG5 | Segment (high bit)                          |
+|  14 |      | Reserved                                    |
+|  15 |      | Reserved                                    |
 
 ** Memory
-Segmentation is used for memory protection. The corresponding segment register ($cs/$ds) is concatenated with the logical address, forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segment registers can only be accessed from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped into data segment 0
+Segmentation is used for memory protection. The current segment (found in $flags) is concatenated with the memory type and logical address, forming the physical address that is sent across the bus. Each process is assigned it's own segment. The segment can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped into data segment 0
 
 *** Data Memory Layout
 | 0x00 0000 | RAM         |
