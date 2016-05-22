@@ -31,8 +31,12 @@ ADDR_BUS_WIDTH = 23
 REGISTER_COUNT = 16
 
 # segment register width in bits
-SEGMENT_WIDTH = 6
-SEGMENT_COUNT = 2**SEGMENT_WIDTH
+DSEG_WIDTH	= 6
+CSEG_WIDTH	= 6
+DSEG_SIZE	= 2**DSEG_WIDTH
+CSEG_SIZE	= 2**CSEG_WIDTH
+DSEG_POS	= 10
+CSEG_POS	= 4
 
 ADDR_TYPE_D = 0
 ADDR_TYPE_I = 1
@@ -47,7 +51,8 @@ R_EFLAGS	= 11
 # $flags register (bit masks)
 FLAGS_IE	= 0x0001
 FLAGS_M		= 0x0002
-FLAGS_SEG	= 0x3F00
+FLAGS_CSEG	= 0x03F0
+FLAGS_DSEG	= 0xFC00
 
 
 def sbin(n, x=0):
@@ -270,7 +275,7 @@ def send_listeners(fn):
 class CPU(object):
 	def __init__(self, real_clock):
 		self.reg = [0] * REGISTER_COUNT
-		self.mem = [None] * SEGMENT_COUNT
+		self.mem = [None] * max(DSEG_SIZE, CSEG_SIZE)
 		self.dev = [None] * 2**16
 		self.pic = None
 		self.halt = False
@@ -288,8 +293,18 @@ class CPU(object):
 		self.reg = [word() for _ in range(REGISTER_COUNT)]
 
 	@property
-	def segment(self):
-		seg = (self.reg[R_FLAGS] & FLAGS_SEG) >> 8
+	def dsegment(self):
+		seg = (self.reg[R_FLAGS] & FLAGS_DSEG) >> DSEG_POS
+		self._load_segment(seg)
+		return seg
+
+	@property
+	def csegment(self):
+		seg = (self.reg[R_FLAGS] & FLAGS_CSEG) >> CSEG_POS
+		self._load_segment(seg)
+		return seg
+
+	def _load_segment(self, seg):
 		if seg not in self._loaded_segments:
 			if self._randomize:
 				word = lambda: random.randint(0, 2**16-1)
@@ -300,20 +315,18 @@ class CPU(object):
 				[word() for _ in range(2**16)], # instruction
 			]
 			self._loaded_segments.add(seg)
-		return seg
 
 	@send_listeners
-	def dload(self, chunk):
-		self._load(chunk, ADDR_TYPE_D)
-
-	@send_listeners
-	def iload(self, chunk):
-		self._load(chunk, ADDR_TYPE_I)
-
-	def _load(self, (addr, words), addr_type):
-		seg = self.segment
+	def dload(self, (addr, words)):
+		seg = self.dsegment
 		for i, word in enumerate(words):
-			self.mem[seg][addr_type][addr + i] = word
+			self.mem[seg][ADDR_TYPE_D][addr + i] = word
+
+	@send_listeners
+	def iload(self, (addr, words)):
+		seg = self.csegment
+		for i, word in enumerate(words):
+			self.mem[seg][ADDR_TYPE_I][addr + i] = word
 
 	@send_listeners
 	def run(self):
@@ -377,22 +390,22 @@ class CPU(object):
 	@send_listeners
 	def iget(self, addr):
 		self._check_addr(addr)
-		return self.mem[self.segment][ADDR_TYPE_I][addr]
+		return self.mem[self.csegment][ADDR_TYPE_I][addr]
 
 	@send_listeners
 	def iset(self, addr, word):
 		self._check_addr(addr)
-		self.mem[self.segment][ADDR_TYPE_I][addr] = word
+		self.mem[self.csegment][ADDR_TYPE_I][addr] = word
 
 	@send_listeners
 	def mget(self, addr):
 		self._check_addr(addr)
-		return self.mem[self.segment][ADDR_TYPE_D][addr]
+		return self.mem[self.dsegment][ADDR_TYPE_D][addr]
 
 	@send_listeners
 	def mset(self, addr, word):
 		self._check_addr(addr)
-		self.mem[self.segment][ADDR_TYPE_D][addr] = word
+		self.mem[self.dsegment][ADDR_TYPE_D][addr] = word
 
 	def _check_addr(self, addr):
 		if addr >= 2**16:

@@ -6,7 +6,7 @@ import asm.encoding
 PC    = 8 # register
 FLAGS = 9
 EPC   = 10
-REGISTER_COUNT = 10
+REGISTER_COUNT = 11
 
 ADDR_TYPE_D = 0
 ADDR_TYPE_I = 1
@@ -81,7 +81,7 @@ class Debugger(object):
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
 			show("\n")
-			mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_D]
+			mem = self.cpu.mem[self.cpu.dsegment][ADDR_TYPE_D]
 			dump(mem, *self.drange)
 		show("\n")
 		if token is not None:
@@ -127,12 +127,12 @@ class Debugger(object):
 				elif cmd[0] == "mem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_D]
+					mem = self.cpu.mem[self.cpu.dsegment][ADDR_TYPE_D]
 					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "imem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					mem = self.cpu.mem[self.cpu.segment][ADDR_TYPE_I]
+					mem = self.cpu.mem[self.cpu.csegment][ADDR_TYPE_I]
 					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "memr":
 					addr1 = int(cmd[1], 16)

@@ -59,23 +59,23 @@ class ErrorChecker(object):
 		self.dmem = set()
 
 	def after_iload(self, _, (addr, words)):
-		for n in range(len(words)*2):
-			self.imem.add(addr*2 + n)
+		for n in range(len(words)):
+			self.imem.add(addr + n)
 
 	def after_dload(self, _, (addr, words)):
-		for n in range(len(words)*2):
+		for n in range(len(words)):
 			self.dmem.add(addr + n)
 
 	def before_iget(self, addr):
 		if addr not in self.imem:
-			raise Exception("ERROR: read from imem 0x%04X before write\n" % (addr/2))
+			raise Exception("ERROR: read from imem 0x%04X before write\n" % (addr))
 
 	def before_iset(self, addr):
 		self.imem.add(addr)
 
 	def before_dget(self, addr):
 		if addr not in self.dmem:
-			raise Exception("ERROR: read from mem 0x%04X before write\n" % (addr/2))
+			raise Exception("ERROR: read from mem 0x%04X before write\n" % (addr))
 
 	def before_dset(self, addr):
 		self.imem.add(addr)
