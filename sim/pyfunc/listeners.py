@@ -22,9 +22,9 @@ class Tracer(object):
 	def show(self, data):
 		self.stream.write(data)
 
-	def after_fetch(self, opcode):
+	def before_execute(self, token):
 		addr = self.cpu.reg[PC] - 1
-		toks = str(asm.encoding.decode(opcode)).split("\t")
+		toks = str(token).split("\t")
 		tok = "%-8s %s" % (toks[0], toks[1])
 		regs = registers(self.cpu, 1, 11)
 		left = "%04X | %s" % (addr, tok)
