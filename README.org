@@ -106,27 +106,27 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 | $cr3     | $eflags | Yes      | Supervisor | Exceptional Flags           |
 
 **** $cr1 - Flags Register
-| Bit | Name  | Meaning                                     |
-|-----+-------+---------------------------------------------|
-|   0 | IE    | 0=Interrupts Disabled; 1=Interrupts Enabled |
-|   1 | M     | 0=Supervisor Mode; 1=User Mode              |
-|   2 |       | Reserved                                    |
-|   3 |       | Reserved                                    |
-|   4 | CSEG0 | Code Segment (low bit)                      |
-|   5 | CSEG1 | \vert{}                                     |
-|   6 | CSEG2 | \vert{}                                     |
-|   7 | CSEG3 | \vert{}                                     |
-|   8 | CSEG4 | \vert{}                                     |
-|   9 | CSEG5 | Code Segment (high bit)                     |
-|  10 | DSEG0 | Data Segment (low bit)                      |
-|  11 | DSEG1 | \vert{}                                     |
-|  12 | DSEG2 | \vert{}                                     |
-|  13 | DSEG3 | \vert{}                                     |
-|  14 | DSEG4 | \vert{}                                     |
-|  15 | DSEG5 | Data Segment (high bit)                     |
+| Bit | Name | Meaning                                     |
+|-----+------+---------------------------------------------|
+|   0 | IE   | 0=Interrupts Disabled; 1=Interrupts Enabled |
+|   1 | M    | 0=Supervisor Mode; 1=User Mode              |
+|   2 |      | Reserved                                    |
+|   3 |      | Reserved                                    |
+|   4 | CS0  | Code Segment (low bit)                      |
+|   5 | CS1  | \vert{}                                     |
+|   6 | CS2  | \vert{}                                     |
+|   7 | CS3  | \vert{}                                     |
+|   8 | CS4  | \vert{}                                     |
+|   9 | CS5  | Code Segment (high bit)                     |
+|  10 | DS0  | Data Segment (low bit)                      |
+|  11 | DS1  | \vert{}                                     |
+|  12 | DS2  | \vert{}                                     |
+|  13 | DS3  | \vert{}                                     |
+|  14 | DS4  | \vert{}                                     |
+|  15 | DS5  | Data Segment (high bit)                     |
 
 ** Memory
-Segmentation is used for memory protection. The corresponding segment (instruction/data found in $flags) is concatenated with the logical address (and memory type), forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segments can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto data segment 0.
+Segmentation is used for memory protection. The corresponding segment (instruction/data found in $flags) is concatenated with the logical address (and memory type), forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segments can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto data segment 0. To support accessing an arbitrary segment's instruction memory, instruction fetch is hardwired to segment 0 while in supervisor mode.
 
 *** Data Memory Layout
 | 0x00 0000 | RAM         |
