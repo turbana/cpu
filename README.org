@@ -32,7 +32,7 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - 23 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
 
 ** Instruction Set
-Most instructions are 3 register instructions with support for a special immediate. Special immediates are 1, 2, 4, 8, -1, -2, -4, and -8.
+Most instructions are 3 register instructions where the 2nd operand can be replaced with a 4 bit special signed immediate. Positive immediate values are added with 1 while negative immediates are unchanged, giving the range [-8 - -1, 1 - 8]. If a 0 is required register $0 is hardwired to return 0.
 
 Effort was made to use relative addressing modes to encourage PC independent code. Two jump instructions support both base + index and PC-relative addressing. Data accesses support base + index and base + offset, while instruction accesses support only base + index. Absolute addressing must first load an address into a register.
 
@@ -68,9 +68,6 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 | trap     |                       | Enter supervisor mode; disable interrupts; jump to kernel routine |
 | halt     |                       | Execution halts                                                   |
 | iret     |                       | Enter user mode; enable interrupts; jump to $epc                  |
-
-***** Special Immediates
-8 possible values: 1, 2, 4, 8, -1, -2, -4, -8
 
 ***** Conditionals
 | s.eq   | ==          |
