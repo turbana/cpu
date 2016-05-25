@@ -20,11 +20,20 @@ import listeners
 MAGIC_HEADER = 0xDEADF00D
 TIMER_PERIOD = 250
 
-IDT_ADDR = 0x0100
-PIC_ADDR = 0x0010
-SCR_ADDR = 0x0020
-KB_ADDR  = 0x0030
-EOI_VAL = 0x00AB
+# device addresses (within data segment 0)
+DEV_PIC		= 0xFF80
+DEV_UART0	= 0xFF90
+DEV_UART1	= 0xFFA0
+DEV_555		= 0xFFB0
+DEV_IDE		= 0xFFC0
+
+DEV_MASK	= 0xFFF0
+
+# IRQ assignments
+IRQ_IDE		= 2
+IRQ_UART0	= 3
+IRQ_UART1	= 4
+IRQ_555		= 6
 
 # address bus is 23 bits: segment (6), data/instruction (1), addr (16)
 ADDR_BUS_WIDTH = 23
@@ -233,7 +242,7 @@ def sar(cpu, ir, op1, op2, tgt):
 def iret(cpu):
 	cpu.reg[R_PC] = cpu.reg[R_EPC]
 	cpu.reg[R_FLAGS] = cpu.reg[R_EFLAGS] | (1 << FLAGS_IE)
-	cpu.stall(2)				# TODO check stall value
+	cpu.stall(3)
 
 @op
 def lcr(cpu, tgt, cr):
@@ -276,7 +285,7 @@ class CPU(object):
 	def __init__(self, real_clock):
 		self.reg = [0] * REGISTER_COUNT
 		self.mem = [None] * max(DSEG_SIZE, CSEG_SIZE)
-		self.dev = [None] * 2**16
+		self.devices = []
 		self.pic = None
 		self.halt = False
 		self.real_clock = real_clock
@@ -341,8 +350,8 @@ class CPU(object):
 
 	@send_listeners
 	def cycle(self):
-		self.pic.tick()
-		if (self.reg[R_FLAGS] & FLAGS_IE) and self.pic.int_line:
+		self.tick()
+		if (self.reg[R_FLAGS] & FLAGS_IE) and self.pic.int:
 			self.do_interrupt()
 		if self.stalls:
 			self.stalls -= 1
@@ -372,14 +381,16 @@ class CPU(object):
 		self.mem_write_reg = str(token.tgt) if token.name in ("ldw", "ldiw") else None
 
 	@send_listeners
-	def do_interrupt(self, irq):
+	def do_interrupt(self):
 		# save state
 		self.reg[R_EPC] = self.reg[R_PC]
 		self.reg[R_EFLAGS] = self.reg[R_FLAGS]
 		# disable interrupts, enter supervisor mode
 		self.reg[R_FLAGS] = 0
 		# jump to isr
-		self.reg[PC] = self.pic.read(DEV_PIC_DATA)
+		self.reg[R_PC] = self.pic.isr
+		# stall
+		self.stall(6)
 
 	@send_listeners
 	def fetch(self):
@@ -400,12 +411,17 @@ class CPU(object):
 	@send_listeners
 	def mget(self, addr):
 		self._check_addr(addr)
-		return self.mem[self.dsegment][ADDR_TYPE_D][addr]
+		value = self.device_read(addr)
+		if value is not None:
+			return value
+		else:
+			return self.mem[self.dsegment][ADDR_TYPE_D][addr]
 
 	@send_listeners
 	def mset(self, addr, word):
 		self._check_addr(addr)
-		self.mem[self.dsegment][ADDR_TYPE_D][addr] = word
+		if not self.device_write(addr, word):
+			self.mem[self.dsegment][ADDR_TYPE_D][addr] = word
 
 	def _check_addr(self, addr):
 		if addr >= 2**16:
@@ -448,6 +464,28 @@ class CPU(object):
 			if attr.startswith("before_") or attr.startswith("after_"):
 				self.listeners[attr].append(getattr(listener, attr))
 
+	def add_device(self, device, mask):
+		self.devices.append((mask, device))
+
+	def tick(self):
+		for mask, device in self.devices:
+			device.tick()
+
+	def device_read(self, addr):
+		for dev_addr, device in self.devices:
+			if (addr & DEV_MASK) == dev_addr:
+				register = addr & ~DEV_MASK
+				return device.read(register)
+		return None
+
+	def device_write(self, addr, value):
+		for dev_addr, device in self.devices:
+			if (addr & DEV_MASK) == dev_addr:
+				register = addr & ~DEV_MASK
+				device.write(register, value)
+				return True
+		return False
+
 
 def dump_short(cpu):
 	for r in xrange(1, 10):
@@ -466,7 +504,10 @@ class Device(object):
 	def tick(self):
 		pass
 
-	def read(self, write=None):
+	def read(self, addr):
+		return 0
+
+	def write(self, addr, value):
 		pass
 
 
@@ -482,10 +523,11 @@ class TimerDevice(Device):
 			self.count = 0
 			self.pic.interrupt(self)
 
-	def read(self, count=None):
-		if count is None:
-			return self.count
-		self.count = count
+	def read(self, addr):
+		return self.count
+
+	def write(self, addr, value):
+		self.count = value
 
 
 class PICDevice(Device):
@@ -493,20 +535,28 @@ class PICDevice(Device):
 		self.devices = [None] * 8
 		self.cpu = cpu
 		self.pending = 0
-		self.int_line = False
+		self.idt = None
 
-	def tick(self):
-		for dev in self.devices:
-			if dev is not None:
-				dev.tick()
+	@property
+	def int(self):
+		return self.pending != 0
 
-	def read(self, val):
-		if val != EOI_VAL:
-			show("pic error: received wrong value for EOI:", val, "\n")
+	@property
+	def isr(self):
+		if self.idt is None:
+			show("pic error: interrupt serviced before programming PIC")
 			sys.exit(1)
-		irq = self.get_interrupt()
-		self.pending &= ~(1 << irq)
-		self.int_line = self.pending != 0
+		if self.irq is None:
+			show("pic error: interrupt serviced before interrupt raised")
+			sys.exit(1)
+		return self.idt | self.irq
+
+	@property
+	def irq(self):
+		for irq in range(8):
+			if self.pending & (1 << irq):
+				return irq
+		return None
 
 	def register(self, dev, irq):
 		self.devices[irq] = dev
@@ -514,18 +564,26 @@ class PICDevice(Device):
 
 	def interrupt(self, dev):
 		irq = self.devices.index(dev)
-		already = self.pending & (1 << irq)
-		self.pending |= (1 << irq)
-		# TODO check for priority
-		if not already:
-			self.int_line = True
+		self.pending |= 1 << irq
 
-	def get_interrupt(self):
-		self.int_line = False
-		for irq in range(8):
-			if self.pending & (1 << irq):
-				return irq
-		return None
+	def write(self, addr, value):
+		value &= 0x00FF
+		# ICW1
+		if addr == 0 and (value & 0x08):
+			self.pending = 0
+		# ICW2
+		elif addr == 1:
+			self.idt = value & 0xF8
+		# OCW2
+		elif addr == 0 and (value & 0x18) == 0:
+			eoi = (value & 0x20) >> 5
+			sl = (value & 0x40) >> 6
+			level = (value & 0x03)
+			if eoi:
+				level = self.irq if not sl else level
+				self.pending &= ~(1 << level)
+		else:
+			show("pic error: unexpected write: reg=%d val=0x%02X" % (addr, value))
 
 
 class KeyboardDevice(Device):
@@ -542,12 +600,14 @@ class KeyboardDevice(Device):
 			if self.buffer:
 				self.pic.interrupt(self)
 
-	def read(self, val=None):
-		if val is not None:
-			show("keyboard error: tried to write value:", val, "\n")
-			sys.exit(1)
+	def read(self, addr):
 		with self.lock:
 			return self.buffer.pop() if self.buffer else 0
+
+	def write(self, addr, value):
+		if value is not None:
+			show("keyboard error: tried to write value:", value, "\n")
+			sys.exit(1)
 
 
 def keyboard_thread(lock, buffer):
@@ -566,17 +626,17 @@ class NullKeyboardDevice(Device):
 		if self.buffer:
 			self.pic.interrupt(self)
 
-	def read(self, val=None):
-		if val is not None:
-			self.buffer.append(val)
-			return 0
+	def read(self, addr):
 		return self.buffer.pop(0) if self.buffer else 0
+
+	def write(self, addr, value):
+		if value is not None:
+			self.buffer.append(value)
 
 
 class ScreenDevice(Device):
-	def read(self, val=None):
-		if val is not None:
-			sys.stdout.write(chr(val))
+	def write(self, addr, value):
+		sys.stdout.write(chr(value))
 
 
 def load_devices(cpu, keyboard=False):
@@ -587,12 +647,14 @@ def load_devices(cpu, keyboard=False):
 	else:
 		kb = NullKeyboardDevice()
 	scr = ScreenDevice()
-	pic.register(timer, 7)
-	pic.register(kb, 2)
+	pic.register(timer, IRQ_555)
+	pic.register(kb, IRQ_UART0)
+	pic.register(scr, IRQ_UART1)
+	cpu.add_device(pic, DEV_PIC)
+	cpu.add_device(kb, DEV_UART0)
+	cpu.add_device(scr, DEV_UART1)
+	cpu.add_device(timer, DEV_555)
 	cpu.pic = pic
-	cpu.dev[PIC_ADDR] = pic
-	cpu.dev[SCR_ADDR] = scr
-	cpu.dev[KB_ADDR]  = kb
 
 
 # following three functions modified from:
