@@ -86,10 +86,11 @@ def apply_directives(toks):
 def apply_variables(tok, vars):
 	for i,arg in enumerate(tok.args):
 		if isinstance(arg, tokens.Label):
-			if arg.value in vars:
-				arg_name = tok.args[i].name
-				tok.args[i] = vars[arg.value]
-				tok.args[i].name = arg_name
+			while arg.value in vars.keys():
+				name = arg.name
+				arg = vars[arg.value]
+				arg.name = name
+				tok.args[i] = arg
 		elif isinstance(arg, tokens.Expression):
 			apply_variables(arg, vars)
 
