@@ -70,7 +70,7 @@ class ErrorChecker(object):
 		if addr not in self.imem:
 			raise Exception("ERROR: read from imem 0x%04X before write\n" % (addr))
 
-	def before_iset(self, addr):
+	def before_iset(self, addr, value):
 		self.imem.add(addr)
 
 	def before_dget(self, addr):
