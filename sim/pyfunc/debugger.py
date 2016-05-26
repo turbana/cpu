@@ -52,6 +52,23 @@ def reg_dump(cpu, top_reg):
 		show("%s:  %s  |  %s  =  %6s\n" % (name, bin_word(v), hex_word(v), twoc_sign(v)))
 
 
+class segment_change(object):
+	def __init__(self, debugger):
+		self.debugger = debugger
+		self.cpu = debugger.cpu
+		self.old_flags = self.cpu.reg[FLAGS]
+		self.new_flags = (debugger.segment << 10) | (debugger.segment << 6)
+		self.old_segment = debugger.segment
+
+	def __enter__(self):
+		self.cpu.reg[FLAGS] = self.new_flags
+		return self.cpu
+
+	def __exit__(self, type, value, traceback):
+		self.cpu.reg[FLAGS] = self.old_flags
+		self.debugger.segment = self.old_segment
+
+
 class Debugger(object):
 	def __init__(self, cpu):
 		self.cpu = cpu
@@ -60,6 +77,7 @@ class Debugger(object):
 		self.irange = [0, 0]
 		self.brk_addrs = set()
 		self.brk_opcodes = set()
+		self.segment = 0
 
 	def before_dload(self, words):
 		self.drange[1] = len(words)
@@ -73,15 +91,16 @@ class Debugger(object):
 
 	def before_execute(self, token):
 		if self.step:
-			self.normal_dump(token)
-			self.command()
+			with segment_change(self):
+				self.normal_dump(token)
+				self.command()
 
 	def normal_dump(self, token=None):
 		show(" "*40 + "clock:", self.cpu.clock, "\n")
 		reg_dump(self.cpu, 7)
 		if sum(self.drange):
 			show("\n")
-			mem = self.cpu.mem[self.cpu.dsegment][ADDR_TYPE_D]
+			mem = self.cpu.mem[self.segment][ADDR_TYPE_D]
 			dump(mem, *self.drange)
 		show("\n")
 		if token is not None:
@@ -127,12 +146,12 @@ class Debugger(object):
 				elif cmd[0] == "mem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					mem = self.cpu.mem[self.cpu.dsegment][ADDR_TYPE_D]
+					mem = self.cpu.mem[self.segment][ADDR_TYPE_D]
 					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "imem":
 					addr1 = int(cmd[1], 16)
 					addr2 = int(cmd[2], 16) if len(cmd) == 3 else addr1
-					mem = self.cpu.mem[self.cpu.csegment][ADDR_TYPE_I]
+					mem = self.cpu.mem[self.segment][ADDR_TYPE_I]
 					dump(mem, addr1, addr2 + 1)
 				elif cmd[0] == "memr":
 					addr1 = int(cmd[1], 16)
@@ -166,6 +185,15 @@ class Debugger(object):
 					reg = reg_mapping[cmd[1]] if cmd[1] in reg_mapping else int(reg[1])
 					val = int(cmd[2], 16)
 					self.cpu.rset(reg, val)
+				elif cmd[0] == "seg":
+					seg = int(cmd[1], 16)
+					self.segment = seg
+					# set $flags now, will be reset after command
+					flags = (seg << 10) | (seg << 4)
+					self.cpu.reg[FLAGS] = flags
+					# poke both memories to ensure they're loaded
+					self.cpu.mget(0)
+					self.cpu.iget(0)
 				elif cmd[0] in ("?", "h", "help"):
 					show("q|quit            halts\n")
 					show("s|step            step\n")
@@ -182,6 +210,7 @@ class Debugger(object):
 					show("imem! addr val    set instruction mem @addr to val\n")
 					show("reg! reg val      set register to val\n")
 					show("dis addr [addr]   disassemble imem\n")
+					show("seg s             set current segment\n")
 				else:
 					show("unknown command:", " ".join(cmd), "\n")
 			except EOFError:
