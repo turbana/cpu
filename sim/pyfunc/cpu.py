@@ -241,7 +241,7 @@ def sar(cpu, ir, op1, op2, tgt):
 @op
 def iret(cpu):
 	cpu.reg[R_PC] = cpu.reg[R_EPC]
-	cpu.reg[R_FLAGS] = cpu.reg[R_EFLAGS] | (1 << FLAGS_IE)
+	cpu.reg[R_FLAGS] = cpu.reg[R_EFLAGS] | FLAGS_IE
 	cpu.stall(3)
 
 @op
