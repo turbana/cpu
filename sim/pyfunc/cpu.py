@@ -253,14 +253,17 @@ def scr(cpu, cr, src):
 	cpu.crset(cr, cpu.rget(src))
 
 @op
-def ldiw(cpu, tgt, src):
-	inst = cpu.iget(cpu.rget(src))
-	cpu.rset(tgt, inst)
+def ldiw(cpu, tgt, base, index, ir):
+	base = cpu.rget(base)
+	if not ir: index = cpu.rget(index)
+	cpu.rset(tgt, cpu.iget(base + index))
+
 
 @op
-def stiw(cpu, tgt, src):
-	inst = cpu.rget(src)
-	cpu.iset(cpu.rget(tgt), inst)
+def stiw(cpu, base, src, index, ir):
+	base = cpu.rget(base)
+	if not ir: index = cpu.rget(index)
+	cpu.iset(index + base, cpu.rget(src))
 
 
 # TODO add halt and trap instructions
