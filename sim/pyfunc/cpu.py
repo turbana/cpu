@@ -399,7 +399,10 @@ class CPU(object):
 	def fetch(self):
 		pc = self.reg[R_PC]
 		self.reg[R_PC] = (pc + 1) & 0xFFFF
-		return self.iget(pc)
+		self._check_addr(pc)
+		# read from code segment when in user mode, supervisor mode is always segment 0
+		seg = self.csegment if (self.reg[R_FLAGS] & FLAGS_M) else 0
+		return self.mem[seg][ADDR_TYPE_I][pc]
 
 	@send_listeners
 	def iget(self, addr):
