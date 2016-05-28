@@ -575,7 +575,7 @@ class PICDevice(Device):
 	def write(self, addr, value):
 		value &= 0x00FF
 		# ICW1
-		if addr == 0 and (value & 0x08):
+		if addr == 0 and (value & 0x10):
 			self.pending = 0
 		# ICW2
 		elif addr == 1:
