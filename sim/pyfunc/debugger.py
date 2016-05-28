@@ -53,20 +53,14 @@ def reg_dump(cpu, top_reg):
 
 
 class segment_change(object):
-	def __init__(self, debugger):
-		self.debugger = debugger
-		self.cpu = debugger.cpu
-		self.old_flags = self.cpu.reg[FLAGS]
-		self.new_flags = (debugger.segment << 10) | (debugger.segment << 6)
-		self.old_segment = debugger.segment
+	def __init__(self, cpu):
+		self.cpu = cpu
 
 	def __enter__(self):
-		self.cpu.reg[FLAGS] = self.new_flags
-		return self.cpu
+		self.flags = self.cpu.reg[FLAGS]
 
 	def __exit__(self, type, value, traceback):
-		self.cpu.reg[FLAGS] = self.old_flags
-		self.debugger.segment = self.old_segment
+		self.cpu.reg[FLAGS] = self.flags
 
 
 class Debugger(object):
@@ -91,9 +85,13 @@ class Debugger(object):
 
 	def before_execute(self, token):
 		if self.step:
-			with segment_change(self):
+			with segment_change(self.cpu):
 				self.normal_dump(token)
 				self.command()
+
+	def before_crset(self, reg, value):
+		if reg+8 == FLAGS:
+			self.segment = (value & 0xFC00) >> 10
 
 	def normal_dump(self, token=None):
 		show(" "*40 + "clock:", self.cpu.clock, "\n")
@@ -189,7 +187,7 @@ class Debugger(object):
 					seg = int(cmd[1], 16)
 					self.segment = seg
 					# set $flags now, will be reset after command
-					flags = (seg << 10) | (seg << 4)
+					flags = (seg << 10) | (seg << 4) | (self.cpu.reg[FLAGS] & 3)
 					self.cpu.reg[FLAGS] = flags
 					# poke both memories to ensure they're loaded
 					self.cpu.mget(0)
