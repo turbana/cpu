@@ -250,7 +250,16 @@ def lcr(cpu, tgt, cr):
 
 @op
 def scr(cpu, cr, src):
-	cpu.crset(cr, cpu.rget(src))
+	value = cpu.rget(src)
+	def update():
+		cpu.crset(cr, value)
+		cpu._load_segment(cpu.dsegment)
+		cpu._load_segment(cpu.csegment)
+	# if we're setting $flags, we need to wait one cycle before it takes effect
+	if cr+8 == R_FLAGS:
+		cpu.after(1, update)
+	else:
+		update()
 
 @op
 def ldiw(cpu, tgt, base, index, ir):
@@ -298,6 +307,10 @@ class CPU(object):
 		self.stalls = 0
 		self._randomize = False
 		self._loaded_segments = set()
+		self._after = []
+
+	def after(self, cycles, func):
+		self._after.append([cycles, func])
 
 	def randomize(self):
 		self._randomize = True
@@ -474,8 +487,18 @@ class CPU(object):
 		self.devices.append((mask, device))
 
 	def tick(self):
+		# tick each device
 		for mask, device in self.devices:
 			device.tick()
+		# check for upcoming tasks
+		for i in range(len(self._after)):
+			task = self._after[i]
+			if task[0] == 0:
+				self._after.remove(task)
+				task[1]()
+				i -= 1
+			else:
+				task[0] -= 1
 
 	def device_read(self, addr):
 		for dev_addr, device in self.devices:
