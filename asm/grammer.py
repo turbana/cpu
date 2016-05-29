@@ -94,7 +94,7 @@ expr_num = num.copy().addParseAction(_just_int_value)
 operand = expr_num | label_name
 
 expr = operatorPrecedence(operand, [
-	(oneOf("~"), 1, opAssoc.RIGHT),
+	(oneOf("~ -"), 1, opAssoc.RIGHT),
 	(oneOf("* /"), 2, opAssoc.LEFT),
 	(oneOf("<< >> **"), 2, opAssoc.LEFT),
 	(oneOf("+ -"), 2, opAssoc.LEFT),

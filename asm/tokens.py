@@ -222,8 +222,8 @@ class Expression(Token):
 			self._value = self.args[0].value
 			return self._value
 		elif len(self.args) == 2:
-			op, op1 = self.args
-			op2 = 0
+			op1 = 0
+			op, op2 = self.args
 		elif len(self.args) == 3:
 			op1, op, op2 = self.args
 		op1 = op1.value if isinstance(op1, Expression) else op1
@@ -236,7 +236,7 @@ class Expression(Token):
 			# either op's are a Label or an Expression that can't be evaluated yet
 			return None
 		# evaluate
-		if   op == "~": res = ~op1
+		if   op == "~": res = ~op2
 		elif op == "+": res = op1 + op2
 		elif op == "-": res = op1 - op2
 		elif op == "*": res = op1 * op2
