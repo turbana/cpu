@@ -162,7 +162,7 @@ s16 = number(16, True)
 label = label_name + colon
 reg = Suppress("$") + Word("01234567").setParseAction(to_int)
 ireg = reg | spec_imm
-creg = Suppress("$cr") + Word("012").setParseAction(to_int)
+creg = Suppress("$cr") + Word("0123").setParseAction(to_int)
 cond = oneOf("eq ne gt gte lt lte ult ulte")("cond")
 string = QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)
 string.setParseAction(lambda s,l,t: t[0].replace("\\n", "\n"))
