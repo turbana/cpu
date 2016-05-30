@@ -104,28 +104,26 @@ def pop(reg):
 def call(addr):
 	return """
 		sub $7, $7, 1
-		stw 0($7), $6
 		lcr $6, $cr0
-		add $6, $6, 3
+		add $6, $6, 4
+		stw 0($7), $6
 		jmp {addr}
-		ldw $6, 0($7)
-		add $7, $7, 1
 	"""
 
 
 @macro("u8")
 def enter(words):
 	return """
-		sub  $7, $7, 1
-		stw  0($7), $6
-		add  $6, $7, 1
-	""" + ("addi $7, -{words}" if words.value > 0 else "")
+		add $6, $7, 1
+		addi $7, -({words}+1)
+		stw $0($7), $6
+	"""
 
 
 @macro
 def leave():
 	return """
-		add $7, $0, $6
-		ldw $6, -1($6)
+		ldw $7, $0($7)
+		ldw $6, -1($7)
 		jmp $0($6)
 	"""
