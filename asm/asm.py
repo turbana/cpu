@@ -3,6 +3,7 @@
 import collections
 import os.path
 import sys
+import copy
 
 import pyparsing
 
@@ -88,7 +89,7 @@ def apply_variables(tok, vars):
 		if isinstance(arg, tokens.Label):
 			while arg.value in vars.keys():
 				name = arg.name
-				arg = vars[arg.value]
+				arg = copy.deepcopy(vars[arg.value])
 				arg.name = name
 				tok.args[i] = arg
 		elif isinstance(arg, tokens.Expression):
