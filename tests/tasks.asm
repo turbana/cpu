@@ -247,26 +247,25 @@ done:	.leave
 
 
 	.align 4
-t1code:	add	$0, $0, $0
-	add	$1, $1, $1
-	add	$2, $2, $2
-	add	$3, $3, $3
-	add	$4, $4, $4
-	add	$5, $5, $5
-	add	$6, $6, $6
-	add	$7, $7, $7
+t1code: add	$1, $2, $3
+	sub	$2, $3, $4
+	add	$3, $4, $5
+	sub	$4, $5, $6
+	sub	$5, $6, $7
+	add	$6, $7, $1
+	sub	$7, $1, $2
 	jmp	t1code
 	.align	4
 t1code_end:
 
-t2code:	sub	$0, $0, $0
-	sub	$1, $1, $1
-	sub	$2, $2, $2
-	sub	$3, $3, $3
-	sub	$4, $4, $4
-	sub	$5, $5, $5
-	sub	$6, $6, $6
-	sub	$7, $7, $7
+	;; task two code
+t2code: sub	$1, $2, $3
+	add	$2, $3, $4
+	sub	$3, $4, $5
+	add	$4, $5, $6
+	sub	$5, $6, $7
+	add	$6, $7, $1
+	sub	$7, $1, $2
 	jmp	t2code
 	.align	4
 t2code_end:
