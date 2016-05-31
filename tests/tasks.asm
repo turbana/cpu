@@ -4,44 +4,67 @@
 	.set	ICW1,		0x0010
 	.set	ICW2,		idt
 	.set	EOI,		0x20
+	.set	USER_MODE,	0x0002
 
 	.set	T1_START,	0x0010
 	.set	T1_SEGMENT,	1
 	.set	T1_PC,		T1_START
-	.set	T1_FLAGS,	(T1_SEGMENT << 4) | (T1_SEGMENT << 10)
+	.set	T1_FLAGS,	((T1_SEGMENT << 4) | (T1_SEGMENT << 10)) | USER_MODE
+	.set	T1_R1,		0x0011
+	.set	T1_R2,		0x0012
+	.set	T1_R3,		0x0013
+	.set	T1_R4,		0x0014
+	.set	T1_R5,		0x0015
+	.set	T1_R6,		0x0016
+	.set	T1_R7,		0x0017
 
 	.set	T2_START,	0x0020
 	.set	T2_SEGMENT,	2
 	.set	T2_PC,		T2_START
-	.set	T2_FLAGS,	(T2_SEGMENT << 4) | (T2_SEGMENT << 10)
+	.set	T2_FLAGS,	((T2_SEGMENT << 4) | (T2_SEGMENT << 10)) | USER_MODE
+	.set	T2_R1,		0x0021
+	.set	T2_R2,		0x0022
+	.set	T2_R3,		0x0023
+	.set	T2_R4,		0x0024
+	.set	T2_R5,		0x0025
+	.set	T2_R6,		0x0026
+	.set	T2_R7,		0x0027
 
 
 	.data
-	;; first 3 words are scratch space for task_switch
-	.word	0		; current task
-	.word	0		; temp $1
-	.word	0		; temp $2
+	;; first 2 words are scratch space for task_switch
+	.word	0		; supervisor stack
+	.word	0		; temp task stack
 	.zero	32
-stack:
-	;; tasks int[][9];
-tasks:	.word	T1_PC		; T1 PC
-	.word	T1_FLAGS	; T1 Flags
-	.word	0x0000		; T1 $7
-	.word	0x0000		; T1 $6
-	.word	0x0000		; T1 $5
-	.word	0x0000		; T1 $4
-	.word	0x0000		; T1 $3
-	.word	0x0000		; T1 $2
-	.word	0x0000		; T1 $1
-	.word	T2_PC		; T2 PC
-	.word	T2_FLAGS	; T2 Flags
-	.word	0x0000		; T2 $7
-	.word	0x0000		; T2 $6
-	.word	0x0000		; T2 $5
-	.word	0x0000		; T2 $4
-	.word	0x0000		; T2 $3
-	.word	0x0000		; T2 $2
-	.word	0x0000		; T2 $1
+stack:	.word	T2_PC		; push T2 onto stack so T1 will be switched in first
+	.word	T2_FLAGS
+	.word	T2_R1
+	.word	T2_R2
+	.word	T2_R3
+	.word	T2_R4
+	.word	T2_R5
+	.word	T2_R6
+	.word	T2_R7
+
+	.set	TASK_LEN, 9
+tasks:	.word	T1_PC
+	.word	T1_FLAGS
+	.word	T1_R1
+	.word	T1_R2
+	.word	T1_R3
+	.word	T1_R4
+	.word	T1_R5
+	.word	T1_R6
+	.word	T1_R7
+	.word	T2_PC
+	.word	T2_FLAGS
+	.word	T2_R1
+	.word	T2_R2
+	.word	T2_R3
+	.word	T2_R4
+	.word	T2_R5
+	.word	T2_R6
+	.word	T2_R7
 
 
 	.text
@@ -73,15 +96,7 @@ tasks:	.word	T1_PC		; T1 PC
 	scr	$cr1, $1	; enable interrupts
 
 	stw	$0($0), $7	; save supervisor stack
-
-	.ldi	$1, 1
-	.ldi	$2, 2
-	.ldi	$3, 3
-	.ldi	$4, 4
-	.ldi	$5, 5
-	.ldi	$6, 6
-
-	jmp	0
+	jmp	__load_task
 
 
 irq6:
@@ -110,6 +125,7 @@ irq6:
 
 	.call	task_switch
 
+__load_task:
 	;; load new task
 	ldw	$2, 1($7)	; load $eflags
 	ldw	$1, $0($7)	; load $epc
@@ -132,6 +148,65 @@ irq6:
 
 task_switch:
 	.enter	0
+	.ldi	$5, tasks	; load pointer to tasks
+	add	$6, $7, 2	; load pointer to stack
+	;; find previous task by inspecting data segment
+	ldw	$4, 1($6)
+	shr	$4, $4, 8
+	shr	$4, $4, 2
+	as.z	$0, $4, -1
+	addi	$5, TASK_LEN	; move tasks pointer to task two
+	;; save control registers
+	ldw	$1, $0($6)	; $pc
+	ldw	$2, 1($6)	; $flags
+	stw	$0($5), $1
+	stw	1($5), $2
+	;; increment pointers
+	add	$5, $5, 2
+	add	$6, $6, 2
+	;; save regular registers
+	ldw	$1, $0($6)	; $1
+	ldw	$2, 1($6)	; $2
+	stw	$0($5), $1
+	stw	1($5), $2
+	ldw	$1, 2($6)	; $3
+	ldw	$2, 3($6)	; $4
+	stw	2($5), $1
+	stw	3($5), $2
+	ldw	$1, 4($6)	; $5
+	ldw	$2, 5($6)	; $6
+	stw	4($5), $1
+	stw	5($5), $2
+	ldw	$1, 6($6)	; $7
+	stw	6($5), $1
+	;; find next task
+	.ldi	$1, TASK_LEN	; task pointer delta (assuming previous task was one)
+	as.z	$0, $4, -1
+	addi	$1, -(2*TASK_LEN) ; update task pointer delta for task two
+	add	$5, $5, $1	; update task pointer
+	;; load regular registers
+	ldw	$1, $0($5)	; $1
+	ldw	$2, 1($5)	; $2
+	stw	$0($6), $1
+	stw	1($6), $2
+	ldw	$1, 2($5)	; $3
+	ldw	$2, 3($5)	; $4
+	stw	2($6), $1
+	stw	3($6), $2
+	ldw	$1, 4($5)	; $5
+	ldw	$2, 5($5)	; $6
+	stw	4($6), $1
+	stw	5($6), $2
+	ldw	$1, 6($5)	; $7
+	stw	6($6), $1
+	;; decrement pointers
+	add	$5, $5, -2
+	add	$6, $6, -2
+	;; load control registers
+	ldw	$1, $0($5)
+	ldw	$2, 1($5)
+	stw	$0($6), $1
+	stw	1($6), $2
 	.leave
 
 
