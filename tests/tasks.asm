@@ -1,4 +1,13 @@
-;;; test multiple tasks running concurrently
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Test full context switch
+;;;
+;;; Setup two tasks T1 and T2, each with their own code, each with separate segments.
+;;; On receiving a 555 timer interrupt do the following:
+;;; 	1) Push current state (all GP registers and $cr1/$cr2) onto supervisor stack
+;;; 	2) Save current task within the 'tasks' array.
+;;; 	3) Load other task from 'tasks' array.
+;;; 	4) Apply loaded state from supervisor stack.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	.set	PIC_ADDR,	0xFF80
 	.set	ICW1,		0x0010
@@ -32,19 +41,20 @@
 
 
 	.data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	;; first 2 words are scratch space for task_switch
-	.word	0		; supervisor stack
+	.word	0		; supervisor stack pointer
 	.word	0		; temp task stack
 	.zero	32
-stack:	.word	T2_PC		; push T2 onto stack so T1 will be switched in first
-	.word	T2_FLAGS
-	.word	T2_R1
-	.word	T2_R2
-	.word	T2_R3
-	.word	T2_R4
-	.word	T2_R5
-	.word	T2_R6
-	.word	T2_R7
+stack:	.word	T1_PC		; push T1 onto stack to switch in first
+	.word	T1_FLAGS
+	.word	T1_R1
+	.word	T1_R2
+	.word	T1_R3
+	.word	T1_R4
+	.word	T1_R5
+	.word	T1_R6
+	.word	T1_R7
 
 	.set	TASK_LEN, 9
 tasks:	.word	T1_PC
@@ -68,6 +78,7 @@ tasks:	.word	T1_PC
 
 
 	.text
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.ldi	$7, stack
 
 	;;  copy T1 code
@@ -84,7 +95,7 @@ tasks:	.word	T1_PC
 	.ldi	$4, T2_SEGMENT
 	.call	copy
 
-	;; setup interrupts
+	;; program PIC
 	.ldi	$1, PIC_ADDR	; load &PIC
 	.ldi	$2, ICW1	; send ICW1
 	stw	$0($1), $2	;
@@ -206,7 +217,7 @@ task_switch:
 	.leave
 
 
-	;; copy code from supervisor to user
+	;; copy code from supervisor segment to user segment
 	;; $1 = destination pointer (in user segment)
 	;; $2 = source pointer (in supervisor segment)
 	;; $3 = count
@@ -223,7 +234,7 @@ copy:	.enter	5
 	or	$6, $5, $6
 	stw	1($7), $6
 
-loop:	ldiw	$3, 1($2)	; load 2nd word
+1:	ldiw	$3, 1($2)	; load 2nd word
 	ldiw	$4, 2($2)	; load 3rd word
 	ldiw	$5, 3($2)	; load 4th word
 	scr	$cr1, $6	; swap to user segment
@@ -236,16 +247,17 @@ loop:	ldiw	$3, 1($2)	; load 2nd word
 	add	$0, $0, $0	; no memory access possible in shadow of segment change
 	ldw	$5, 4($7)	; load count
 	as.nz	$5, $5, -4	; decrement count
-	jmp	done
+	jmp	2f
 	stw	4($7), $5	; save count
 	add	$1, $1, 4	; increment dest pointer
 	ldw	$2, 3($7)	; load source pointer
 	add	$2, $2, 4	; increment source pointer
 	stw	3($7), $2	; save source pointer
-	jmp	loop
-done:	.leave
+	jmp	1b
+2:	.leave
 
 
+	;; task one code
 	.align 4
 t1code: add	$1, $2, $3
 	sub	$2, $3, $4
@@ -272,11 +284,11 @@ t2code_end:
 
 	;; interrupt descriptor table
 	.align	8
-idt:	iret
-	iret
-	iret
-	iret
-	iret
-	iret
-	jmp	irq6
-	iret
+idt:	iret			; IRQ0
+	iret			; IRQ1
+	iret			; IRQ2
+	iret			; IRQ3
+	iret			; IRQ4
+	iret			; IRQ5
+	jmp	irq6		; IRQ6
+	iret			; IRQ7
