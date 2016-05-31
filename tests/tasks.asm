@@ -91,11 +91,7 @@ tasks:	.word	T1_PC
 	.ldi	$2, ICW2	; send ICW2
 	stw	1($1), $2
 
-	lcr	$1, $cr1	; load flags
-	or	$1, $1, 1	; set IE bit
-	scr	$cr1, $1	; enable interrupts
-
-	stw	$0($0), $7	; save supervisor stack
+	;; jump into middle of irq6 (we already have T1 on stack)
 	jmp	__load_task
 
 
