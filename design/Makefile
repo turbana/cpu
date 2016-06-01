@@ -9,6 +9,8 @@ FAILON = ./failon.sh
 SCHEMS=$(SCHEM)/*.sch
 SYMBOLS=symbols/**/*.v
 
+GNETLIST = /usr/bin/gnetlist
+
 
 # multi page schematics
 $(BUILD)/execute_alu.v: $(BUILD)/execute_alu.sch $(BUILD)/execute_barrel_shifter.sch
@@ -23,7 +25,7 @@ NETLIST = @echo "Netlist : $(@F) ($(^F))"; \
 	$(CHK_NETLIST); \
 	echo "Fix Net : $(@F)"; \
 	$(FIX_NETLIST)
-GEN_NETLIST = gnetlist -g verilog $^ -o $@ 2>&1 | \
+GEN_NETLIST = $(GNETLIST) -g verilog $^ -o $@ 2>&1 | \
 	grep -v "^Loading schematic" | \
 	grep -v "is not likely a valid Verilog identifier" | \
 	$(FAILON) '.*'
