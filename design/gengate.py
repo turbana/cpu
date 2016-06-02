@@ -12,6 +12,7 @@ import collections
 
 DEFINITIONS = "74HCxxx.json"
 
+_SPACE_CHARS		= "(){},;"
 _BASIC_WIRE_REGEX	= "[0-9A-Z]+"
 _WIRE_REGEX			= "\??%s" % _BASIC_WIRE_REGEX
 _EXPR_REGEX			= "\?%s" % _BASIC_WIRE_REGEX
@@ -46,23 +47,28 @@ def load_spec(module):
 def gen_code(spec):
 	module = spec["module"]
 	delay = spec["delay"]
+	all_wires = map(escape, range(1, wire_count(spec)+1))
+	outputs = map(escape, expand_wires(spec, spec["assign"].keys()))
+	inputs = map(escape, set(all_wires) - set(outputs))
 	code = "/* %s */\n`timescale 1 ns / 100 ps\n" % module
 	code += "module %s (" % escape(module)
-	code += ", ".join(map(escape, range(1, wire_count(spec)+1)))
+	code += ",".join(map(escape, range(1, wire_count(spec)+1)))
 	code += ");\n\tinput "
-	code += ", ".join(map(escape, input_wires(spec)))
+	code += ",".join(inputs)
 	code += ";\n\toutput "
-	code += ", ".join(map(escape, output_wires(spec)))
+	code += ",".join(outputs)
 	code += ";\n\n"
 	for assign in assignments(spec):
 		code += "\tassign #%d %s;\n" % (delay, assign)
 	code += "\nendmodule"
+	for char in _SPACE_CHARS:
+		code = code.replace(char, " " + char + " ")
 	return code
 
 
 def escape(x):
 	x = str(x)
-	e = "\\" if x and x[0] in "0123456789" else ""
+	e = "\\" if x and x[0] in "0123456789" and "'" not in x else ""
 	return e + x
 
 
@@ -86,9 +92,11 @@ def input_wires(spec):
 	return flatmap(_expand, names)
 
 
-def output_wires(spec):
+def expand_wires(spec, wires):
 	_expand = functools.partial(expand, spec)
-	return flatmap(_expand, spec["assign"].keys())
+	_findall = functools.partial(findall, _WIRE_REGEX)
+	names = flatmap(_findall, wires)
+	return flatmap(_expand, names)
 
 
 def wire_name(spec, name):
@@ -135,6 +143,9 @@ def expand_expr(spec, expr):
 			names[name] = var
 			expr = expr.replace(name, "{%s}" % var)
 			count += 1
+	if not names.keys():
+		yield expr
+		return
 	expansions = map(_expand, names.keys())
 	length = len(expansions[0])
 	length_check = lambda l: len(l) == length
