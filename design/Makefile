@@ -6,8 +6,8 @@ WF=waveforms
 
 FAILON = ./failon.sh
 
-SCHEMS=$(SCHEM)/*.sch
-SYMBOLS=symbols/**/*.v
+SCHEMS = $(SCHEM)/*.sch
+DEPS = $(subst .sch,.d, $(subst $(SCHEM)/,$(BUILD)/, $(wildcard $(SCHEMS))))
 
 GNETLIST = /usr/bin/gnetlist
 
@@ -35,15 +35,19 @@ FIX_NETLIST = python fix_netlist.py $@ $^
 GEN_TB = @echo "Build TB: $(@F)"; \
 	python testmod.py $< > $@
 CMP_TB = @echo "Cmpl TB : $(@F)"; \
-	iverilog $^ $(SYMBOLS) -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
+	iverilog $^ -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
 EXE_TB = @echo "Run TB  : $(@F)"; \
 	$< 2>&1 | grep -v "^VCD info" | tee $(WF)/$(@F).log | $(FAILON) "FAILURE"
 GAF_PNG = @gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
+GEN_GATE = @echo "Gen Gate: $(@F)"; \
+	python gengate.py $(basename $(@F)) > $@
+MAKE_DEPS = @echo "Deps    : $(@F)"; \
+	python makedeps.py $< > $@
 
 
 # build rules
 .PHONY: clean help netlist testbench test testall protopcb doc
-.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
+.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(BUILD)/%.d
 
 help:
 	@echo "make TARGET=foo test       -- run full netlist and testbench for foo"
@@ -61,10 +65,16 @@ $(WF):
 $(BUILD)/%.sch: $(SCHEM)/%.sch
 	$(FIX_SCH)
 
+$(BUILD)/74%.v: gengate.py 74HCxxx.json
+	$(GEN_GATE)
+
 $(BUILD)/%.v: $(BUILD)/%.sch
 	$(NETLIST)
 
-$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json
+$(BUILD)/%.d: $(SCHEM)/%.sch makedeps.py
+	$(MAKE_DEPS)
+
+$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json $(BUILD)/%.d
 	$(GEN_TB)
 
 $(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
@@ -87,4 +97,6 @@ testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(
 doc:		$(DOC)/block_diagram.png
 
 clean:
-	@rm -rf -- $(BUILD) $(WF) proto.cmd proto.net proto.pcb-
+	@rm -rf -- $(BUILD)/* $(WF)/* proto.cmd proto.net proto.pcb-
+
+-include $(DEPS)
