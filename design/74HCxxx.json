@@ -4,19 +4,34 @@
 		"delay": 27,
 		"package": "DIP14",
 		"names": ["1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3A", "3B", "4Y", "4A", "4B", "VCC"],
-		"assign": {
-			"?Y": "?A & ?B"
-		}
+		"assign": {"?Y": "?A & ?B"}
 	},
-	"7408_basic": {
-		"desc": "Quad 2-bit AND gate",
-		"delay": 27,
+	"7432": {
+		"desc": "Quad 2-bit OR gate",
+		"delay": 10,
 		"package": "DIP14",
-		"assign": {
-			"3": "1 & 2",
-			"6": "4 & 5",
-			"8": "9 & 10",
-			"11": "12 & 13"
-		}
+		"names": ["1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3A", "3B", "4Y", "4A", "4B", "VCC"],
+		"assign": {"?Y": "?A | ?B"}
+	},
+	"7486": {
+		"desc": "Quad 2-bit XOR gate",
+		"delay": 30,
+		"package": "DIP14",
+		"names": ["1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3A", "3B", "4Y", "4A", "4B", "VCC"],
+		"assign": {"?Y": "?A ^ ?B"}
+	},
+	"74157": {
+		"desc": "Quad 2x1 Mux",
+		"delay": 27,
+		"package": "DIP16",
+		"names": ["S", "1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3B", "3A", "4Y", "4B", "4A", "G", "VCC"],
+		"assign": {"?Y": "~G & (S ? ?B : ?A)"}
+	},
+	"74283": {
+		"desc": "4-bit adder",
+		"delay": 80,
+		"package": "DIP16",
+		"names": ["2O", "2B", "2A", "1O", "1A", "1B", "CI", "GND", "CO", "4O", "4B", "4A", "3O", "3A", "3B", "VCC"],
+		"assign": {"{CO,4O,3O,2O,1O}": "{GND,4A,3A,2A,1A} + {GND,4B,3B,2B,1B} + {GND,GND,GND,GND,CI}"}
 	}
 }
