@@ -48,7 +48,7 @@
 		}
 	},
 	"execute_forward_a": {
-		"delay": 118,
+		"delay": 1000,
 		"inputs": {
 			"DE_A":  {"width": 16},
 			"DE_Ra": {"width": 4},
