@@ -8,3 +8,4 @@
 *.gtkw
 *.vcd
 design/build
+design/Makefile.deps
