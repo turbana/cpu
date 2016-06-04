@@ -1,50 +1,70 @@
 {
-	"execute_barrel_shifter": {
-		"delay": 162,
+	"execute_alu": {
+		"delay": 1000,
 		"inputs": {
-			"_E_A":    {"width": 16, "alias": "n"},
-			"_E_B":    {"width": 16},
-			"D_ALUop": {"width": 3}
+			"F_A":      {"width": 16, "alias": "a"},
+			"F_B":      {"width": 16, "alias": "b"},
+			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
-		"assert": "(D_ALUop & 3) != 3",
+		"assert": "DE_ALUop != 7",
 		"internal": {
-			"s": "_E_B & 0xF",
-			"r": "(~D_ALUop & 2) >> 1",
-			"a": "D_ALUop & 1"
+			"s": "F_B & 0xF",
+			"r": "(~DE_ALUop & 2) >> 1",
+			"ar": "DE_ALUop & 1"
 		},
 		"outputs": {
-			"_E_S": {
+			"A_D": {
+				"width": 16,
+				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else (((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))))))"
+			}
+		}
+	},
+	"execute_alu_bs": {
+		"delay": 1000,
+		"inputs": {
+			"F_A":      {"width": 16, "alias": "n"},
+			"F_B":      {"width": 16},
+			"DE_ALUop": {"width": 3}
+		},
+		"assert": "(DE_ALUop & 3) != 3",
+		"internal": {
+			"s": "F_B & 0xF",
+			"r": "(~DE_ALUop & 2) >> 1",
+			"a": "DE_ALUop & 1"
+		},
+		"outputs": {
+			"S_D": {
 				"width": 16,
 				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
 			}
 		}
 	},
 	"execute_forward": {
-		"delay": 118,
+		"delay": 1000,
 		"inputs": {
-			"D_A":  {"width": 16},
-			"D_B":  {"width": 16},
-			"D_C":  {"width": 16},
-			"D_Ra": {"width": 3},
-			"D_Rb": {"width": 3},
-			"D_Rc": {"width": 3},
-			"E_D":  {"width": 16},
-			"E_Rd": {"width": 3},
-			"M_D":  {"width": 16},
-			"M_Rd": {"width": 3}
+			"DE_A":  {"width": 16},
+			"DE_B":  {"width": 16},
+			"DE_C":  {"width": 16},
+			"DE_Ra": {"width": 4},
+			"DE_Rb": {"width": 4},
+			"DE_Rc": {"width": 4},
+			"EM_D":  {"width": 16},
+			"EM_Rd": {"width": 4},
+			"MW_D":  {"width": 16},
+			"MW_Rd": {"width": 4}
 		},
 		"internal": {
-			"ea": "E_Rd ^ D_Ra == 0",
-			"eb": "E_Rd ^ D_Rb == 0",
-			"ec": "E_Rd ^ D_Rc == 0",
-			"ma": "M_Rd ^ D_Ra == 0",
-			"mb": "M_Rd ^ D_Rb == 0",
-			"mc": "M_Rd ^ D_Rc == 0"
+			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"eb": "EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
+			"ec": "EM_Rd ^ DE_Rc == 0 and DE_Rc != 0",
+			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"mb": "MW_Rd ^ DE_Rb == 0 and DE_Rb != 0",
+			"mc": "MW_Rd ^ DE_Rc == 0 and DE_Rc != 0"
 		},
 		"outputs": {
-			"_E_A": {"width": 16, "formula": "E_D if ea else (M_D if ma else D_A)"},
-			"_E_B": {"width": 16, "formula": "E_D if eb else (M_D if mb else D_B)"},
-			"_E_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
+			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"},
+			"F_B": {"width": 16, "formula": "EM_D if eb else (MW_D if mb else DE_B)"},
+			"F_C": {"width": 16, "formula": "EM_D if ec else (MW_D if mc else DE_C)"}
 		}
 	},
 	"execute_forward_a": {
@@ -101,27 +121,7 @@
 			"F_C": {"width": 16, "formula": "EM_D if ec else (MW_D if mc else DE_C)"}
 		}
 	},
-	"execute_alu": {
-		"delay": 1000,
-		"inputs": {
-			"_E_A": {"width": 16, "alias": "a"},
-			"_E_B": {"width": 16, "alias": "b"},
-			"D_ALUop": {"width": 3, "alias": "op"}
-		},
-		"assert": "D_ALUop != 7",
-		"internal": {
-			"s": "_E_B & 0xF",
-			"r": "(~D_ALUop & 2) >> 1",
-			"ar": "D_ALUop & 1"
-		},
-		"outputs": {
-			"_E_D": {
-				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else (((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))))))"
-			}
-		}
-	},
-	"proto_alu": {
+	"proto": {
 		"delay": 1000,
 		"inputs": {
 			"A":   {"width": 4, "alias": "a"},
