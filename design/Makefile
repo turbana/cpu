@@ -4,16 +4,9 @@ SCHEM=schem
 DOC=../doc
 WF=waveforms
 
-FAILON = ./failon.sh
-
 SCHEMS = $(SCHEM)/*.sch
-DEPS = $(subst .sch,.d, $(subst $(SCHEM)/,$(BUILD)/, $(wildcard $(SCHEMS))))
-
+FAILON = ./failon.sh
 GNETLIST = /usr/bin/gnetlist
-
-
-# multi page schematics
-$(BUILD)/execute_alu.v: $(BUILD)/execute_alu.sch $(BUILD)/execute_barrel_shifter.sch
 
 
 # build commands
@@ -41,13 +34,11 @@ EXE_TB = @echo "Run TB  : $(@F)"; \
 GAF_PNG = @gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
 GEN_GATE = @echo "Gen Gate: $(@F)"; \
 	python gengate.py $(basename $(@F)) > $@
-MAKE_DEPS = @echo "Deps    : $(@F)"; \
-	python makedeps.py $< > $@
 
 
 # build rules
 .PHONY: clean help netlist testbench test testall protopcb doc
-.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(BUILD)/%.d
+.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
 
 help:
 	@echo "make TARGET=foo test       -- run full netlist and testbench for foo"
@@ -68,16 +59,13 @@ $(BUILD)/%.sch: $(SCHEM)/%.sch
 $(BUILD)/74%.v: gengate.py 74HCxxx.json
 	$(GEN_GATE)
 
-$(BUILD)/%.v: $(BUILD)/%.sch
-	$(NETLIST)
-
-$(BUILD)/%.d: $(SCHEM)/%.sch makedeps.py
-	$(MAKE_DEPS)
-
-$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json $(BUILD)/%.d
+$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json
 	$(GEN_TB)
 
-$(BUILD)/test_%: $(BUILD)/tb_%.v $(BUILD)/%.v
+$(BUILD)/%.v: $(wildcard $(BUILD)/%.sch)
+	$(NETLIST)
+
+$(BUILD)/test_%: $(BUILD)/%.v $(BUILD)/tb_%.v
 	$(CMP_TB)
 
 $(WF)/%.vcd: $(BUILD)/test_%
@@ -99,4 +87,7 @@ doc:		$(DOC)/block_diagram.png
 clean:
 	@rm -rf -- $(BUILD)/* $(WF)/* proto.cmd proto.net proto.pcb-
 
--include $(DEPS)
+# generate dependencies
+Makefile.deps: $(SCHEMS) makedeps.py
+	@python makedeps.py $(SCHEMS) > $@
+-include Makefile.deps
