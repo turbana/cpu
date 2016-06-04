@@ -36,7 +36,7 @@
 	},
 	"744002": {
 		"desc": "Dual 4-bit NOR gate",
-		"delay": 0,
+		"delay": 25,
 		"package": "DIP14",
 		"names": ["1Y", "1A", "1B", "1C", "1D", "NC", "GND", "NC", "2A", "2B", "2C", "2D", "2Y", "VCC"],
 		"assign": {"?Y": "~(?A | ?B | ?C | ?D)"}
