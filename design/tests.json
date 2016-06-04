@@ -47,6 +47,24 @@
 			"_E_C": {"width": 16, "formula": "E_D if ec else (M_D if mc else D_C)"}
 		}
 	},
+	"execute_forward_a": {
+		"delay": 118,
+		"inputs": {
+			"DE_A":  {"width": 16},
+			"DE_Ra": {"width": 4},
+			"EM_D":  {"width": 16},
+			"EM_Rd": {"width": 4},
+			"MW_D":  {"width": 16},
+			"MW_Rd": {"width": 4}
+		},
+		"internal": {
+			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0"
+		},
+		"outputs": {
+			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"}
+		}
+	},
 	"execute_alu": {
 		"delay": 1000,
 		"inputs": {
