@@ -2,3 +2,4 @@
 ;; Needs to be symlinked to ~/.gEDA/gschemrc
 
 (log-window "later")
+(define default-titleblock "title-bordered-A2.sym")
