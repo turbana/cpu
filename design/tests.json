@@ -33,7 +33,7 @@
 			"a": "DE_ALUop & 1"
 		},
 		"outputs": {
-			"S_D": {
+			"_E_Z": {
 				"width": 16,
 				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
 			}
