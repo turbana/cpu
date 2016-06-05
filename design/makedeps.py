@@ -31,10 +31,11 @@ def main(args):
 		print "$(BUILD)/test_%s: %s" % (key, _deps)
 	# print schematic dependencies
 	for key in deps:
-		print  "$(BUILD)/%s.v: $(BUILD)/%s.sch" % (key, key)
 		_deps = " ".join("$(BUILD)/%s.sch" % x for x in schematics(key, map(base, args)))
 		if _deps:
 			print "$(BUILD)/%s.v: %s" % (key, _deps)
+		else:
+			print  "$(BUILD)/%s.v: $(BUILD)/%s.sch" % (key, key)
 
 
 def schematics(key, keys):
