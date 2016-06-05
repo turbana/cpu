@@ -1,7 +1,4 @@
 v 20110115 2
-C 42600 16500 0 0 0 title-bordered-A1.sym
-T 68700 17400 9 24 1 0 0 0 1
-ALU
 C 58500 32800 1 0 0 74157-2.sym
 {
 T 58600 35340 5 10 0 0 0 0 1
@@ -812,3 +809,4 @@ device=IPAD
 T 56300 36700 5 10 1 1 0 1 1
 netlabel=DE_ALUop[2:0]
 }
+C 49500 22100 0 0 0 title-bordered-A2.sym
