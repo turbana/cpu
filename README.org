@@ -1,16 +1,19 @@
 * TIM-16
 TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips.
 
+[[doc/block_diagram.png?raw=true][Block Diagram]]
+[[doc/schematics.png?raw=true][Schematics]]
+
  - [[#architecture][Architecture]]
  - [[#instruction-set][Instruction Set]]
  - [[#registers][Registers]]
  - [[#memory][Memory Layout]]
 
 ***** Progress
- - Architecture ~[Mostly Done]~ Always reviewing. Mostly static, but still have changes occasionally
+ - Architecture ~[Done]~ Always reviewing, but mostly static
  - Instruction Set ~[Done]~
- - Assembler ~[Done]~ Needs minor updates
- - Functional Simulator ~[Done]~ Needs minor updates
+ - Assembler ~[Done]~
+ - Functional Simulator ~[Done]~
  - Assembler Tests ~[Mostly Done]~ Need to add additional tests
  - Schematic Capture ~[In Progress]~ Currently have a handful of modules complete. Still have the bulk to go
  - Behavioral Simulator ~[Started]~ Fuzz tests for captured schematics. Full simulator will be written once capture is complete.
@@ -22,7 +25,7 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - 16 bit ALU
  - 8x 16 bit general purpose registers
  - 4x control registers
- - 22 bit word addressed memory (8MB)
+ - System bus is 23 bits wide with word addressing (16MB of memory)
  - Precise external interrupts using an 8259A PIC
  - No support for exceptions or control codes
  - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555 timer with room to expand
