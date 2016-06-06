@@ -9,7 +9,7 @@ import pyparsing as pp
 
 
 CONFIG_FILE = "tests.json"
-WAVEFORM_DIR = "waveforms"
+WAVEFORM_DIR = "build/waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
 DELAY = 1000

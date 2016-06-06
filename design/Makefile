@@ -2,15 +2,15 @@
 BUILD		= build
 SCHEM		= schem
 DOC			= ../doc
-WF			= waveforms
+WF			= $(BUILD)/waveforms
 FAILON		= ./failon.sh
 GNETLIST	= /usr/bin/gnetlist
 
 SCHEMS = $(SCHEM)/*.sch
 
 
-.PHONY: clean help netlist testbench test testall protopcb doc
-.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_%
+.PHONY: clean help netlist testbench test testall protopcb doc wave
+.PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(WF)/%.vcd
 
 
 help:
@@ -72,6 +72,10 @@ $(DOC)/%.png: %.sch
 	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
 
 
+wave: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
+	@gtkwave $(WF)/$(TARGET).vcd
+
+
 netlist:	$(BUILD) $(BUILD)/$(target).v
 testbench:	$(BUILD) $(BUILD)/tb_$(target).v
 test: 		$(BUILD) $(WF) $(WF)/$(target).vcd
@@ -79,4 +83,4 @@ testall:	$(BUILD) $(WF) $(ALL_TESTS)
 doc:		$(DOC)/block_diagram.png
 
 clean:
-	@rm -rf -- $(BUILD)/* $(WF)/* Makefile.deps
+	@rm -rf -- $(BUILD)/* Makefile.deps
