@@ -15,6 +15,7 @@ SHOW_WAVEFORM = False
 DELAY = 1000
 
 DONTCARE = object()
+CONFIG_KEYS = ("inputs", "assert", "internal", "outputs")
 
 
 class FatalTestException(Exception):
@@ -189,9 +190,46 @@ def grammer():
 
 def parse_config(filename, module):
     data = json.loads(open(filename).read())
-    mod = data[module]
-    mod["name"] = module
-    return mod
+    expand_config(data, module)
+    config = data[module]
+    # ensure all keys are set for parent module
+    for var,value in config.get("outputs", {}).items():
+        value["order"] = value.get("order", sys.maxint)
+        value["expose"] = value.get("expose", True)
+    return config
+
+
+def expand_config(data, module):
+    parent = data.get(module, {})
+    parent["name"] = module
+    data[module] = parent
+    depth = module.count("_")
+    children = [name for name in data if name.startswith(module) and name.count("_") == depth+1]
+    for child_name in children:
+        expand_config(data, child_name)
+        child = data[child_name]
+        for key in CONFIG_KEYS:
+            config_merge(parent, child, key)
+
+
+def config_merge(left, right, key):
+    lvalue = left.get(key, {})
+    rvalue = right.get(key, {})
+    if key == "assert":
+        # only merge in child assert when parent doesn't have one
+        if not lvalue and rvalue:
+            left["assert"] = rvalue
+        return
+    for rkey in rvalue.keys():
+        if rkey not in lvalue:
+            lvalue[rkey] = rvalue[rkey]
+        elif lvalue[rkey] != rvalue[rkey]:
+            name = "%s.%s" % (key, rkey)
+            raise FatalTestException("Config mis-match found for %s in %s and %s" % (name, left["name"], right["name"]))
+        if key == "outputs":
+            lvalue[rkey]["order"] = rvalue[rkey].get("order", 0) + 1
+            lvalue[rkey]["expose"] = False # don't assign child expression to module wires
+    left[key] = lvalue
 
 
 def generate_tests(config):
@@ -225,14 +263,18 @@ def generate_test(config):
             value = eval_formula(formula, env, config["name"])
             env[name] = value
     # generate outputs
-    for name in config["outputs"].keys():
+    order_key = lambda name: config["outputs"][name]["order"]
+    names = sorted(config["outputs"].keys(), key=order_key)
+    for name in names:
         width = config["outputs"][name]["width"]
         formula = config["outputs"][name]["formula"]
         value = eval_formula(formula, env, config["name"], width)
+        env[name] = value
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
-        test["outputs"].append({"value": value, "width": width, "name": name})
+        if config["outputs"][name]["expose"]:
+            test["outputs"].append({"value": value, "width": width, "name": name})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
         return generate_test(config)
@@ -251,6 +293,7 @@ def eval_formula(formula, env, name, width=64):
         message += str(e) + "\n"
         raise FatalTestException(message)
     return value
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

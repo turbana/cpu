@@ -5,63 +5,31 @@
 			"F_B":      {"width": 16, "alias": "b"},
 			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
-		"assert": "DE_ALUop != 7",
-		"internal": {
-			"s": "F_B & 0xF",
-			"r": "(~DE_ALUop & 2) >> 1",
-			"ar": "DE_ALUop & 1"
-		},
+		"assert": "op != 7",
 		"outputs": {
 			"A_D": {
 				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op ==1 else (a|b if op==2 else (a^b if op==3 else (((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))))))"
+				"formula": "a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_Z)))"
 			}
 		}
 	},
 	"execute_alu_bs": {
 		"inputs": {
-			"F_A":      {"width": 16, "alias": "n"},
-			"F_B":      {"width": 16},
-			"DE_ALUop": {"width": 3}
+			"F_A":      {"width": 16, "alias": "a"},
+			"F_B":      {"width": 16, "alias": "b"},
+			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
-		"assert": "(DE_ALUop & 3) != 3",
+		"assert": "(op & 3) != 3",
 		"internal": {
-			"s": "F_B & 0xF",
-			"r": "(~DE_ALUop & 2) >> 1",
-			"a": "DE_ALUop & 1"
+			"s": "b & 0xF",
+			"r": "(~op & 2) >> 1",
+			"ar": "op & 1"
 		},
 		"outputs": {
 			"_E_Z": {
 				"width": 16,
-				"formula": "((n>>s)|((2**16 - 2**(16-s)) * (n>>15))) if r and a else ((n>>s) if r else (n<<s))"
+				"formula": "((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))"
 			}
-		}
-	},
-	"execute_forward": {
-		"inputs": {
-			"DE_A":  {"width": 16},
-			"DE_B":  {"width": 16},
-			"DE_C":  {"width": 16},
-			"DE_Ra": {"width": 4},
-			"DE_Rb": {"width": 4},
-			"DE_Rc": {"width": 4},
-			"EM_D":  {"width": 16},
-			"EM_Rd": {"width": 4},
-			"MW_D":  {"width": 16},
-			"MW_Rd": {"width": 4}
-		},
-		"internal": {
-			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
-			"eb": "EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
-			"ec": "EM_Rd ^ DE_Rc == 0 and DE_Rc != 0",
-			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0",
-			"mb": "MW_Rd ^ DE_Rb == 0 and DE_Rb != 0",
-			"mc": "MW_Rd ^ DE_Rc == 0 and DE_Rc != 0"
-		},
-		"outputs": {
-			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"},
-			"F_B": {"width": 16, "formula": "EM_D if eb else (MW_D if mb else DE_B)"},
-			"F_C": {"width": 16, "formula": "EM_D if ec else (MW_D if mc else DE_C)"}
 		}
 	},
 	"execute_forward_a": {
