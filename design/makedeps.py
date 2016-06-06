@@ -11,15 +11,18 @@ execute           -> 7486, 7408, 7432
 
 import sys
 import os.path
+import json
 
 import schematic
 
-#$(BUILD)/execute_forward.v: $(BUILD)/execute_forward_a.sch $(BUILD)/execute_forward_b.sch $(BUILD)/execute_forward_c.sch
+TESTS_CONFIG = "tests.json"
+
 
 def main(args):
 	if len(args) == 0:
 		print "USAGE: %s schematics..." % sys.argv[0]
 		return 2
+	config = json.loads(open(TESTS_CONFIG).read())
 	filename = args[0]
 	base = os.path.basename(filename).replace(".sch", "")
 	base = lambda fn: os.path.basename(fn).replace(".sch", "")
@@ -36,6 +39,8 @@ def main(args):
 			print "$(BUILD)/%s.v: %s" % (key, _deps)
 		else:
 			print  "$(BUILD)/%s.v: $(BUILD)/%s.sch" % (key, key)
+		if key in config:
+			print "ALL_TESTS := $(ALL_TESTS) $(WF)/%s.vcd" % key
 
 
 def schematics(key, keys):

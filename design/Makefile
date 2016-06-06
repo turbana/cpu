@@ -9,6 +9,12 @@ FAILON = ./failon.sh
 GNETLIST = /usr/bin/gnetlist
 
 
+# generate dependencies
+Makefile.deps: $(SCHEMS) makedeps.py
+	@python makedeps.py $(SCHEMS) > $@
+-include Makefile.deps
+
+
 # build commands
 FIX_SCH = @echo "Fix Sch : $(@F)"; \
 	python fix_schematic.py $< $@
@@ -81,13 +87,8 @@ protopcb: project
 netlist:	$(BUILD) $(BUILD)/$(TARGET).v
 testbench:	$(BUILD) $(BUILD)/tb_$(TARGET).v
 test: 		$(BUILD) $(WF) $(WF)/$(TARGET).vcd
-testall:	$(BUILD) $(WF) $(subst .sch,.vcd,$(subst $(SCHEM),$(WF),$(shell echo $(SCHEMS))))
+testall:	$(BUILD) $(WF) $(ALL_TESTS)
 doc:		$(DOC)/block_diagram.png
 
 clean:
-	@rm -rf -- $(BUILD)/* $(WF)/* proto.cmd proto.net proto.pcb-
-
-# generate dependencies
-Makefile.deps: $(SCHEMS) makedeps.py
-	@python makedeps.py $(SCHEMS) > $@
--include Makefile.deps
+	@rm -rf -- $(BUILD)/* $(WF)/* proto.cmd proto.net proto.pcb- Makefile.deps
