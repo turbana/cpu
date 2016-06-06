@@ -12,6 +12,7 @@ CONFIG_FILE = "tests.json"
 WAVEFORM_DIR = "waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
+DELAY = 1000
 
 DONTCARE = object()
 
@@ -30,7 +31,7 @@ def main(args):
     try:
         tests = generate_tests(config)
         emit_header(stream, module, wires)
-        emit_tests(stream, tests, config["delay"])
+        emit_tests(stream, tests, DELAY)
         emit_footer(stream, module, wires)
     except FatalTestException, e:
         sys.stderr.write(str(e))
