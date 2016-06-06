@@ -72,6 +72,10 @@ $(DOC)/%.png: %.sch
 	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
 
 
+$(DOC)/schematics.pdf: $(SCHEMS)
+	@gaf export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
+
+
 wave: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
 	@gtkwave $(WF)/$(TARGET).vcd
 
@@ -80,7 +84,7 @@ netlist:	$(BUILD) $(BUILD)/$(target).v
 testbench:	$(BUILD) $(BUILD)/tb_$(target).v
 test: 		$(BUILD) $(WF) $(WF)/$(target).vcd
 testall:	$(BUILD) $(WF) $(ALL_TESTS)
-doc:		$(DOC)/block_diagram.png
+doc:		$(DOC)/block_diagram.png $(DOC)/schematics.pdf
 
 clean:
 	@rm -rf -- $(BUILD)/* Makefile.deps
