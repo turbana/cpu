@@ -32,42 +32,12 @@
 			}
 		}
 	},
-	"execute_forward_a": {
+	"execute_forward": {
 		"inputs": {
 			"DE_A":  {"width": 16},
 			"DE_Ra": {"width": 4},
-			"EM_D":  {"width": 16},
-			"EM_Rd": {"width": 4},
-			"MW_D":  {"width": 16},
-			"MW_Rd": {"width": 4}
-		},
-		"internal": {
-			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
-			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0"
-		},
-		"outputs": {
-			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"}
-		}
-	},
-	"execute_forward_b": {
-		"inputs": {
 			"DE_B":  {"width": 16},
 			"DE_Rb": {"width": 4},
-			"EM_D":  {"width": 16},
-			"EM_Rd": {"width": 4},
-			"MW_D":  {"width": 16},
-			"MW_Rd": {"width": 4}
-		},
-		"internal": {
-			"eb": "EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
-			"mb": "MW_Rd ^ DE_Rb == 0 and DE_Rb != 0"
-		},
-		"outputs": {
-			"F_B": {"width": 16, "formula": "EM_D if eb else (MW_D if mb else DE_B)"}
-		}
-	},
-	"execute_forward_c": {
-		"inputs": {
 			"DE_C":  {"width": 16},
 			"DE_Rc": {"width": 4},
 			"EM_D":  {"width": 16},
@@ -76,10 +46,16 @@
 			"MW_Rd": {"width": 4}
 		},
 		"internal": {
+			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"eb": "EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
+			"mb": "MW_Rd ^ DE_Rb == 0 and DE_Rb != 0",
 			"ec": "EM_Rd ^ DE_Rc == 0 and DE_Rc != 0",
 			"mc": "MW_Rd ^ DE_Rc == 0 and DE_Rc != 0"
 		},
 		"outputs": {
+			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"},
+			"F_B": {"width": 16, "formula": "EM_D if eb else (MW_D if mb else DE_B)"},
 			"F_C": {"width": 16, "formula": "EM_D if ec else (MW_D if mc else DE_C)"}
 		}
 	},
