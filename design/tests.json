@@ -7,7 +7,8 @@
 		},
 		"assert": "op != 7",
 		"values": [
-			"A_D:16 = a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))"
+			"A_D:16 = a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))",
+			"A_Z:1 = 1 if A_D==0 else 0"
 		]
 	},
 	"execute_alu_bs": {
