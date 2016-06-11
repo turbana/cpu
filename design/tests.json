@@ -9,7 +9,7 @@
 		"outputs": {
 			"A_D": {
 				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_Z)))"
+				"formula": "a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))"
 			}
 		}
 	},
@@ -26,7 +26,7 @@
 			"ar": "op & 1"
 		},
 		"outputs": {
-			"_E_Z": {
+			"_E_S": {
 				"width": 16,
 				"formula": "((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))"
 			}
