@@ -6,12 +6,9 @@
 			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
 		"assert": "op != 7",
-		"outputs": {
-			"A_D": {
-				"width": 16,
-				"formula": "a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))"
-			}
-		}
+		"values": [
+			"A_D:16 = a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))"
+		]
 	},
 	"execute_alu_bs": {
 		"inputs": {
@@ -20,17 +17,12 @@
 			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
 		"assert": "(op & 3) != 3",
-		"internal": {
-			"s": "b & 0xF",
-			"r": "(~op & 2) >> 1",
-			"ar": "op & 1"
-		},
-		"outputs": {
-			"_E_S": {
-				"width": 16,
-				"formula": "((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))"
-			}
-		}
+		"values": [
+			"s = b & 0xF",
+			"r = (~op & 2) >> 1",
+			"ar = op & 1",
+			"_E_S:16 = ((a>>s)|((2**16 - 2**(16-s)) * (a>>15))) if r and ar else ((a>>s) if r else (a<<s))"
+		]
 	},
 	"execute_forward": {
 		"inputs": {
@@ -45,19 +37,17 @@
 			"MW_D":  {"width": 16},
 			"MW_Rd": {"width": 4}
 		},
-		"internal": {
-			"ea": "EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
-			"ma": "MW_Rd ^ DE_Ra == 0 and DE_Ra != 0",
-			"eb": "EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
-			"mb": "MW_Rd ^ DE_Rb == 0 and DE_Rb != 0",
-			"ec": "EM_Rd ^ DE_Rc == 0 and DE_Rc != 0",
-			"mc": "MW_Rd ^ DE_Rc == 0 and DE_Rc != 0"
-		},
-		"outputs": {
-			"F_A": {"width": 16, "formula": "EM_D if ea else (MW_D if ma else DE_A)"},
-			"F_B": {"width": 16, "formula": "EM_D if eb else (MW_D if mb else DE_B)"},
-			"F_C": {"width": 16, "formula": "EM_D if ec else (MW_D if mc else DE_C)"}
-		}
+		"values": [
+			"ea = EM_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"ma = MW_Rd ^ DE_Ra == 0 and DE_Ra != 0",
+			"eb = EM_Rd ^ DE_Rb == 0 and DE_Rb != 0",
+			"mb = MW_Rd ^ DE_Rb == 0 and DE_Rb != 0",
+			"ec = EM_Rd ^ DE_Rc == 0 and DE_Rc != 0",
+			"mc = MW_Rd ^ DE_Rc == 0 and DE_Rc != 0",
+			"F_A:16 = EM_D if ea else (MW_D if ma else DE_A)",
+			"F_B:16 = EM_D if eb else (MW_D if mb else DE_B)",
+			"F_C:16 = EM_D if ec else (MW_D if mc else DE_C)"
+		]
 	},
 	"proto": {
 		"inputs": {
@@ -66,15 +56,9 @@
 			"Op":  {"width": 2, "alias": "op"},
 			"Cin": {"width": 1}
 		},
-		"outputs": {
-			"D": {
-				"width": 4,
-				"formula": "a+b+Cin if op==0 else (a&b if op==1 else (a|b if op==2 else a^b))"
-			},
-			"Cout": {
-				"width": 1,
-				"formula": "(a+b+Cin)>>4 if op==0 else DONTCARE"
-			}
-		}
+		"values": [
+			"D:4 = a+b+Cin if op==0 else (a&b if op==1 else (a|b if op==2 else a^b))",
+			"Cout:1 = (a+b+Cin)>>4 if op==0 else DONTCARE"
+		]
 	}
 }

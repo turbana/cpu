@@ -15,7 +15,7 @@ SHOW_WAVEFORM = False
 DELAY = 1000
 
 DONTCARE = object()
-CONFIG_KEYS = ("inputs", "assert", "internal", "outputs")
+CONFIG_KEYS = ("inputs", "assert", "values")
 
 
 class FatalTestException(Exception):
@@ -191,12 +191,7 @@ def grammer():
 def parse_config(filename, module):
     data = json.loads(open(filename).read())
     expand_config(data, module)
-    config = data[module]
-    # ensure all keys are set for parent module
-    for var,value in config.get("outputs", {}).items():
-        value["order"] = value.get("order", sys.maxint)
-        value["expose"] = value.get("expose", True)
-    return config
+    return data[module]
 
 
 def expand_config(data, module):
@@ -208,28 +203,36 @@ def expand_config(data, module):
     for child_name in children:
         expand_config(data, child_name)
         child = data[child_name]
-        for key in CONFIG_KEYS:
-            config_merge(parent, child, key)
+        config_merge_inputs(parent, child)
+        config_merge_assert(parent, child)
+        config_merge_values(parent, child)
 
 
-def config_merge(left, right, key):
-    lvalue = left.get(key, {})
-    rvalue = right.get(key, {})
-    if key == "assert":
-        # only merge in child assert when parent doesn't have one
-        if not lvalue and rvalue:
-            left["assert"] = rvalue
-        return
+def config_merge_inputs(left, right):
+    lvalue = left.get("inputs", {})
+    rvalue = right.get("inputs", {})
     for rkey in rvalue.keys():
         if rkey not in lvalue:
             lvalue[rkey] = rvalue[rkey]
         elif lvalue[rkey] != rvalue[rkey]:
             name = "%s.%s" % (key, rkey)
             raise FatalTestException("Config mis-match found for %s in %s and %s" % (name, left["name"], right["name"]))
-        if key == "outputs":
-            lvalue[rkey]["order"] = rvalue[rkey].get("order", 0) + 1
-            lvalue[rkey]["expose"] = False # don't assign child expression to module wires
-    left[key] = lvalue
+    left["inputs"] = lvalue
+
+
+def config_merge_assert(left, right):
+    # only merge string if parent doesn't have it and child does
+    if "assert" not in left and "assert" in right:
+        left["assert"] = right["assert"]
+
+
+def config_merge_values(left, right):
+    # strip width from child formulas as we don't want to export child values to test bench
+    rvalues = []
+    for formula in right.get("values", []):
+        name, width, expr = parse_formula(formula)
+        rvalues.append("%s = %s" % (name, expr))
+    left["values"] = rvalues + left["values"]
 
 
 def generate_tests(config):
@@ -257,35 +260,38 @@ def generate_test(config):
     if "assert" in config:
         if not eval(config["assert"], {}, env):
             return generate_test(config)
-    # load intermidiates
-    if "internal" in config:
-        for name, formula in config["internal"].items():
-            value = eval_formula(formula, env, config["name"])
-            env[name] = value
-    # generate outputs
-    order_key = lambda name: config["outputs"][name]["order"]
-    names = sorted(config["outputs"].keys(), key=order_key)
-    for name in names:
-        width = config["outputs"][name]["width"]
-        formula = config["outputs"][name]["formula"]
-        value = eval_formula(formula, env, config["name"], width)
+    # evaluate values
+    for formula in config["values"]:
+        name, export_width, expr = parse_formula(formula)
+        value = eval_formula(expr, env, config["name"], export_width)
         env[name] = value
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
-        if config["outputs"][name]["expose"]:
-            test["outputs"].append({"value": value, "width": width, "name": name})
+        if export_width:
+            test["outputs"].append({"value": value, "width": export_width, "name": name})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
         return generate_test(config)
     return test
 
 
-def eval_formula(formula, env, name, width=64):
+def parse_formula(formula):
+    parts = formula.split("=")
+    if ":" in parts[0]:
+        name, width = parts[0].split(":")
+        width = int(width)
+    else:
+        name = parts[0].strip()
+        width = None
+    return name, width, "=".join(parts[1:])
+
+
+def eval_formula(formula, env, name, width=None):
     try:
         value = eval(formula, {}, env)
         # if we have an actual value constrain it to it's width
-        if value is not DONTCARE:
+        if value is not DONTCARE and width is not None:
             formula = "(%s) & %d" % (value, (2**width)-1)
             value = eval(formula, {}, env)
     except Exception, e:
