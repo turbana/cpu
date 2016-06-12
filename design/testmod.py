@@ -106,8 +106,8 @@ def emit_test(stream, delay, test, count=[0]):
     count[0] += 1
     e("  /* test #%d */\n" % count[0])
     # setup inputs
-    for item in test["inputs"]:
-        e("  %s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
+    for item in sorted(test["inputs"]):
+        e("  %8s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
     e("  #%d\n" % (delay + 1))
     # check outputs
     check = " || ".join("(%s !== %s)" % (item["name"], binary(item["value"], item["width"]))
