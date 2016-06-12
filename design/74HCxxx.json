@@ -40,5 +40,15 @@
 		"package": "DIP14",
 		"names": ["1Y", "1A", "1B", "1C", "1D", "NC", "GND", "NC", "2A", "2B", "2C", "2D", "2Y", "VCC"],
 		"assign": {"?Y": "~(?A | ?B | ?C | ?D)"}
+	},
+	"744078": {
+		"desc": "8-bit OR/NOR gate",
+		"delay": 0,
+		"package": "DIP14",
+		"names": ["Y", "A", "B", "C", "D", "NC", "GND", "NC", "E", "F", "G", "H", "W", "VCC"],
+		"assign": {
+			"Y": "A | B | C | D | E | F | G | H",
+			"W": "~(A | B | C | D | E | F | G | H)"
+		}
 	}
 }
