@@ -111,6 +111,24 @@
 			"S_S:1 = EM_S & EM_Snz & EM_Z"
 		]
 	},
+	"writeback_interrupts": {
+		"inputs": {
+			"MW_PC": {"width": 16},
+			"MW_Rd": {"width": 4},
+			"MW_T":  {"width": 1},
+			"MW_I":  {"width": 1},
+			"MW_D":  {"width": 16},
+			"R_IE":  {"width": 1}
+		},
+		"values": [
+			"int = MW_I & R_IE",
+			"trap = MW_T & R_IE",
+			"I_I:1 = int",
+			"I_T:1 = trap",
+			"I_D:16 = MW_PC if int | trap else MW_D",
+			"I_Rd:4 = 10 if int | trap else MW_Rd"
+		]
+	},
 	"proto": {
 		"inputs": {
 			"A":   {"width": 4, "alias": "a"},
