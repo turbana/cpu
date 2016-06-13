@@ -85,6 +85,22 @@
 			"EC_D:16 = (0xFF80 if int else 0xC000) if brk else (DONTCARE if skip else A_D)"
 		]
 	},
+	"memory_control": {
+		"inputs": {
+			"EM_Mr": {"width": 1},
+			"EM_Mw": {"width": 1},
+			"EM_Rd": {"width": 4},
+			"I_I":   {"width": 1}
+		},
+		"values": [
+			"reti = EM_Mr & EM_Mw",
+			"nop = I_I | reti",
+			"MC_Ir:1 = reti",
+			"MC_Rd:4 = 0 if I_I else EM_Rd",
+			"MC_Mr:1 = 0 if nop else EM_Mr",
+			"MC_Mw:1 = 0 if nop else EM_Mw"
+		]
+	},
 	"memory_skip": {
 		"inputs": {
 			"EM_S":   {"width": 1},
