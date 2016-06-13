@@ -13,6 +13,7 @@ WAVEFORM_DIR = "build/waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
 DELAY = 1000
+MAX_TRIES = 50
 
 DONTCARE = object()
 CONFIG_KEYS = ("inputs", "assert", "values")
@@ -232,7 +233,7 @@ def config_merge_values(left, right):
     for formula in right.get("values", []):
         name, width, expr = parse_formula(formula)
         rvalues.append("%s = %s" % (name, expr))
-    left["values"] = rvalues + left["values"]
+    left["values"] = rvalues + left.get("values", [])
 
 
 def generate_tests(config):
@@ -244,7 +245,7 @@ def randbits(bits):
     return random.randint(0, (2**bits)-1)
 
 
-def generate_test(config):
+def generate_test(config, _count=0):
     test = {"inputs": [], "outputs": []}
     env = {"DONTCARE": DONTCARE}
     # generate inputs
@@ -272,7 +273,9 @@ def generate_test(config):
             test["outputs"].append({"value": value, "width": export_width, "name": name})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
-        return generate_test(config)
+        if _count == MAX_TRIES:
+            raise FatalTestException("Exceeded MAX_TRIES (%d) attempts for %s" % (MAX_TRIES, config["name"]))
+        return generate_test(config, _count+1)
     return test
 
 
