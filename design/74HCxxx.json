@@ -20,6 +20,13 @@
 		"names": ["1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3A", "3B", "4Y", "4A", "4B", "VCC"],
 		"assign": {"?Y": "?A ^ ?B"}
 	},
+	"74153": {
+		"desc": "Dual 4x1 Mux",
+		"delay": 30,
+		"package": "DIP16",
+		"names": ["1E", "S1", "1I3", "1I2", "1I1", "1I0", "1Y", "GND", "2Y", "2I0", "2I1", "2I2", "2I3", "S0", "2E", "VCC"],
+		"assign": {"?Y": "~?E & (S1 ? (S0 ? ?I3 : ?I2) : (S0 ? ?I1 : ?I0))"}
+	},
 	"74157": {
 		"desc": "Quad 2x1 Mux",
 		"delay": 27,
@@ -43,7 +50,7 @@
 	},
 	"744078": {
 		"desc": "8-bit OR/NOR gate",
-		"delay": 0,
+		"delay": 26,
 		"package": "DIP14",
 		"names": ["Y", "A", "B", "C", "D", "NC", "GND", "NC", "E", "F", "G", "H", "W", "VCC"],
 		"assign": {
