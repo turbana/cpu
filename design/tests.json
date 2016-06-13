@@ -50,6 +50,41 @@
 			"F_C:16 = EM_D if ec else (MW_D if mc else DE_C)"
 		]
 	},
+	"execute_control": {
+		"inputs": {
+			"R_IE":  {"width": 1},
+			"EM_J":  {"width": 1},
+			"I_I":   {"width": 1},
+			"I_T":   {"width": 1},
+			"PIC_I": {"width": 1},
+			"S_S":   {"width": 1},
+			"DE_Rd": {"width": 4},
+			"DE_T":  {"width": 1},
+			"DE_J":  {"width": 1},
+			"DE_Mr": {"width": 1},
+			"DE_Mw": {"width": 1},
+			"DE_Mt": {"width": 1},
+			"DE_S":  {"width": 1},
+			"A_D":   {"width": 16}
+		},
+		"values": [
+			"valid_op = DE_J | DE_S | DE_Mr | DE_Mw | (1 if DE_Rd else 0)",
+			"int = I_I",
+			"trap = I_T",
+			"brk = int | trap",
+			"sint = R_IE & PIC_I & valid_op & ~S_S & ~EM_J",
+			"skip = sint | S_S | EM_J",
+			"EC_Rd:4 = 8 if brk else (0 if skip else DE_Rd)",
+			"EC_T:1 = 0 if brk else (0 if skip else DE_T)",
+			"EC_I:1 = 0 if brk else (sint if skip else 0)",
+			"EC_J:1 = 0 if brk else (0 if skip else DE_J)",
+			"EC_Mr:1 = 1 if brk else (0 if skip else DE_Mr)",
+			"EC_Mw:1 = 0 if brk else (0 if skip else DE_Mw)",
+			"EC_Mt:1 = 1 if brk else (DONTCARE if skip else DE_Mt)",
+			"EC_S:1 = 0 if brk else (0 if skip else DE_S)",
+			"EC_D:16 = (0xFF80 if int else 0xC000) if brk else (DONTCARE if skip else A_D)"
+		]
+	},
 	"proto": {
 		"inputs": {
 			"A":   {"width": 4, "alias": "a"},
