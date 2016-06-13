@@ -85,6 +85,16 @@
 			"EC_D:16 = (0xFF80 if int else 0xC000) if brk else (DONTCARE if skip else A_D)"
 		]
 	},
+	"memory_skip": {
+		"inputs": {
+			"EM_S":   {"width": 1},
+			"EM_Snz": {"width": 1},
+			"EM_Z":   {"width": 1}
+		},
+		"values": [
+			"S_S:1 = EM_S & EM_Snz & EM_Z"
+		]
+	},
 	"proto": {
 		"inputs": {
 			"A":   {"width": 4, "alias": "a"},
