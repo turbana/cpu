@@ -2,7 +2,7 @@
 	"decode_hazard": {
 		"inputs": {
 			"EM_J":  {"width": 1},
-			"DE_Mr": {"width":1},
+			"DE_Mr": {"width": 1},
 			"DE_Rd": {"width": 4},
 			"D_Ra":  {"width": 4},
 			"D_Rb":  {"width": 4},
@@ -12,7 +12,8 @@
 			"ma = 1 if DE_Rd == D_Ra else 0",
 			"mb = 1 if DE_Rd == D_Rb else 0",
 			"mc = 1 if DE_Rd == D_Rc else 0",
-			"match = ma | mb | mc",
+			"zero = 1 if DE_Rd == 0 else 0",
+			"match = ~zero & (ma | mb | mc)",
 			"H_H:1 = EM_J | (DE_Mr & match)"
 		]
 	},
