@@ -1,4 +1,25 @@
 {
+	"decode_control": {
+		"inputs": {
+			"H_H":  {"width": 1},
+			"I_I":  {"width": 1},
+			"D_Rd": {"width": 4},
+			"D_T":  {"width": 1},
+			"D_J":  {"width": 1},
+			"D_Mr": {"width": 1},
+			"D_Mw": {"width": 1},
+			"D_S":  {"width": 1}
+		},
+		"values": [
+			"nop = I_I | H_H",
+			"DC_Rd:4 = 0 if nop else D_Rd",
+			"DC_T:1 = 0 if nop else D_T",
+			"DC_J:1 = 0 if nop else D_J",
+			"DC_Mr:1 = 0 if nop else D_Mr",
+			"DC_Mw:1 = 0 if nop else D_Mw",
+			"DC_S:1 = 0 if nop else D_S"
+		]
+	},
 	"decode_hazard": {
 		"inputs": {
 			"EM_J":  {"width": 1},
