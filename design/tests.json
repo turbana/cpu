@@ -126,7 +126,8 @@
 			"EM_Z":   {"width": 1}
 		},
 		"values": [
-			"S_S:1 = EM_S & EM_Snz & EM_Z"
+			"match = 1 if EM_Snz == EM_Z else 0",
+			"S_S:1 = EM_S & match"
 		]
 	},
 	"writeback_interrupts": {
