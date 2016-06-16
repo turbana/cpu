@@ -48,8 +48,9 @@ def gen_code(spec):
 	module = spec["module"]
 	delay = spec["delay"]
 	all_wires = map(escape, range(1, wire_count(spec)+1))
-	outputs = map(escape, expand_wires(spec, spec["assign"].keys()))
+	outputs = map(escape, output_wires(spec))
 	inputs = map(escape, set(all_wires) - set(outputs))
+	registers = map(escape, expand_wires(spec, spec.get("registers", [])))
 	code = "/* %s */\n`timescale 1 ns / 100 ps\n" % module
 	code += "module %s (" % escape(module)
 	code += ",".join(map(escape, range(1, wire_count(spec)+1)))
@@ -57,9 +58,15 @@ def gen_code(spec):
 	code += ",".join(inputs)
 	code += ";\n\toutput "
 	code += ",".join(outputs)
+	if registers:
+		code += ";\n\treg "
+		code += ",".join("%s = 0" % r for r in registers)
 	code += ";\n\n"
 	for assign in assignments(spec):
 		code += "\tassign #%d %s;\n" % (delay, assign)
+	code += "\n"
+	for if_stmnt, expr in clocked_expressions(spec):
+		code += "\talways @(%s)\n\tbegin\n\t\t%s\n\tend\n" % (if_stmnt, expr)
 	code += "\nendmodule"
 	for char in _SPACE_CHARS:
 		code = code.replace(char, " " + char + " ")
@@ -72,11 +79,26 @@ def escape(x):
 	return e + x
 
 
+def output_wires(spec):
+	assign = expand_wires(spec, spec.get("assign", {}).keys())
+	clocked = expand_wires(spec, spec.get("registers", []))
+	return set(assign) | set(clocked)
+
+
 def assignments(spec):
-	for value, expr in spec["assign"].items():
+	for value, expr in spec.get("assign", {}).items():
 		expr = expand_basic_wires(spec, "%s = %s" % (value, expr))
 		for assign in expand_expr(spec, expr):
 			yield assign
+
+
+def clocked_expressions(spec):
+	sep = "/|\\"
+	for test, expr in spec.get("clocked", {}).items():
+		full_expr = "%s %s %s" % (test, sep, expr)
+		for expansion in expand_expr(spec, full_expr):
+			test, expr = expansion.split(sep)
+			yield test, expr
 
 
 def wire_count(spec):
@@ -137,7 +159,8 @@ def expand_expr(spec, expr):
 	_expand = functools.partial(expand, spec)
 	names = collections.OrderedDict()
 	count = 0
-	for name in re.findall(_EXPR_REGEX, expr):
+	found = re.findall(_EXPR_REGEX, expr)
+	for name in sorted(found, key=len, reverse=True):
 		if name and name not in names:
 			var = "var%d" % count
 			names[name] = var
