@@ -128,7 +128,7 @@ def expand(spec, name):
 	_wire_name = functools.partial(wire_name, spec)
 	if "?" not in name:
 		return [wire_name(spec, name)]
-	regex = name.replace("?", "[0-9]+")
+	regex = r"\b%s\b" % name.replace("?", "[0-9]+")
 	matches = findall(regex, " ".join(spec["names"]))
 	return map(_wire_name, matches)
 
