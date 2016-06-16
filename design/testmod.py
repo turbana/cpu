@@ -55,6 +55,8 @@ def emit_header(stream, module, wires):
         type = "reg" if wires[name]["dir"] == "in" else "wire"
         width = "[%d:0]" % (wires[name]["width"] - 1)
         e("%4s %8s %s;\n" % (type, width, name))
+    if "_CLK" not in wires:
+        e("reg _CLK = 0;\n")
     e("\n")
 
     e("/* instantiate component */\n")
@@ -64,6 +66,11 @@ def emit_header(stream, module, wires):
 
     e("/* test bench variables */\n")
     e("integer _TB_ERRORS;\n")
+    e("integer _TB_DONE = 0;\n")
+    e("\n")
+
+    e("/* setup clock */\n")
+    e("always #%s _CLK = ~_CLK;\n" % (DELAY/8))
     e("\n")
 
     e("/* begin test bench */\n")
@@ -71,6 +78,7 @@ def emit_header(stream, module, wires):
     e('  $dumpfile("%s/%s.vcd");\n' % (WAVEFORM_DIR, module))
     e("  $dumpvars;\n")
     e("  _TB_ERRORS = 0;\n")
+    e("  _CLK = 0;\n")
     if not SHOW_WAVEFORM: return
     vars = wires.keys()
     maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
@@ -92,6 +100,7 @@ def emit_footer(stream, module, wires):
     e("  begin\n")
     e('    $display("\\nFAILURE %%1d error(s) testing %s", _TB_ERRORS);\n' % module)
     e("  end\n")
+    e("  $finish;\n")
     e("end\nendmodule\n")
 
 
@@ -249,7 +258,7 @@ def generate_test(config, _count=0):
     test = {"inputs": [], "outputs": []}
     env = {"DONTCARE": DONTCARE}
     # generate inputs
-    for name in config["inputs"].keys():
+    for name in config.get("inputs", {}).keys():
         width = config["inputs"][name]["width"]
         alias = config["inputs"][name].get("alias", None)
         value = randbits(width)
