@@ -6,8 +6,8 @@ WF			= $(BUILD)/waveforms
 FAILON		= ./failon.sh
 GNETLIST	= /usr/bin/gnetlist
 
-SCHEMS = $(SCHEM)/*.sch
-DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(wildcard $(SCHEMS))))
+SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(SCHEM)/*.sch))
+DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
 
 
 .PHONY: clean help netlist testbench test testall protopcb doc wave
