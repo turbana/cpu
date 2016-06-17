@@ -153,7 +153,7 @@ def expand(spec, name):
 		return [wire_name(spec, name)]
 	regex = r"\b%s\b" % name.replace("?", "[0-9]+")
 	matches = findall(regex, " ".join(spec["names"]))
-	return map(_wire_name, matches)
+	return map(_wire_name, sorted(matches))
 
 
 def expand_expr(spec, expr):
