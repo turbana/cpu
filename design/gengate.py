@@ -96,6 +96,7 @@ def clocked_expressions(spec):
 	sep = "/|\\"
 	for test, expr in spec.get("clocked", {}).items():
 		full_expr = "%s %s %s" % (test, sep, expr)
+		full_expr = expand_basic_wires(spec, full_expr)
 		for expansion in expand_expr(spec, full_expr):
 			test, expr = expansion.split(sep)
 			yield test, expr
