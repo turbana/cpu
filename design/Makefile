@@ -7,6 +7,7 @@ FAILON		= ./failon.sh
 GNETLIST	= /usr/bin/gnetlist
 
 SCHEMS = $(SCHEM)/*.sch
+DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(wildcard $(SCHEMS))))
 
 
 .PHONY: clean help netlist testbench test testall protopcb doc wave
@@ -69,11 +70,11 @@ $(WF)/%.vcd: $(BUILD)/test_%
 
 
 $(DOC)/%.png: %.sch
-	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
+	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
-$(DOC)/schematics.pdf: $(SCHEMS)
-	@gaf export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:"
+$(DOC)/schematics.pdf: $(DOC_SCHEMS)
+	@gaf export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
 wave: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
@@ -87,4 +88,4 @@ testall:	$(BUILD) $(WF) $(ALL_TESTS)
 doc:		$(DOC)/block_diagram.png $(DOC)/schematics.pdf
 
 clean:
-	@rm -rf -- $(BUILD)/* Makefile.deps
+	@rm -rf -- $(BUILD)/* Makefile.deps $(DOC)/block_diagram.png $(DOC)/schematics.pdf
