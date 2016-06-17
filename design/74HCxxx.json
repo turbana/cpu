@@ -21,7 +21,7 @@
 		"assign": {"?Y": "?A | ?B"}
 	},
 	"7474": {
-		"desc": "Dual D-type flip flop with set and reset; positive edge-triggered",
+		"desc": "Dual D-type flip flop with async set/reset; positive edge-triggered",
 		"delay": 16,
 		"package": "DIP14",
 		"names": ["1RD", "1D", "1CP", "1SD", "1Q", "1QB", "GND", "2QB", "2Q", "2SD", "2CP", "2D", "2RD", "VCC"],
@@ -74,6 +74,16 @@
 		"assign": {
 			"Y": "A | B | C | D | E | F | G | H",
 			"W": "~(A | B | C | D | E | F | G | H)"
+		}
+	},
+	"74574": {
+		"desc": "Octal D-type flip flop; positive edge-triggered; 3 state output",
+		"delay": 16,
+		"package": "DIP20",
+		"names": ["OE", "0D", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "GND", "CP", "7Q", "6Q", "5Q", "4Q", "3Q", "2Q", "1Q", "0Q", "VCC"],
+		"registers": ["0Q", "1Q", "2Q", "3Q", "4Q", "5Q", "6Q", "7Q"],
+		"clocked": {
+			"posedge CP": "?Q <= OE ? 1'bZ : ?D;"
 		}
 	}
 }
