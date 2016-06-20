@@ -67,6 +67,7 @@ def emit_header(stream, module, wires):
     e("/* test bench variables */\n")
     e("integer _TB_ERRORS;\n")
     e("integer _TB_DONE = 0;\n")
+    e("integer _TB_TEST_ID;\n")
     e("\n")
 
     e("/* setup clock */\n")
@@ -78,6 +79,7 @@ def emit_header(stream, module, wires):
     e('  $dumpfile("%s/%s.vcd");\n' % (WAVEFORM_DIR, module))
     e("  $dumpvars;\n")
     e("  _TB_ERRORS = 0;\n")
+    e("  _TB_TEST_ID = 0;\n")
     e("  _CLK = 0;\n")
     if not SHOW_WAVEFORM: return
     vars = wires.keys()
@@ -115,6 +117,7 @@ def emit_test(stream, delay, test, count=[0]):
     # test header
     count[0] += 1
     e("  /* test #%d */\n" % count[0])
+    e("  _TB_TEST_ID = %d;\n" % count[0])
     # setup inputs
     for item in sorted(test["inputs"]):
         e("  %8s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
