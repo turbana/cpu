@@ -257,21 +257,23 @@ def config_merge_values(left, right):
     # strip width from child formulas as we don't want to export child values to test bench
     rvalues = []
     for formula in right.get("values", []):
-        name, width, delay, expr = parse_formula(formula)
-        rvalues.append("@%0.2f %s = %s" % (delay, name, expr))
+        name, width, delay, static_, expr = parse_formula(formula)
+        static_ = "static" if static_ else ""
+        rvalues.append("%s @%0.2f %s = %s" % (static_, delay, name, expr))
     left["values"] = rvalues + left.get("values", [])
 
 
 def generate_tests(config):
+    static_vars = {}
     for _ in range(TEST_COUNT):
-        yield generate_test(config)
+        yield generate_test(config, static_vars)
 
 
 def randbits(bits):
     return random.randint(0, (2**bits)-1)
 
 
-def generate_test(config, _count=0):
+def generate_test(config, static_vars, _count=0):
     test = {"inputs": [], "outputs": []}
     env = {"DONTCARE": DONTCARE}
     # generate inputs
@@ -289,9 +291,13 @@ def generate_test(config, _count=0):
             return generate_test(config)
     # evaluate values
     for formula in config["values"]:
-        name, export_width, delay, expr = parse_formula(formula)
+        name, export_width, delay, static_, expr = parse_formula(formula)
+        if static_ and name not in static_vars:
+            static_vars[name] = 0
+        env.update(static_vars)
         value = eval_formula(expr, env, config["name"], export_width)
         env[name] = value
+        if static_: static_vars[name] = value
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
@@ -306,6 +312,11 @@ def generate_test(config, _count=0):
 
 
 def parse_formula(formula):
+    formula = formula.strip()
+    static_ = False
+    if formula.startswith("static"):
+        static_ = True
+        formula = formula[len("static"):].strip()
     delay = 1.0
     if formula.startswith("@"):
         i = formula.index(" ")
@@ -318,7 +329,7 @@ def parse_formula(formula):
     else:
         name = parts[0].strip()
         width = None
-    return name, width, delay, "=".join(parts[1:])
+    return name, width, delay, static_, "=".join(parts[1:])
 
 
 def eval_formula(formula, env, name, width=None):
