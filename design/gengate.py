@@ -66,7 +66,7 @@ def gen_code(spec):
 		code += "\tassign #%d %s;\n" % (delay, assign)
 	code += "\n"
 	for if_stmnt, expr in clocked_expressions(spec):
-		code += "\talways @(%s)\n\tbegin\n\t\t%s\n\tend\n" % (if_stmnt, expr)
+		code += "\talways @(%s)\n\tbegin\n\t\t#%s %s\n\tend\n" % (if_stmnt, delay, expr)
 	code += "\nendmodule"
 	for char in _SPACE_CHARS:
 		code = code.replace(char, " " + char + " ")
