@@ -12,7 +12,7 @@ CONFIG_FILE = "tests.json"
 WAVEFORM_DIR = "build/waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
-DELAY = 1000
+CLOCK_TIME = 1000
 MAX_TRIES = 50
 
 DONTCARE = object()
@@ -33,7 +33,7 @@ def main(args):
     try:
         tests = generate_tests(config)
         emit_header(stream, module, wires)
-        emit_tests(stream, tests, DELAY)
+        emit_tests(stream, tests, CLOCK_TIME)
         emit_footer(stream, module, wires)
     except FatalTestException, e:
         sys.stderr.write(str(e))
@@ -56,7 +56,7 @@ def emit_header(stream, module, wires):
         width = "[%d:0]" % (wires[name]["width"] - 1)
         e("%4s %8s %s;\n" % (type, width, name))
     if "_CLK" not in wires:
-        e("reg _CLK = 0;\n")
+        e("reg _CLK;\n")
     e("\n")
 
     e("/* instantiate component */\n")
@@ -68,10 +68,11 @@ def emit_header(stream, module, wires):
     e("integer _TB_ERRORS;\n")
     e("integer _TB_DONE = 0;\n")
     e("integer _TB_TEST_ID;\n")
+    e("integer _TB_TEST_FAILED;\n")
     e("\n")
 
     e("/* setup clock */\n")
-    e("always #%s _CLK = ~_CLK;\n" % (DELAY/8))
+    e("always #%s _CLK = ~_CLK;\n" % (CLOCK_TIME/8))
     e("\n")
 
     e("/* begin test bench */\n")
@@ -80,7 +81,7 @@ def emit_header(stream, module, wires):
     e("  $dumpvars;\n")
     e("  _TB_ERRORS = 0;\n")
     e("  _TB_TEST_ID = 0;\n")
-    e("  _CLK = 0;\n")
+    e("  _CLK = 1;\n")
     if not SHOW_WAVEFORM: return
     vars = wires.keys()
     maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
@@ -106,35 +107,48 @@ def emit_footer(stream, module, wires):
     e("end\nendmodule\n")
 
 
-def emit_tests(stream, tests, delay):
+def emit_tests(stream, tests, clock):
     emit(stream, "  /* test cases */\n\n")
     for test in tests:
-        emit_test(stream, delay, test)
+        emit_test(stream, clock, test)
 
 
-def emit_test(stream, delay, test, count=[0]):
+def emit_test(stream, clock, test, count=[0]):
     e = lambda s: emit(stream, s)
-    # test header
     count[0] += 1
-    e("  /* test #%d */\n" % count[0])
-    e("  _TB_TEST_ID = %d;\n" % count[0])
+    test_id = count[0]
+    prev_delay = 0.0
+    # test header
+    e("  /* test #%d */\n" % test_id)
+    e("  _TB_TEST_ID = %d;\n" % test_id)
+    e("  _TB_TEST_FAILED = 0;\n")
     # setup inputs
     for item in sorted(test["inputs"]):
         e("  %8s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
-    e("  #%d\n" % (delay + 1))
     # check outputs
-    check = " || ".join("(%s !== %s)" % (item["name"], binary(item["value"], item["width"]))
-                        for item in test["outputs"])
-    e("  if (%s)\n" % check)
-    # display diag info
-    e('  begin\n    $display("\\nFAIL (test #%d)");\n' % count[0])
-    e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
-    for item in sorted(test["outputs"]):
+    for item in sorted(test["outputs"], key=lambda i: i["delay"]):
+        delay = item["delay"]
+        if delay != prev_delay:
+            e("  #%d\n" % (int((delay - prev_delay) * clock)))
+            prev_delay = delay
+        check = "%s !== %s" % (item["name"], binary(item["value"], item["width"]))
+        e("  if (%s)\n" % check)
+        name = item["name"]
+        disp_name = name + ("" if delay == 1.0 else "@%0.2f" % delay)
+        e("  begin\n")
+        e('    if (!_TB_TEST_FAILED) begin $display("\\nFAIL (test #%d)"); end\n' % test_id)
+        e("    _TB_TEST_FAILED = 1;\n")
         e('    $display("%16s=%%36b\\n%16s=%%36s", %s, "%s");\n' % (
-            item["name"], "Expected", item["name"], binary_value(item["value"], item["width"])))
+            disp_name, "Expected", item["name"], binary_value(item["value"], item["width"])))
+        e("  end\n")
+    # display diag info
+    e("  if (_TB_TEST_FAILED)\n")
+    e("  begin\n")
+    e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
     for item in sorted(test["inputs"]):
         e('    $display("%16s=%36s");\n' % (item["name"], binary_value(item["value"], item["width"])))
     e("  end\n\n")
+    e("  #%d\n" % (int((1.0 - prev_delay) * clock)))
 
 
 def binary(n, width):
@@ -243,8 +257,8 @@ def config_merge_values(left, right):
     # strip width from child formulas as we don't want to export child values to test bench
     rvalues = []
     for formula in right.get("values", []):
-        name, width, expr = parse_formula(formula)
-        rvalues.append("%s = %s" % (name, expr))
+        name, width, delay, expr = parse_formula(formula)
+        rvalues.append("@%0.2f %s = %s" % (delay, name, expr))
     left["values"] = rvalues + left.get("values", [])
 
 
@@ -275,14 +289,14 @@ def generate_test(config, _count=0):
             return generate_test(config)
     # evaluate values
     for formula in config["values"]:
-        name, export_width, expr = parse_formula(formula)
+        name, export_width, delay, expr = parse_formula(formula)
         value = eval_formula(expr, env, config["name"], export_width)
         env[name] = value
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
         if export_width:
-            test["outputs"].append({"value": value, "width": export_width, "name": name})
+            test["outputs"].append({"value": value, "width": export_width, "delay": delay, "name": name})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
         if _count == MAX_TRIES:
@@ -292,6 +306,11 @@ def generate_test(config, _count=0):
 
 
 def parse_formula(formula):
+    delay = 1.0
+    if formula.startswith("@"):
+        i = formula.index(" ")
+        delay = float(formula[1:i])
+        formula = formula[i+1:]
     parts = formula.split("=")
     if ":" in parts[0]:
         name, width = parts[0].split(":")
@@ -299,7 +318,7 @@ def parse_formula(formula):
     else:
         name = parts[0].strip()
         width = None
-    return name, width, "=".join(parts[1:])
+    return name, width, delay, "=".join(parts[1:])
 
 
 def eval_formula(formula, env, name, width=None):
