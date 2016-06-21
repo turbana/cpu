@@ -1136,7 +1136,7 @@ C 51300 49400 1 0 0 ipad-1.sym
 T 51384 49621 5 10 0 1 0 0 1
 device=IPAD
 T 51300 49500 5 10 1 1 0 1 1
-netlabel=_CLK
+netlabel=CLK1
 }
 C 40500 41900 1 0 0 ipad-2.sym
 {
