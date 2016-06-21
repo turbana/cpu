@@ -144,6 +144,16 @@
 			"EC_D:16 = (0xFF80 if int else 0xC000) if brk else (DONTCARE if skip else A_D)"
 		]
 	},
+	"fetch_pc": {
+		"inputs": {
+			"EM_J": {"width": 1},
+			"H_H": {"width": 1},
+			"EM_D": {"width": 16}
+		},
+		"values": [
+			"static F_PC:16 = EM_D if EM_J else (F_PC if H_H else F_PC+1)"
+		]
+	},
 	"memory_control": {
 		"inputs": {
 			"EM_Mr": {"width": 1},
