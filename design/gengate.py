@@ -143,7 +143,7 @@ def findall(regex, data):
 
 def expand_basic_wires(spec, expr):
 	_wire_name = functools.partial(wire_name, spec)
-	regex = "(%s)" % _BASIC_WIRE_REGEX
+	regex = r"(\b%s\b)" % _BASIC_WIRE_REGEX
 	return "".join(map(escape, map(_wire_name, re.split(regex, expr))))
 
 
