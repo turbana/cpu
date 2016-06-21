@@ -288,7 +288,7 @@ def generate_test(config, static_vars, _count=0):
     # check assertions
     if "assert" in config:
         if not eval(config["assert"], {}, env):
-            return generate_test(config)
+            return generate_test(config, static_vars)
     # evaluate values
     for formula in config["values"]:
         name, export_width, delay, static_, expr = parse_formula(formula)
@@ -307,7 +307,7 @@ def generate_test(config, static_vars, _count=0):
     if not test["outputs"]:
         if _count == MAX_TRIES:
             raise FatalTestException("Exceeded MAX_TRIES (%d) attempts for %s" % (MAX_TRIES, config["name"]))
-        return generate_test(config, _count+1)
+        return generate_test(config, static_vars, _count+1)
     return test
 
 
