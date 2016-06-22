@@ -123,10 +123,10 @@ def parse_wires(schems):
         return 0 if not width else int(width)
     # read all wires
     for schem in schems:
-        for pad in schem.findall(basename="[io]pad-[12].sym"):
+        for pad in schem.findall(basename="(i|o|io)pad-[12].sym"):
             name = clean_name(pad)
             width = clean_width(pad)
-            direction = "input" if pad.device == "IPAD" else "output"
+            direction = {"IPAD": "input", "IOPAD": "inout", "OPAD": "output"}[pad.device]
             wires.add((name, width, direction))
     # check matching wires
     for name, width, direction in list(wires):
