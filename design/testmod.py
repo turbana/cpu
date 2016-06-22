@@ -16,6 +16,7 @@ CLOCK_TIME = 1000
 MAX_TRIES = 50
 
 DONTCARE = object()
+HIGHZ = object()
 CONFIG_KEYS = ("inputs", "assert", "values")
 
 
@@ -31,8 +32,8 @@ def main(args):
     stream = sys.stdout
     config = parse_config(CONFIG_FILE, module)
     try:
-        tests = generate_tests(config)
-        emit_header(stream, module, wires)
+        tests = generate_tests(config, wires)
+        emit_header(stream, module, wires, config)
         emit_tests(stream, tests, CLOCK_TIME)
         emit_footer(stream, module, wires)
     except FatalTestException, e:
@@ -44,7 +45,7 @@ def emit(stream, msg):
     stream.write(msg)
 
 
-def emit_header(stream, module, wires):
+def emit_header(stream, module, wires, config):
     e = lambda s: emit(stream, s)
 
     e("`timescale 1 ns / 100 ps\n\n")
@@ -52,9 +53,13 @@ def emit_header(stream, module, wires):
 
     e("/* test bench wires/registers */\n")
     for name in sorted(wires):
-        type = "reg" if wires[name]["dir"] == "in" else "wire"
+        dir = wires[name]["dir"]
+        type = "reg" if dir == "in" else "wire"
         width = "[%d:0]" % (wires[name]["width"] - 1)
         e("%4s %8s %s;\n" % (type, width, name))
+        if dir == "inout":
+            e(" reg %8s _%s;\n" % (width, name))
+            e(" reg          _%s_wr;\n" % name)
     if "_CLK" not in wires:
         e("reg _CLK;\n")
     e("\n")
@@ -75,6 +80,16 @@ def emit_header(stream, module, wires):
     e("always #%s _CLK = ~_CLK;\n" % (CLOCK_TIME/8))
     e("\n")
 
+    e("/* setup bidirectional wires */\n")
+    for name in sorted(wires):
+        if wires[name]["dir"] != "inout": continue
+        e("assign %s = (_%s_wr) ? _%s : %d'bZ;\n" % (name, name, name, wires[name]["width"]))
+        clock = config["inputs"].get(name, {}).get("clock", False)
+        if clock:
+            e("always @(posedge U0.%s) begin _%s_wr = 1'b1; end\n" % (clock, name))
+            e("always @(negedge U0.%s) begin _%s_wr = 1'bz; end\n" % (clock, name))
+    e("\n")
+
     e("/* begin test bench */\n")
     e("initial\nbegin\n")
     e('  $dumpfile("%s/%s.vcd");\n' % (WAVEFORM_DIR, module))
@@ -82,6 +97,9 @@ def emit_header(stream, module, wires):
     e("  _TB_ERRORS = 0;\n")
     e("  _TB_TEST_ID = 0;\n")
     e("  _CLK = 1;\n")
+    for name in sorted(wires):
+        if wires[name]["dir"] != "inout": continue
+        e("  _%s_wr = 0;\n" % (name))
     if not SHOW_WAVEFORM: return
     vars = wires.keys()
     maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
@@ -124,7 +142,10 @@ def emit_test(stream, clock, test, count=[0]):
     e("  _TB_TEST_FAILED = 0;\n")
     # setup inputs
     for item in sorted(test["inputs"]):
-        e("  %8s = %36s;\n" % (item["name"], binary(item["value"], item["width"])))
+        name = item["name"]
+        if item["inout"]:
+            name = "_" + item["name"]
+        e("  %8s = %36s;\n" % (name, binary(item["value"], item["width"])))
     # check outputs
     for item in sorted(test["outputs"], key=lambda i: i["delay"]):
         delay = item["delay"]
@@ -152,12 +173,12 @@ def emit_test(stream, clock, test, count=[0]):
 
 
 def binary(n, width):
-    val = bin(n)[2:].zfill(width)
+    val = binary_value(n, width)
     return "%d'b%s" % (width, val)
 
 
 def binary_value(n, width):
-    return bin(n)[2:].zfill(width)
+    return "z"*width if n is HIGHZ else bin(n)[2:].zfill(width)
 
 
 def notequal(var, width, value):
@@ -181,7 +202,8 @@ def parse_module(filename):
         else:
             dir, name = wire
             width = 1
-        wires[name] = {"width": width, "dir": "in" if dir=="input" else "out"}
+        dir_ = {"input": "in", "output": "out", "inout": "inout"}[dir]
+        wires[name] = {"width": width, "dir": dir_}
     return module, wires
 
 
@@ -195,6 +217,7 @@ def grammer():
     module = pp.Suppress(pp.Keyword("module"))
     input  = pp.Keyword("input")
     output = pp.Keyword("output")
+    inout  = pp.Keyword("inout")
     num    = pp.Word(pp.nums).addParseAction(lambda s,l,t: int(t[0]))
     width  = (lbrack + num + colon + num + rbrack).setParseAction(lambda s,l,t: t[0]+1)
     iden   = pp.Word(pp.alphanums + "\\_", pp.alphanums + "_")
@@ -207,7 +230,7 @@ def grammer():
     mod_iden.addParseAction(check_module)
 
     defmod  = module + mod_iden + lparen + pp.Group(idenlist) + rparen + scolon
-    wires  = pp.Group(pp.OneOrMore(pp.Group((input | output) + pp.Optional(width) + iden) + scolon))
+    wires  = pp.Group(pp.OneOrMore(pp.Group((input | output | inout) + pp.Optional(width) + iden) + scolon))
 
     g = defmod + wires
     g.ignore(pp.cStyleComment)
@@ -263,32 +286,34 @@ def config_merge_values(left, right):
     left["values"] = rvalues + left.get("values", [])
 
 
-def generate_tests(config):
+def generate_tests(config, wires):
     static_vars = {}
     for _ in range(TEST_COUNT):
-        yield generate_test(config, static_vars)
+        yield generate_test(config, wires, static_vars)
 
 
 def randbits(bits):
     return random.randint(0, (2**bits)-1)
 
 
-def generate_test(config, static_vars, _count=0):
+def generate_test(config, wires, static_vars, _count=0):
     test = {"inputs": [], "outputs": []}
-    env = {"DONTCARE": DONTCARE}
+    env = {"DONTCARE": DONTCARE, "Z": HIGHZ}
+    inouts = [name for name in wires if wires[name]["dir"] == "inout"]
     # generate inputs
     for name in config.get("inputs", {}).keys():
         width = config["inputs"][name]["width"]
         alias = config["inputs"][name].get("alias", None)
         value = randbits(width)
-        test["inputs"].append({"value": value, "width": width, "name": name})
+        inout = name in inouts
+        test["inputs"].append({"value": value, "width": width, "name": name, "inout": inout})
         env[name] = value
         if alias:
             env[alias] = value
     # check assertions
     if "assert" in config:
         if not eval(config["assert"], {}, env):
-            return generate_test(config, static_vars)
+            return generate_test(config, wires, static_vars)
     # evaluate values
     for formula in config["values"]:
         name, export_width, delay, static_, expr = parse_formula(formula)
@@ -302,12 +327,13 @@ def generate_test(config, static_vars, _count=0):
         if value is DONTCARE:
             continue
         if export_width:
-            test["outputs"].append({"value": value, "width": export_width, "delay": delay, "name": name})
+            inout = name in inouts
+            test["outputs"].append({"value": value, "width": export_width, "delay": delay, "name": name, "inout": inout})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
         if _count == MAX_TRIES:
             raise FatalTestException("Exceeded MAX_TRIES (%d) attempts for %s" % (MAX_TRIES, config["name"]))
-        return generate_test(config, static_vars, _count+1)
+        return generate_test(config, wires, static_vars, _count+1)
     return test
 
 
@@ -336,7 +362,7 @@ def eval_formula(formula, env, name, width=None):
     try:
         value = eval(formula, {}, env)
         # if we have an actual value constrain it to it's width
-        if value is not DONTCARE and width is not None:
+        if value is not DONTCARE and value is not HIGHZ and width is not None:
             formula = "(%s) & %d" % (value, (2**width)-1)
             value = eval(formula, {}, env)
     except Exception, e:
