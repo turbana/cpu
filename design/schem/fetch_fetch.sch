@@ -782,14 +782,14 @@ C 46000 49900 1 0 0 iopad-1.sym
 T 46302 50118 5 10 0 1 0 0 1
 device=IOPAD
 T 46300 50000 5 10 1 1 0 1 1
-netlabel=BUS_Mw
+netlabel=BUS_W
 }
 C 46000 50600 1 0 0 iopad-1.sym
 {
 T 46302 50818 5 10 0 1 0 0 1
 device=IOPAD
 T 46300 50700 5 10 1 1 0 1 1
-netlabel=BUS_Mr
+netlabel=BUS_R
 }
 C 43700 50300 1 0 0 74126-1.sym
 {
