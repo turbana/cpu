@@ -85,9 +85,11 @@ def emit_header(stream, module, wires, config):
         if wires[name]["dir"] != "inout": continue
         e("assign %s = (_%s_wr) ? _%s : %d'bZ;\n" % (name, name, name, wires[name]["width"]))
         clock = config["inputs"].get(name, {}).get("clock", False)
+        delay = config["inputs"].get(name, {}).get("delay", False)
+        delay = "#"+str(delay) if delay else ""
         if clock:
-            e("always @(posedge U0.%s) begin _%s_wr = 1'b1; end\n" % (clock, name))
-            e("always @(negedge U0.%s) begin _%s_wr = 1'bz; end\n" % (clock, name))
+            e("always @(posedge U0.%s) begin %s _%s_wr = 1'b1; end\n" % (clock, delay, name))
+            e("always @(negedge U0.%s) begin %s _%s_wr = 1'bz; end\n" % (clock, delay, name))
     e("\n")
 
     e("/* begin test bench */\n")
