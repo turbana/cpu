@@ -89,7 +89,7 @@ def emit_header(stream, module, wires, config):
         delay = "#"+str(delay) if delay else ""
         if clock:
             e("always @(posedge U0.%s) begin %s _%s_wr = 1'b1; end\n" % (clock, delay, name))
-            e("always @(negedge U0.%s) begin %s _%s_wr = 1'bz; end\n" % (clock, delay, name))
+            e("always @(negedge U0.%s) begin %s _%s_wr = 1'b0; end\n" % (clock, delay, name))
     e("\n")
 
     e("/* begin test bench */\n")
