@@ -66,6 +66,16 @@
 		"names": ["2O", "2B", "2A", "1O", "1A", "1B", "CI", "GND", "CO", "4O", "4B", "4A", "3O", "3A", "3B", "VCC"],
 		"assign": {"{CO,4O,3O,2O,1O}": "{GND,4A,3A,2A,1A} + {GND,4B,3B,2B,1B} + {GND,GND,GND,GND,CI}"}
 	},
+	"74377": {
+		"desc": "Octal D-type flip-flop with data enable; positive edge-triggered",
+		"delay": 32,
+		"package": "DIP20",
+		"names": ["E", "0Q", "0D", "1D", "1Q", "2Q", "2D", "3D", "3Q", "GND", "CP", "4Q", "4D", "5D", "5Q", "6Q", "6D", "7D", "7Q", "VCC"],
+		"registers": ["0Q", "1Q", "2Q", "3Q", "4Q", "5Q", "6Q", "7Q"],
+		"clocked": {
+			"posedge CP": "if (!E) begin ?Q <= ?D; end"
+		}
+	},
 	"744002": {
 		"desc": "Dual 4-bit NOR gate",
 		"delay": 25,
