@@ -54,8 +54,34 @@ def fixup(in_stream, out_stream, modname, schems):
         elif line == "/* Package instantiations */\n":
             out_stream.write(line)
             emit_instantiations(in_stream, out_stream)
+        elif line == "/* continuous assignments */\n":
+            out_stream.write(line)
+            assigns = parse_assignments(in_stream)
+            for lhs, rhs in remove_duplicates(assigns):
+                out_stream.write("assign %s = %s;\n" % (lhs, rhs))
+            out_stream.write("\n")
         else:
             out_stream.write(line)
+
+
+def parse_assignments(stream):
+    for line in stream:
+        if not line.startswith("assign"):
+            break
+        line = line.replace("assign", "").strip(" ;\n")
+        lhs, rhs = line.split("=")
+        yield lhs.strip(), rhs.strip()
+
+
+def remove_duplicates(assigns):
+    # remove circular assignments
+    # ex (assign x = y; assign y = x) -> (assign x = y)
+    names = dict(assigns)
+    for lhs, rhs in names.items():
+        if lhs.startswith("unnamed") and not rhs.startswith("unnamed"):
+            if rhs in names and names[rhs] == lhs:
+                continue
+        yield lhs, rhs
 
 
 def ignore_module(stream):
