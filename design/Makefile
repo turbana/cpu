@@ -70,10 +70,12 @@ $(WF)/%.vcd: $(BUILD)/test_%
 
 
 $(DOC)/%.png: %.sch
+	@echo "PNG     : $(@F)"
 	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
 $(DOC)/schematics.pdf: $(DOC_SCHEMS)
+	@echo "PDF     : $(@F)"
 	@gaf export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
