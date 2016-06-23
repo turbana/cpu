@@ -83,13 +83,10 @@ def emit_header(stream, module, wires, config):
     e("/* setup bidirectional wires */\n")
     for name in sorted(wires):
         if wires[name]["dir"] != "inout": continue
-        e("assign %s = (_%s_wr) ? _%s : %d'bZ;\n" % (name, name, name, wires[name]["width"]))
-        clock = config["inputs"].get(name, {}).get("clock", False)
+        clock = config["inputs"].get(name, {}).get("clock", "0")
         delay = config["inputs"].get(name, {}).get("delay", False)
         delay = "#"+str(delay) if delay else ""
-        if clock:
-            e("always @(posedge U0.%s) begin %s _%s_wr = 1'b1; end\n" % (clock, delay, name))
-            e("always @(negedge U0.%s) begin %s _%s_wr = 1'b0; end\n" % (clock, delay, name))
+        e("assign %s = (%s) ? _%s : %d'bZ;\n" % (name, clock, name, wires[name]["width"]))
     e("\n")
 
     e("/* begin test bench */\n")
