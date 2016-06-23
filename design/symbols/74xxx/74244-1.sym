@@ -80,7 +80,7 @@ pintype=in
 P 0 400 300 400 1 0 0
 {
 T 200 450 5 8 1 1 0 6 1
-pinnumber=1
+pinnumber=11
 T 200 350 5 8 0 1 0 8 1
 pinseq=9
 T 350 400 9 8 1 1 0 0 1
