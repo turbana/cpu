@@ -59,6 +59,18 @@
 		"names": ["S", "1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3B", "3A", "4Y", "4B", "4A", "G", "VCC"],
 		"assign": {"?Y": "~G & (S ? ?B : ?A)"}
 	},
+	"74244": {
+		"desc": "Octal buffer/line driver; 3-state",
+		"delay": 14,
+		"package": "DIP20",
+		"names": ["1OE", "1A0", "2Y0", "1A1", "2Y1", "1A2", "2Y2", "1A3", "2Y3", "GND", "2A3", "1Y3", "2A2", "1Y2", "2A1", "1Y1", "2A0", "1Y0", "2OE", "VCC"],
+		"assign": {
+			"?Y0": "!?OE ? ?A0 : Z",
+			"?Y1": "!?OE ? ?A1 : Z",
+			"?Y2": "!?OE ? ?A2 : Z",
+			"?Y3": "!?OE ? ?A3 : Z"
+		}
+	},
 	"74283": {
 		"desc": "4-bit adder",
 		"delay": 80,
