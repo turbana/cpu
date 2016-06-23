@@ -189,6 +189,42 @@
 			"MC_Mw:1 = 0 if nop else EM_Mw"
 		]
 	},
+	"memory_memory": {
+		"inputs": {
+			"EM_D":  {"width": 16},
+			"EM_C":  {"width": 16},
+			"EM_Mt": {"width": 1},
+			"MC_Mr": {"width": 1},
+			"MC_Mw": {"width": 1},
+			"R_DS":  {"width": 6},
+			"R_CS":  {"width": 6},
+			"BUS_D": {"width": 16, "clock": "U0.CLK0 & MC_Mr", "delay": 10}
+		},
+		"assert": "not (MC_Mr and MC_Mw)",
+		"values": [
+			"_BUS_D = BUS_D",
+			"seg = R_CS if EM_Mt else R_DS",
+			"nop = not (MC_Mr or MC_Mw)",
+			"@0.25 BUS_A:23 = (EM_Mt << 22) | (seg << 16) | EM_D",
+			"@0.25 BUS_R:1 = MC_Mr",
+			"@0.25 BUS_W:1 = MC_Mw",
+			"@0.25 BUS_D:16 = DONTCARE if nop else (EM_C if MC_Mw else _BUS_D)",
+			"@0.50 BUS_A:23 = (EM_Mt << 22) | (seg << 16) | EM_D",
+			"@0.50 BUS_R:1 = MC_Mr",
+			"@0.50 BUS_W:1 = MC_Mw",
+			"@0.50 BUS_D:16 = DONTCARE if nop else (EM_C if MC_Mw else _BUS_D)",
+			"@0.50 M_D:16 = _BUS_D if MC_Mr else EM_D",
+			"@0.75 BUS_A:23 = Z",
+			"@0.75 BUS_R:1 = Z",
+			"@0.75 BUS_W:1 = Z",
+			"@0.75 BUS_D:16 = Z",
+			"@1.00 BUS_A:23 = Z",
+			"@1.00 BUS_R:1 = Z",
+			"@1.00 BUS_W:1 = Z",
+			"@1.00 BUS_D:16 = Z",
+			"M_D:16 = _BUS_D if MC_Mr else EM_D"
+		]
+	},
 	"memory_skip": {
 		"inputs": {
 			"EM_S":   {"width": 1},
