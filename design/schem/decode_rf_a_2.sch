@@ -953,7 +953,7 @@ C 43500 55600 1 0 0 ipad-2.sym
 T 43600 55800 5 10 0 1 0 0 1
 device=IPAD
 T 43500 55700 5 10 1 1 0 1 1
-netlabel=RD_PC[15:0]
+netlabel=FD_PC[15:0]
 }
 C 43500 55300 1 0 0 ipad-2.sym
 {
