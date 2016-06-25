@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.37 (w)1999-2012 BSI
+[*] Sat Jun 25 23:26:25 2016
+[*]
+[dumpfile] "/home/ian/src/cpu/design/build/waveforms/decode_rf.vcd"
+[dumpfile_mtime] "Sat Jun 25 23:23:15 2016"
+[dumpfile_size] 338439
+[savefile] "/home/ian/src/cpu/etc/gtkwave/decode_rf.sav"
+[timestart] 0
+[size] 1920 1060
+[pos] -1 -1
+*-20.000000 429000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_decode_rf.
+[treeopen] tb_decode_rf.DUT.
+[sst_width] 210
+[signals_width] 188
+[sst_expanded] 1
+[sst_vpaned_height] 306
+@24
++{Test#} tb_decode_rf._TB_TEST_ID[31:0]
+@28
+tb_decode_rf.CLK0
+tb_decode_rf.CLK2
+@200
+-
+@22
++{$1} tb_decode_rf.DUT._1R[15:0]
++{$2} tb_decode_rf.DUT._2R[15:0]
++{$3} tb_decode_rf.DUT._3R[15:0]
++{$4} tb_decode_rf.DUT._4R[15:0]
++{$5} tb_decode_rf.DUT._5R[15:0]
++{$6} tb_decode_rf.DUT._6R[15:0]
++{$7} tb_decode_rf.DUT._7R[15:0]
++{$cr1} tb_decode_rf.DUT._9R[15:0]
++{$cr2} tb_decode_rf.DUT._10R[15:0]
++{$cr3} tb_decode_rf.DUT._11R[15:0]
+@200
+-
+@22
++{I_D} tb_decode_rf.I_D[15:0]
+@2024
+^2 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{I_Rd} tb_decode_rf.I_Rd[3:0]
+@22
++{FD_PC} tb_decode_rf.FD_PC[15:0]
+@2025
+^2 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_Ra} tb_decode_rf.D_Ra[3:0]
+@200
+-
+@28
+tb_decode_rf.R_IE
+@22
++{R_A} tb_decode_rf.R_A[15:0]
+[pattern_trace] 1
+[pattern_trace] 0
