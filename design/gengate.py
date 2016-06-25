@@ -12,7 +12,7 @@ import collections
 
 DEFINITIONS = "74HCxxx.json"
 
-_SPACE_CHARS		= "(){},;"
+_SPACE_CHARS		= "(){},;|"
 _BASIC_WIRE_REGEX	= "[0-9A-Z]+(?!')"
 _WIRE_REGEX			= "\??%s" % _BASIC_WIRE_REGEX
 _EXPR_REGEX			= "\?%s" % _BASIC_WIRE_REGEX
