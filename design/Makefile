@@ -6,7 +6,8 @@ WF			= $(BUILD)/waveforms
 FAILON		= ./failon.sh
 GNETLIST	= /usr/bin/gnetlist
 
-SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(SCHEM)/*.sch))
+ALL_SCHEMS = $(SCHEM)/*.sch
+SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
 
 
@@ -23,8 +24,8 @@ help:
 
 
 # generate dependencies
-Makefile.deps: $(SCHEMS) makedeps.py
-	@python makedeps.py $(SCHEMS) > $@
+Makefile.deps: $(ALL_SCHEMS) makedeps.py
+	@python makedeps.py $(ALL_SCHEMS) > $@
 -include Makefile.deps
 
 
