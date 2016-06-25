@@ -52,6 +52,16 @@
 		"names": ["1OE", "1A", "1Y", "2OE", "2A", "2Y", "GND", "3Y", "3A", "3OE", "4Y", "4A", "4OE", "VCC"],
 		"assign": {"?Y": "?OE ? ?A : Z"}
 	},
+	"74151": {
+		"desc": "8x1 Mux",
+		"delay": 22,
+		"package": "DIP16",
+		"names": ["I3", "I2", "I1", "I0", "Y", "YB", "E", "GND", "S2", "S1", "S0", "I7", "I6", "I5", "I4", "VCC"],
+		"assign": {
+			"Y": "S2 ? (S1 ? (S0 ? I7 : I6) : (S0 ? I5 : I4)) : (S1 ? (S0 ? I3 : I2) : (S0 ? I1 : I0))",
+			"YB": "~(S2 ? (S1 ? (S0 ? I7 : I6) : (S0 ? I5 : I4)) : (S1 ? (S0 ? I3 : I2) : (S0 ? I1 : I0)))"
+		}
+	},
 	"74153": {
 		"desc": "Dual 4x1 Mux",
 		"delay": 30,
