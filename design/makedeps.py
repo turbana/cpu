@@ -29,7 +29,6 @@ def main(args):
 	base = os.path.basename(filename).replace(".sch", "")
 	base = lambda fn: os.path.basename(fn).replace(".sch", "")
 	deps = {base(fn): dependencies(fn) for fn in args}
-	clock = {base(fn): has_clock(fn) for fn in args}
 	expand(deps)
 	# print chip dependencies
 	for key in deps:
@@ -38,21 +37,13 @@ def main(args):
 	# print schematic dependencies
 	for key in deps:
 		schems = schematics(key, map(base, args))
-		clock_dep = any(clock.get(x, False) for x in schems) or clock.get(key, False)
 		_deps = " ".join("$(BUILD)/%s.sch" % x for x in schems)
 		if _deps:
 			print "$(BUILD)/%s.v: %s" % (key, _deps)
 		else:
 			print  "$(BUILD)/%s.v: $(BUILD)/%s.sch" % (key, key)
-		if clock_dep:
-			print "$(BUILD)/%s.v: $(BUILD)/%s" % (key, CLOCK_SCH)
 		if key in config:
 			print "ALL_TESTS := $(ALL_TESTS) $(WF)/%s.vcd" % key
-
-
-def has_clock(filename):
-	schem = schematic.Schematic(open(filename))
-	return list(schem.findall(basename="ipad-[12].sym", attr="netlabel=CLK.*"))
 
 
 def schematics(key, keys):
@@ -74,7 +65,7 @@ def dependencies(filename):
 	components = set(c["basename"] for c in schem.findall(type="component"))
 	clean = lambda s: s.replace("-1.sym", "").replace("-2.sym", "")
 	chips = set(clean(c) for c in components if c.startswith("74"))
-	if has_clock(filename):
+	if filename != CLOCK_SCH_FILENAME:
 		chips |= dependencies(CLOCK_SCH_FILENAME)
 	return chips
 

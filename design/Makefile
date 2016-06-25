@@ -60,7 +60,7 @@ $(BUILD)/%.v: $(wildcard $(BUILD)/%.sch)
 	@python fix_netlist.py $@ $^
 
 
-$(BUILD)/test_%: $(BUILD)/%.v $(BUILD)/tb_%.v
+$(BUILD)/test_%: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/clock.v
 	@echo "Cmpl TB : $(@F)"
 	@iverilog $^ -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
 

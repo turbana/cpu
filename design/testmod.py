@@ -52,7 +52,11 @@ def emit_header(stream, module, wires, config):
     e("module tb_%s;\n\n" % module)
 
     e("/* test bench wires/registers */\n")
+    e("reg _CLK;\n")
+    e("wire CLK0, CLK1, CLK2;\n")
     for name in sorted(wires):
+        # skip clock wires
+        if name.startswith("CLK"): continue
         dir = wires[name]["dir"]
         type = "reg" if dir == "in" else "wire"
         width = "[%d:0]" % (wires[name]["width"] - 1)
@@ -60,14 +64,19 @@ def emit_header(stream, module, wires, config):
         if dir == "inout":
             e(" reg %8s _%s;\n" % (width, name))
             e(" reg          _%s_wr;\n" % name)
-    if "_CLK" not in wires:
-        e("reg _CLK;\n")
     e("\n")
 
     e("/* instantiate component */\n")
-    e("%s U0 (\n" % module)
-    e(",\n".join("  .%s (%s)" % (name, name) for name in wires))
+    e("clock CLOCK (\n")
+    e("  ._CLK (_CLK),\n")
+    e("  .CLK0 (CLK0),\n")
+    e("  .CLK1 (CLK1),\n")
+    e("  .CLK2 (CLK2),\n")
+    e("  .CLK3 (CLK3)\n")
     e(");\n\n")
+    e("%s DUT (\n" % module)
+    e(",\n".join("  .%s (%s)" % (name, name) for name in wires))
+    e("\n);\n\n")
 
     e("/* test bench variables */\n")
     e("integer _TB_ERRORS;\n")
