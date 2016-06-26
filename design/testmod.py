@@ -108,18 +108,20 @@ def emit_header(stream, module, wires, config):
     for name in sorted(wires):
         if wires[name]["dir"] != "inout": continue
         e("  _%s_wr = 0;\n" % (name))
-    if not SHOW_WAVEFORM: return
-    vars = wires.keys()
-    maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
-    fmt = "%%%ds" % maxlen
-    bfmt = "%%%db" % maxlen
-    e('  $display("                time ')
-    e(" ".join(fmt % name for name in vars))
-    e('");\n')
-    e('  $monitor("%d ')
-    e(" ".join(bfmt for _ in vars))
-    e('",\n')
-    e("    $time, " + ", ".join(name for name in vars) + ");\n\n")
+    if SHOW_WAVEFORM:
+        vars = wires.keys()
+        maxlen = max([max(wires[name]["width"], len(name)) for name in vars])
+        fmt = "%%%ds" % maxlen
+        bfmt = "%%%db" % maxlen
+        e('  $display("                time ')
+        e(" ".join(fmt % name for name in vars))
+        e('");\n')
+        e('  $monitor("%d ')
+        e(" ".join(bfmt for _ in vars))
+        e('",\n')
+        e("    $time, " + ", ".join(name for name in vars) + ");\n\n")
+    e("\n  /* align tests with clock */\n")
+    e("  @(posedge CLK0);\n\n")
 
 
 def emit_footer(stream, module, wires):
