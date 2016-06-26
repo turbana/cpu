@@ -263,14 +263,15 @@ def expand_config(data, module):
     for child_name in children:
         expand_config(data, child_name)
         child = data[child_name]
-        config_merge_inputs(parent, child)
+        config_merge_key(parent, child, "inputs")
         config_merge_assert(parent, child)
         config_merge_values(parent, child)
+        config_merge_key(parent, child, "static")
 
 
-def config_merge_inputs(left, right):
-    lvalue = left.get("inputs", {})
-    rvalue = right.get("inputs", {})
+def config_merge_key(left, right, key):
+    lvalue = left.get(key, {})
+    rvalue = right.get(key, {})
     for rkey in rvalue.keys():
         if rkey not in lvalue:
             lvalue[rkey] = rvalue[rkey]
@@ -290,14 +291,13 @@ def config_merge_values(left, right):
     # strip width from child formulas as we don't want to export child values to test bench
     rvalues = []
     for formula in right.get("values", []):
-        name, width, delay, static_, expr = parse_formula(formula)
-        static_ = "static" if static_ else ""
-        rvalues.append("%s @%0.2f %s = %s" % (static_, delay, name, expr))
+        name, width, delay, expr = parse_formula(formula)
+        rvalues.append("@%0.2f %s = %s" % (delay, name, expr))
     left["values"] = rvalues + left.get("values", [])
 
 
 def generate_tests(config, wires):
-    static_vars = {}
+    static_vars = config.get("static", {})
     for _ in range(TEST_COUNT):
         yield generate_test(config, wires, static_vars)
 
@@ -326,13 +326,12 @@ def generate_test(config, wires, static_vars, _count=0):
             return generate_test(config, wires, static_vars)
     # evaluate values
     for formula in config["values"]:
-        name, export_width, delay, static_, expr = parse_formula(formula)
-        if static_ and name not in static_vars:
-            static_vars[name] = 0
+        name, export_width, delay, expr = parse_formula(formula)
         env.update(static_vars)
         value = eval_formula(expr, env, config["name"], export_width)
         env[name] = value
-        if static_: static_vars[name] = value
+        if name in static_vars:
+            static_vars[name] = value
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
@@ -349,10 +348,6 @@ def generate_test(config, wires, static_vars, _count=0):
 
 def parse_formula(formula):
     formula = formula.strip()
-    static_ = False
-    if formula.startswith("static"):
-        static_ = True
-        formula = formula[len("static"):].strip()
     delay = 1.0
     if formula.startswith("@"):
         i = formula.index(" ")
@@ -365,7 +360,7 @@ def parse_formula(formula):
     else:
         name = parts[0].strip()
         width = None
-    return name, width, delay, static_, "=".join(parts[1:])
+    return name, width, delay, "=".join(parts[1:])
 
 
 def eval_formula(formula, env, name, width=None):
