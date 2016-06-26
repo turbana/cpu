@@ -35,17 +35,17 @@ def main(args):
         return 2
     filename = args[0]
     schem = schematic.Schematic(open(filename))
-    fix_wires(schem)
+    fix_wires(schem, filename)
     fix_busses(schem)
     add_title_block(schem, filename)
     schem.save(open(args[1], "w"))
 
 
-def fix_wires(schem):
+def fix_wires(schem, prefix):
     count = 0
     for pad in schem.findall(type="component", basename="[io]pad-1.sym"):
         value = "%s:1" % pad.netlabel
-        refdes = "%s%d" % (pad.netlabel, count)
+        refdes = "%s_%s%d" % (prefix, pad.netlabel, count)
         count += 1
         set_attribute(pad, "refdes", refdes)
         set_attribute(pad, "net", value)
