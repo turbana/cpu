@@ -67,11 +67,19 @@
 			"D_Ra":  {"width": 4}
 		},
 		"initial": {
-			"rf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			"rf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"PC": 8,
+			"FLAGS": 9,
+			"EPC": 10,
+			"EFLAGS": 11
 		},
 		"values": [
-			"rf[I_Rd] = I_D",
-			"R_A:16 = DONTCARE if D_Ra in (12, 13, 14, 15) else (0 if D_Ra == 0 else (FD_PC if D_Ra == 8 else rf[D_Ra]))"
+			"sup_mode = rf[FLAGS] & 2 == 0",
+			"gp_reg = I_Rd < 8",
+			"rf[I_Rd] = I_D if sup_mode or gp_reg or I_I else rf[I_Rd]",
+			"R_IE:1 = rf[FLAGS] >> 0",
+			"R_M:1  = rf[FLAGS] >> 1",
+			"R_A:16 = DONTCARE if D_Ra in (12, 13, 14, 15) else (0 if D_Ra==0 else (FD_PC if D_Ra==PC else rf[D_Ra]))"
 		]
 	},
 	"execute_alu": {
