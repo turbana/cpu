@@ -1,5 +1,6 @@
 """ Generate test cases for the specified verilog module. """
 
+import copy
 import sys
 import re
 import json
@@ -266,7 +267,7 @@ def expand_config(data, module):
         config_merge_key(parent, child, "inputs")
         config_merge_assert(parent, child)
         config_merge_values(parent, child)
-        config_merge_key(parent, child, "static")
+        config_merge_key(parent, child, "initial")
 
 
 def config_merge_key(left, right, key):
@@ -297,18 +298,24 @@ def config_merge_values(left, right):
 
 
 def generate_tests(config, wires):
-    static_vars = config.get("static", {})
+    env = {"DONTCARE": DONTCARE, "Z": HIGHZ}
+    # env.update({str(k):v for k,v in config.get("initial", {}).items()})
+    env.update(config.get("initial", {}))
     for _ in range(TEST_COUNT):
-        yield generate_test(config, wires, static_vars)
+        yield generate_test(config, wires, env)
 
 
 def randbits(bits):
     return random.randint(0, (2**bits)-1)
 
 
-def generate_test(config, wires, static_vars, _count=0):
+def generate_test(config, wires, env, _count=0):
+    # copy environment so we don't propagate changes when we have to retry a test
+    ## don't copy __builtins__ as deepcopy can't handle it
+    orig_env = copy.deepcopy({k:v for k,v in env.items() if k!="__builtins__"})
+    ## don't deepcopy DONTCARE/Z as we want those addresses changing
+    orig_env.update({"DONTCARE": DONTCARE, "Z": HIGHZ})
     test = {"inputs": [], "outputs": []}
-    env = {"DONTCARE": DONTCARE, "Z": HIGHZ}
     inouts = [name for name in wires if wires[name]["dir"] == "inout"]
     # generate inputs
     for name in config.get("inputs", {}).keys():
@@ -323,15 +330,13 @@ def generate_test(config, wires, static_vars, _count=0):
     # check assertions
     if "assert" in config:
         if not eval(config["assert"], {}, env):
-            return generate_test(config, wires, static_vars)
+            env.clear()
+            env.update(orig_env)
+            return generate_test(config, wires, env)
     # evaluate values
     for formula in config["values"]:
         name, export_width, delay, expr = parse_formula(formula)
-        env.update(static_vars)
-        value = eval_formula(expr, env, config["name"], export_width)
-        env[name] = value
-        if name in static_vars:
-            static_vars[name] = value
+        value = eval_formula(expr, env, name, config["name"], export_width)
         # don't add condition when result is a don't care
         if value is DONTCARE:
             continue
@@ -342,7 +347,9 @@ def generate_test(config, wires, static_vars, _count=0):
     if not test["outputs"]:
         if _count == MAX_TRIES:
             raise FatalTestException("Exceeded MAX_TRIES (%d) attempts for %s" % (MAX_TRIES, config["name"]))
-        return generate_test(config, wires, static_vars, _count+1)
+        env.clear()
+        env.update(orig_env)
+        return generate_test(config, wires, env, _count+1)
     return test
 
 
@@ -363,18 +370,22 @@ def parse_formula(formula):
     return name, width, delay, "=".join(parts[1:])
 
 
-def eval_formula(formula, env, name, width=None):
+def eval_formula(formula, env, name, mod_name, width=None):
+    def value():
+        return eval(name, env)
     try:
-        value = eval(formula, {}, env)
+        expr = "%s = %s" % (name, formula)
+        exec expr in env
         # if we have an actual value constrain it to it's width
-        if value is not DONTCARE and value is not HIGHZ and width is not None:
-            formula = "(%s) & %d" % (value, (2**width)-1)
-            value = eval(formula, {}, env)
+        val = value()
+        if val is not DONTCARE and val is not HIGHZ and width is not None:
+            expr = "%s = (%s) & %d" % (name, val, (2**width)-1)
+            exec expr in env
     except Exception, e:
-        message = "Error evaluating formula for %s: %s\n" % (name, formula)
+        message = "Error evaluating formula for %s: %s = %s\n" % (mod_name, name, formula)
         message += str(e) + "\n"
         raise FatalTestException(message)
-    return value
+    return value()
 
 
 if __name__ == "__main__":
