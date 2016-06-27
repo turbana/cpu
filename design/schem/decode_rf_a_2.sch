@@ -240,7 +240,7 @@ device=none
 N 46800 48500 45200 48500 4
 {
 T 45200 48500 6 10 1 1 0 0 1
-netname=_9R4
+netname=R_CS0
 }
 C 45200 48500 1 90 0 busripper-1.sym
 {
@@ -280,7 +280,7 @@ device=none
 N 46800 47400 45200 47400 4
 {
 T 45200 47400 6 10 1 1 0 0 1
-netname=_9R5
+netname=R_CS1
 }
 C 45200 47400 1 90 0 busripper-1.sym
 {
@@ -320,7 +320,7 @@ device=none
 N 46800 45600 45200 45600 4
 {
 T 45200 45600 6 10 1 1 0 0 1
-netname=_9R6
+netname=R_CS2
 }
 C 45200 45600 1 90 0 busripper-1.sym
 {
@@ -360,7 +360,7 @@ device=none
 N 46800 44500 45200 44500 4
 {
 T 45200 44500 6 10 1 1 0 0 1
-netname=_9R7
+netname=R_CS3
 }
 C 45200 44500 1 90 0 busripper-1.sym
 {
@@ -538,7 +538,7 @@ device=none
 N 52500 53200 50900 53200 4
 {
 T 50900 53200 6 10 1 1 0 0 1
-netname=_9R9
+netname=R_CS5
 }
 C 50900 53200 1 90 0 busripper-1.sym
 {
@@ -578,7 +578,7 @@ device=none
 N 52500 54300 50900 54300 4
 {
 T 50900 54300 6 10 1 1 0 0 1
-netname=_9R8
+netname=R_CS4
 }
 C 50900 54300 1 90 0 busripper-1.sym
 {
@@ -618,7 +618,7 @@ device=none
 N 52500 51400 50900 51400 4
 {
 T 50900 51400 6 10 1 1 0 0 1
-netname=_9R10
+netname=R_DS0
 }
 C 50900 51400 1 90 0 busripper-1.sym
 {
@@ -658,7 +658,7 @@ device=none
 N 52500 50300 50900 50300 4
 {
 T 50900 50300 6 10 1 1 0 0 1
-netname=_9R11
+netname=R_DS1
 }
 C 50900 50300 1 90 0 busripper-1.sym
 {
@@ -698,7 +698,7 @@ device=none
 N 52500 48500 50900 48500 4
 {
 T 50900 48500 6 10 1 1 0 0 1
-netname=_9R12
+netname=R_DS2
 }
 C 50900 48500 1 90 0 busripper-1.sym
 {
@@ -738,7 +738,7 @@ device=none
 N 52500 47400 50900 47400 4
 {
 T 50900 47400 6 10 1 1 0 0 1
-netname=_9R13
+netname=R_DS3
 }
 C 50900 47400 1 90 0 busripper-1.sym
 {
@@ -778,7 +778,7 @@ device=none
 N 52500 45600 50900 45600 4
 {
 T 50900 45600 6 10 1 1 0 0 1
-netname=_9R14
+netname=R_DS4
 }
 C 50900 45600 1 90 0 busripper-1.sym
 {
@@ -818,7 +818,7 @@ device=none
 N 52500 44500 50900 44500 4
 {
 T 50900 44500 6 10 1 1 0 0 1
-netname=_9R15
+netname=R_DS5
 }
 C 50900 44500 1 90 0 busripper-1.sym
 {
@@ -980,4 +980,18 @@ T 43600 54900 5 10 0 1 0 0 1
 device=IPAD
 T 43500 54800 5 10 1 1 0 1 1
 netlabel=_11R[15:0]
+}
+C 43500 54400 1 0 0 ipad-2.sym
+{
+T 43600 54600 5 10 0 1 0 0 1
+device=IPAD
+T 43500 54500 5 10 1 1 0 1 1
+netlabel=R_CS[5:0]
+}
+C 43500 54100 1 0 0 ipad-2.sym
+{
+T 43600 54300 5 10 0 1 0 0 1
+device=IPAD
+T 43500 54200 5 10 1 1 0 1 1
+netlabel=R_DS[5:0]
 }
