@@ -172,7 +172,7 @@
 		"inputs": {
 			"R_CS":  {"width": 6},
 			"F_PC":  {"width": 16},
-			"BUS_D": {"width": 16, "clock": "U0.CLK1", "delay": 10}
+			"BUS_D": {"width": 16, "clock": "CLK1", "delay": 10}
 		},
 		"values": [
 			"_BUS_D = BUS_D",
@@ -193,7 +193,7 @@
 			"H_H": {"width": 1},
 			"EM_D": {"width": 16}
 		},
-		"static": {
+		"initial": {
 			"F_PC": 0
 		},
 		"values": [
@@ -225,7 +225,7 @@
 			"MC_Mw": {"width": 1},
 			"R_DS":  {"width": 6},
 			"R_CS":  {"width": 6},
-			"BUS_D": {"width": 16, "clock": "U0.CLK0 & MC_Mr", "delay": 10}
+			"BUS_D": {"width": 16, "clock": "CLK0 & MC_Mr", "delay": 10}
 		},
 		"assert": "not (MC_Mr and MC_Mw)",
 		"values": [

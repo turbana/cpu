@@ -53,7 +53,8 @@ def emit_header(stream, module, wires, config):
     e("module tb_%s;\n\n" % module)
 
     e("/* test bench wires/registers */\n")
-    e("reg _CLK;\n")
+    if "_CLK" not in wires:
+        e("reg _CLK;\n")
     e("wire CLK0, CLK1, CLK2;\n")
     for name in sorted(wires):
         # skip clock wires
@@ -279,7 +280,7 @@ def config_merge_key(left, right, key):
         elif lvalue[rkey] != rvalue[rkey]:
             name = "%s.%s" % (key, rkey)
             raise FatalTestException("Config mis-match found for %s in %s and %s" % (name, left["name"], right["name"]))
-    left["inputs"] = lvalue
+    left[key] = lvalue
 
 
 def config_merge_assert(left, right):
