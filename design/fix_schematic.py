@@ -25,6 +25,7 @@ TITLE_BAR = {
     "pages":    (18000, 300),
     "revision": (20250, 550),
     "author":    (20250, 300),
+    "module":   (0, 0),
 }
 
 
@@ -80,6 +81,8 @@ def add_title_block(schem, filename):
     add_text(schem, "pages", count)
     add_text(schem, "revision", rev)
     add_text(schem, "author", author)
+    module = "module_name=%s" % os.path.basename(filename).replace(".sch", "")
+    add_text(schem, "module", module, hidden=True)
 
 
 def title(filename):
@@ -113,13 +116,14 @@ def git_info(filename):
     return rev, author
 
 
-def add_text(schem, name, value):
+def add_text(schem, name, value, hidden=False):
     dx, dy = title_block_position(schem)
     x, y = TITLE_BAR[name]
     color = TITLE_BAR["color"]
     size = TITLE_BAR["size"]
+    vis = 0 if hidden else 1
     text = schematic.object(
-        "text", x=dx+x, y=dy+y, color=color, size=size, visibility=1,
+        "text", x=dx+x, y=dy+y, color=color, size=size, visibility=vis,
         show_name_value=1, angle=0, alignment=0, num_lines=1)
     text["text"] = str(value)
     schem.add(text)
