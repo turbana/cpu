@@ -37,6 +37,10 @@ $(WF):
 	@mkdir $(WF)
 
 
+$(DOC):
+	@mkdir $(DOC)
+
+
 $(BUILD)/%.sch: $(SCHEM)/%.sch
 	@echo "Fix Sch : $(@F)"
 	@python fix_schematic.py $< $@
@@ -88,7 +92,7 @@ netlist:	$(BUILD) $(BUILD)/$(target).v
 testbench:	$(BUILD) $(BUILD)/tb_$(target).v
 test: 		$(BUILD) $(WF) $(WF)/$(target).vcd
 testall:	$(BUILD) $(WF) $(ALL_TESTS)
-doc:		$(DOC)/block_diagram.png $(DOC)/schematics.pdf
+doc:		$(DOC) $(DOC)/block_diagram.png $(DOC)/schematics.pdf
 
 clean:
 	@rm -rf -- $(BUILD)/* Makefile.deps $(DOC)/block_diagram.png $(DOC)/schematics.pdf
