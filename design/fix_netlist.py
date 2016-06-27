@@ -94,12 +94,12 @@ def ignore_module(stream):
 
 
 def emit_module(stream, name, wires):
-    names = [wire[0] for wire in wires]
+    names = set(wire[0] for wire in wires)
     stream.write("module %s (\n\t" % name)
-    stream.write(",\n\t".join(names))
+    stream.write(",\n\t".join(sorted(names)))
     stream.write("\n);\n\n\n")
     stream.write("/* Port directions begin here */\n")
-    for name, width, direction in wires:
+    for name, width, direction in sorted(wires):
         stream.write("%s %s %s ;\n" % (direction, width, name))
     stream.write("\n")
 
@@ -155,11 +155,17 @@ def parse_wires(schems):
             direction = {"IPAD": "input", "IOPAD": "inout", "OPAD": "output"}[pad.device]
             wires.add((name, width, direction))
     # check matching wires
-    for name, width, direction in list(wires):
+    for wire in list(wires):
+        name, width, direction = wire
         opp_direction = "input" if direction == "output" else "output"
         opposite = (name, width, opp_direction)
         if opposite in wires:
+            # remove matching wires ...
+            wires.remove(wire)
             wires.remove(opposite)
+            # ... but add an inout for non-hidden wires
+            if not name.startswith("_"):
+                wires.add((name, width, "inout"))
     # check for width mis-match
     key_name = lambda wire: wire[0]
     key_width = lambda wire: wire[1]
