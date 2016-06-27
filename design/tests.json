@@ -180,16 +180,18 @@
 	"fetch_fetch": {
 		"inputs": {
 			"R_CS":  {"width": 6},
+			"R_M":   {"width": 1},
 			"F_PC":  {"width": 16},
 			"BUS_D": {"width": 16, "clock": "CLK1", "delay": 10}
 		},
 		"values": [
 			"_BUS_D = BUS_D",
+			"seg = R_CS if R_M else 0",
 			"@0.50 BUS_A:23 = Z",
 			"@0.50 BUS_D:16 = Z",
 			"@0.50 BUS_R:1 = Z",
 			"@0.50 BUS_W:1 = Z",
-			"@1.00 BUS_A:23 = (1 << 22) | (R_CS << 16) | F_PC",
+			"@1.00 BUS_A:23 = (1 << 22) | (seg << 16) | F_PC",
 			"@1.00 BUS_D:16 = _BUS_D",
 			"@1.00 BUS_R:1 = 1",
 			"@1.00 BUS_W:1 = 0",
