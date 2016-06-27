@@ -279,11 +279,11 @@
 			"MW_T":  {"width": 1},
 			"MW_I":  {"width": 1},
 			"MW_D":  {"width": 16},
-			"R_IE":  {"width": 1}
+			"MW_IE":  {"width": 1}
 		},
 		"values": [
-			"int = MW_I & R_IE",
-			"trap = MW_T & R_IE",
+			"int = MW_I & MW_IE",
+			"trap = MW_T & MW_IE",
 			"I_I:1 = int",
 			"I_T:1 = trap",
 			"I_D:16 = MW_PC if int | trap else MW_D",

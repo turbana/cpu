@@ -19,7 +19,7 @@ C 44300 52800 1 0 0 ipad-1.sym
 T 44384 53021 5 10 0 1 0 0 1
 device=IPAD
 T 44300 52900 5 10 1 1 0 1 1
-netlabel=R_IE
+netlabel=MW_IE
 }
 C 49600 52000 1 0 0 ipad-2.sym
 {
