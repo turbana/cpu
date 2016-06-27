@@ -66,6 +66,7 @@
 			"FD_PC": {"width": 16},
 			"D_Ra":  {"width": 4}
 		},
+		"assert": "not (I_I and I_Rd==EFLAGS)",
 		"initial": {
 			"rf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			"PC": 8,
@@ -76,6 +77,7 @@
 		"values": [
 			"sup_mode = rf[FLAGS] & 2 == 0",
 			"gp_reg = I_Rd < 8",
+			"rf[EFLAGS] = rf[FLAGS] if I_I else rf[EFLAGS]",
 			"rf[I_Rd] = I_D if sup_mode or gp_reg or I_I else rf[I_Rd]",
 			"R_IE:1 = rf[FLAGS] >> 0",
 			"R_M:1  = rf[FLAGS] >> 1",

@@ -80,7 +80,7 @@ device=none
 N 46800 53200 45200 53200 4
 {
 T 45200 53200 6 10 1 1 0 0 1
-netname=_9R1
+netname=R_M
 }
 C 45200 53200 1 90 0 busripper-1.sym
 {
@@ -120,7 +120,7 @@ device=none
 N 46800 54300 45200 54300 4
 {
 T 45200 54300 6 10 1 1 0 0 1
-netname=_9R0
+netname=R_IE
 }
 C 45200 54300 1 90 0 busripper-1.sym
 {
@@ -994,4 +994,18 @@ T 43600 54300 5 10 0 1 0 0 1
 device=IPAD
 T 43500 54200 5 10 1 1 0 1 1
 netlabel=R_DS[5:0]
+}
+C 43500 53800 1 0 0 ipad-2.sym
+{
+T 43600 54000 5 10 0 1 0 0 1
+device=IPAD
+T 43500 53900 5 10 1 1 0 1 1
+netlabel=R_M[0:0]
+}
+C 43500 53500 1 0 0 ipad-2.sym
+{
+T 43600 53700 5 10 0 1 0 0 1
+device=IPAD
+T 43500 53600 5 10 1 1 0 1 1
+netlabel=R_IE[0:0]
 }
