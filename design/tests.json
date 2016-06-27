@@ -159,11 +159,11 @@
 			"DE_S":  {"width": 1},
 			"A_D":   {"width": 16}
 		},
+		"assert": "not I_T or I_I",
 		"values": [
 			"valid_op = DE_J | DE_S | DE_Mr | DE_Mw | (1 if DE_Rd else 0)",
-			"int = I_I",
+			"brk = I_I",
 			"trap = I_T",
-			"brk = int | trap",
 			"sint = R_IE & PIC_I & valid_op & ~S_S & ~EM_J",
 			"skip = sint | S_S | EM_J",
 			"EC_Rd:4 = 8 if brk else (0 if skip else DE_Rd)",
@@ -174,7 +174,7 @@
 			"EC_Mw:1 = 0 if brk else (0 if skip else DE_Mw)",
 			"EC_Mt:1 = 1 if brk else (DONTCARE if skip else DE_Mt)",
 			"EC_S:1 = 0 if brk else (0 if skip else DE_S)",
-			"EC_D:16 = (0xFF80 if int else 0xC000) if brk else (DONTCARE if skip else A_D)"
+			"EC_D:16 = (0xC000 if trap else 0xFF80) if brk else (DONTCARE if skip else A_D)"
 		]
 	},
 	"fetch_fetch": {
@@ -284,7 +284,7 @@
 		"values": [
 			"int = MW_I & MW_IE",
 			"trap = MW_T & MW_IE",
-			"I_I:1 = int",
+			"I_I:1 = int | trap",
 			"I_T:1 = trap",
 			"I_D:16 = MW_PC if int | trap else MW_D",
 			"I_Rd:4 = 10 if int | trap else MW_Rd"
