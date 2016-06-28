@@ -11,7 +11,7 @@ SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
 
 
-.PHONY: clean help netlist testbench test testall protopcb doc wave
+.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(WF)/%.vcd
 
 
@@ -21,6 +21,8 @@ help:
 	@echo "make target=foo testbench  -- generate testbench for foo"
 	@echo "make testall               -- run full test against all schematics"
 	@echo "make doc                   -- generate documentation"
+	@echo "make renum                 -- name all unset refdes (U?)"
+	@echo "make renumall              -- overwrite all refdes"
 
 
 # generate dependencies
@@ -93,6 +95,12 @@ testbench:	$(BUILD) $(BUILD)/tb_$(target).v
 test: 		$(BUILD) $(WF) $(WF)/$(target).vcd
 testall:	$(BUILD) $(WF) $(ALL_TESTS)
 doc:		$(DOC) $(DOC)/block_diagram.png $(DOC)/schematics.pdf
+
+renum:
+	@python renum.py $(ALL_SCHEMS)
+
+renumall:
+	@python renum.py --overwrite $(ALL_SCHEMS)
 
 clean:
 	@rm -rf -- $(BUILD)/* Makefile.deps $(DOC)/block_diagram.png $(DOC)/schematics.pdf
