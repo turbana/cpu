@@ -11,7 +11,9 @@ SCH_FORMAT = {
     "B": "box i:x i:y i:width i:height i:color i:widthline i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
     "P": "pin i:x1 i:y1 i:x2 i:y2 i:color i:pintype i:whichend",
     "U": "bus i:x1 i:y1 i:x2 i:y2 i:color i:ripperdir",
-    "L": "line i:x1 i:y1 i:x2 i:y2 i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace"
+    "L": "line i:x1 i:y1 i:x2 i:y2 i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace",
+	"V": "circle i:x i:y i:radius i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
+	"A": "arc i:x i:y i:radius i:startangle i:sweepangle i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace"
 }
 OBJECT_MAP = {fmt.split()[0]:key for key,fmt in SCH_FORMAT.items()}
 
