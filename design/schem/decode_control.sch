@@ -105,7 +105,7 @@ device=74157
 T 51500 52040 5 10 0 0 0 0 1
 footprint=SO16
 T 52000 51400 5 16 1 1 0 0 1
-refdes=U2
+refdes=U3
 T 51500 51840 5 10 0 0 0 0 1
 value=SN74HC157D
 }
@@ -116,7 +116,7 @@ device=74157
 T 51500 49640 5 10 0 0 0 0 1
 footprint=SO16
 T 52000 49000 5 16 1 1 0 0 1
-refdes=U3
+refdes=U4
 T 51500 49440 5 10 0 0 0 0 1
 value=SN74HC157D
 }
@@ -143,7 +143,7 @@ device=74157
 T 51500 47240 5 10 0 0 0 0 1
 footprint=SO16
 T 52000 46600 5 16 1 1 0 0 1
-refdes=U4
+refdes=U5
 T 51500 47040 5 10 0 0 0 0 1
 value=SN74HC157D
 }
@@ -163,7 +163,7 @@ C 50100 52300 1 0 0 7432-2.sym
 T 50200 52800 5 10 0 0 0 0 1
 device=7432
 T 50300 52500 5 10 1 1 0 1 1
-refdes=U1
+refdes=U6A
 T 50200 54200 5 10 0 0 0 0 1
 footprint=DIP14
 T 50100 52300 5 10 0 0 0 0 1
