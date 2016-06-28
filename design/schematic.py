@@ -78,7 +78,12 @@ class SchematicObject(dict):
             if name == item:
                 attr["text"] = "%s=%s" % (name, str(value))
                 return attr["text"]
-        raise AttributeError("'SchematicObject' object has no attribute '%s'" % item)
+        new_attr = dict(self["attributes"][0])
+        del new_attr["text"]
+        new_attr["visibility"] = 0
+        attribute = object(**new_attr)
+        attribute["text"] = "%s=%s" % (item, value)
+        self["attributes"].append(attribute)
 
 
 def object(type, **kwargs):
