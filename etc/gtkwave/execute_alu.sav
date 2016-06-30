@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.37 (w)1999-2012 BSI
+[*] Thu Jun 30 21:21:07 2016
+[*]
+[dumpfile] "/home/ian/src/cpu/design/build/waveforms/execute_alu.vcd"
+[dumpfile_mtime] "Thu Jun 30 21:13:06 2016"
+[dumpfile_size] 624232
+[savefile] "/home/ian/src/cpu/etc/gtkwave/execute_alu.sav"
+[timestart] 0
+[size] 1920 1060
+[pos] -1 -1
+*-18.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 210
+[signals_width] 94
+[sst_expanded] 1
+[sst_vpaned_height] 316
+@22
++{Test#} tb_execute_alu._TB_TEST_ID[31:0]
+@28
+tb_execute_alu.CLK0
+@200
+-
+@22
++{F_A} tb_execute_alu.F_A[15:0]
++{F_B} tb_execute_alu.F_B[15:0]
+@2024
+^1 /home/ian/src/cpu/etc/gtkwave/filters/aluop
++{DE_ALUop} tb_execute_alu.DE_ALUop[2:0]
+@200
+-
+@22
++{A_D} tb_execute_alu.A_D[15:0]
+@c00029
++{A_F} tb_execute_alu.A_F[3:0]
+@28
++{SF} (0)tb_execute_alu.A_F[3:0]
++{CF} (1)tb_execute_alu.A_F[3:0]
++{OF} (2)tb_execute_alu.A_F[3:0]
++{ZF} (3)tb_execute_alu.A_F[3:0]
+@1401201
+-group_end
+[pattern_trace] 1
+[pattern_trace] 0
