@@ -184,6 +184,16 @@
 			"EC_D:16 = (0xC000 if trap else 0xFF80) if brk else (DONTCARE if skip else A_D)"
 		]
 	},
+	"fetch_control": {
+		"inputs": {
+			"F_I":  {"width": 16},
+			"EM_J": {"width": 1},
+			"I_I":  {"width": 1}
+		},
+		"values": [
+			"FC_I:16 = 0 if EM_J|I_I else F_I"
+		]
+	},
 	"fetch_fetch": {
 		"inputs": {
 			"R_CS":  {"width": 6},
