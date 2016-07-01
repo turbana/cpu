@@ -166,7 +166,7 @@
 			"DE_S":  {"width": 1},
 			"A_D":   {"width": 16}
 		},
-		"assert": "not I_T or I_I",
+		"assert": "not (I_T & ~I_I)",
 		"values": [
 			"valid_op = DE_J | DE_S | DE_Mr | DE_Mw | (1 if DE_Rd else 0)",
 			"brk = I_I",
