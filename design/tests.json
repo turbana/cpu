@@ -272,12 +272,24 @@
 	"memory_skip": {
 		"inputs": {
 			"EM_S":   {"width": 1},
-			"EM_Snz": {"width": 1},
-			"EM_Z":   {"width": 1}
+			"EM_SF":  {"width": 3},
+			"EM_AF":  {"width": 4}
 		},
 		"values": [
-			"match = 1 if EM_Snz == EM_Z else 0",
-			"S_S:1 = EM_S & match"
+			"ZF = (EM_AF >> 0) & 1",
+			"OF = (EM_AF >> 1) & 1",
+			"CF = (EM_AF >> 2) & 1",
+			"SF = (EM_AF >> 3) & 1",
+			"conds = [None]*8",
+			"conds[0] = ZF==1",
+			"conds[1] = ZF==0",
+			"conds[2] = ZF==0 and SF==OF",
+			"conds[3] = SF==OF",
+			"conds[4] = SF!=OF",
+			"conds[5] = ZF==1 or SF!=OF",
+			"conds[6] = CF==0",
+			"conds[7] = CF==ZF",
+			"S_S:1 = EM_S & conds[EM_SF]"
 		]
 	},
 	"writeback_interrupts": {
