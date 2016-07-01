@@ -104,7 +104,7 @@
 			"sb = b >> 15",
 			"sr = A_D >> 15",
 			"cf = (a+b) >> 16",
-			"of = (~sa & sb & sr) | (sa & ~sb & ~sr)",
+			"of = (~sa & ~sb & sr) | (sa & sb & ~sr)",
 			"zf = 1 if A_D==0 else 0",
 			"A_F:4 = (sr << 3) | (cf << 2) | (of << 1) | zf"
 		]
