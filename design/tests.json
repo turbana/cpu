@@ -55,7 +55,7 @@
 			"mc = 1 if DE_Rd == D_Rc else 0",
 			"zero = 1 if DE_Rd == 0 else 0",
 			"match = ~zero & (ma | mb | mc)",
-			"H_H:1 = EM_J | (DE_Mr & match)"
+			"H_H:1 = DE_Mr & match & ~EM_J"
 		]
 	},
 	"decode_rf": {
