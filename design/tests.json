@@ -92,11 +92,12 @@
 		"inputs": {
 			"F_A":      {"width": 16, "alias": "a"},
 			"F_B":      {"width": 16, "alias": "b"},
+			"DE_Ca":    {"width": 1, "alias": "ca"},
 			"DE_ALUop": {"width": 3, "alias": "op"}
 		},
 		"assert": "op != 7",
 		"values": [
-			"A_D:16 = a+b if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))",
+			"A_D:16 = a+b+ca if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))",
 			"sa = a >> 15",
 			"sb = b >> 15",
 			"sr = A_D >> 15",
