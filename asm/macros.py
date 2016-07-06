@@ -116,7 +116,7 @@ def enter(words):
 	return """
 		add $6, $7, 1
 		addi $7, -({words}+1)
-		stw $0($7), $6
+		stw 0($7), $6
 	"""
 
 

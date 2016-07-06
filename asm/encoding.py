@@ -87,6 +87,9 @@ def decode(opcode, _cache={}):
 				arg = Immediate(n, aname)
 			else:
 				arg = Register(value, aname)
+		elif type == "spec_imm":
+			n = Number((isa.immediates_rev[value], 10), 5, True)
+			arg = Immediate(n, aname)
 		elif type.startswith("s"):
 			n = int(type[1:])
 			arg = Number((twoc(value, n), 10), n, True, aname)

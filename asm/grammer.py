@@ -32,7 +32,7 @@ plus = Literal("+")
 
 unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
 signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
-atoms = (signed + unsigned + "reg ireg jreg creg cond z nz string iden").split()
+atoms = (signed + unsigned + "spec_imm reg ireg jreg creg cond z nz string iden").split()
 
 name = Word(alphas, alphanums)
 inst_name = Combine(Optional(dot) + name + Optional(dot + oneOf(["z", "nz"])))

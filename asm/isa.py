@@ -72,23 +72,23 @@ add("as.nz tgt:reg, op1:reg, op2:ireg",
 add("jmp index:ireg(base:reg)",
 	0b01011, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3))
 
+add("ldw tgt:reg, index:ireg(base:reg)",
+	0b01100, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
+
+add("ldiw tgt:reg, index:ireg(base:reg)",
+	0b01101, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
+
+add("sex tgt:reg, src:reg",
+	0b01110, 11, ("src", 5, 3), ("tgt", 2, 0))
+
+add("stiw index:spec_imm(base:reg), src:reg",
+	0b01111, 11, ("index", 10, 7), ("base", 5, 3), ("src", 2, 0))
+
 add("ldw tgt:reg, offset:s7(base:reg)",
 	0b100, 13, ("offset", 12, 6), ("base", 5, 3), ("tgt", 2, 0))
 
 add("stw offset:s7(base:reg), src:reg",
 	0b101, 13, ("offset", 12, 6), ("base", 5, 3), ("src", 2, 0))
-
-add("ldw tgt:reg, index:ireg(base:reg)",
-	0b01100, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
-
-add("stw index:ireg(base:reg), src:reg",
-	0b01101, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("src", 2, 0))
-
-add("ldiw tgt:reg, index:ireg(base:reg)",
-	0b01110, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
-
-add("stiw index:ireg(base:reg), src:reg",
-	0b01111, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("src", 2, 0))
 
 add("lcr tgt:reg, cr:creg",
 	0b11000, 11, ("cr", 5, 3), ("tgt", 2, 0))
