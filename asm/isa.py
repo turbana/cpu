@@ -37,46 +37,46 @@ def parse_format(ast):
 
 
 add("add tgt:reg, op1:reg, op2:ireg",
-	0b00000, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00000, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("sub tgt:reg, op1:reg, op2:ireg",
-	0b00001, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00001, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("and tgt:reg, op1:reg, op2:ireg",
-	0b00010, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00010, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("or tgt:reg, op1:reg, op2:ireg",
-	0b00011, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00011, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("shl tgt:reg, op1:reg, op2:ireg",
-	0b00100, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00100, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("shr tgt:reg, op1:reg, op2:ireg",
-	0b00101, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00101, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("sar tgt:reg, op1:reg, op2:ireg",
-	0b00110, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00110, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("xor tgt:reg, op1:reg, op2:ireg",
-	0b00111, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b00111, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("s.cond:cond op1:reg, op2:ireg",
-	0b01000, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("cond", 2, 0))
+	0b01000, 11, ("op2", 10, 6), ("op1", 5, 3), ("cond", 2, 0))
 
 add("as.z tgt:reg, op1:reg, op2:ireg",
-	0b01001, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b01001, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("as.nz tgt:reg, op1:reg, op2:ireg",
-	0b01010, 11, ("op2", 10, 7), ("ir", 6, 6), ("op1", 5, 3), ("tgt", 2, 0))
+	0b01010, 11, ("op2", 10, 6), ("op1", 5, 3), ("tgt", 2, 0))
 
 add("jmp index:ireg(base:reg)",
-	0b01011, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3))
+	0b01011, 11, ("index", 10, 6), ("base", 5, 3))
 
 add("ldw tgt:reg, index:ireg(base:reg)",
-	0b01100, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
+	0b01100, 11, ("index", 10, 6), ("base", 5, 3), ("tgt", 2, 0))
 
 add("ldiw tgt:reg, index:ireg(base:reg)",
-	0b01101, 11, ("index", 10, 7), ("ir", 6, 6), ("base", 5, 3), ("tgt", 2, 0))
+	0b01101, 11, ("index", 10, 6), ("base", 5, 3), ("tgt", 2, 0))
 
 add("sex tgt:reg, src:reg",
 	0b01110, 11, ("src", 5, 3), ("tgt", 2, 0))

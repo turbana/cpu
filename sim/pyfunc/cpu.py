@@ -13,6 +13,7 @@ import threading
 import time
 
 import asm.encoding
+import asm.tokens
 import debugger
 import listeners
 
@@ -115,23 +116,19 @@ def lookup_op(tok):
 
 @op
 def ldw(cpu, tgt, base, offset):
-	cpu.rset(tgt, cpu.mget(cpu.rget(base) + offset))
+	cpu.rset(tgt, cpu.mget(base + offset))
 
 @op
-def ldw(cpu, tgt, base, index, ir):
-	base = cpu.rget(base)
-	if not ir: index = cpu.rget(index)
+def ldw(cpu, tgt, base, index):
 	cpu.rset(tgt, cpu.mget(base + index))
 
 @op
 def stw(cpu, base, src, offset):
-	cpu.mset((offset + cpu.rget(base)), cpu.rget(src))
+	cpu.mset((offset + base), src)
 
 @op
-def stw(cpu, base, src, index, ir):
-	base = cpu.rget(base)
-	if not ir: index = cpu.rget(index)
-	cpu.mset(index + base, cpu.rget(src))
+def stw(cpu, base, src, index):
+	cpu.mset(index + base, src)
 
 @op
 def jmp(cpu, offset):
@@ -140,56 +137,40 @@ def jmp(cpu, offset):
 	cpu.stall(2)
 
 @op
-def jmp(cpu, index, base, ir):
-	base = cpu.rget(base)
-	if not ir: index = cpu.rget(index)
+def jmp(cpu, index, base):
 	cpu.reg[R_PC] = base + index
 	cpu.stall(2)
 
 @op
-def add(cpu, tgt, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def add(cpu, tgt, op1, op2):
 	cpu.rset(tgt, op1 + op2)
 
 @op
-def sub(cpu, tgt, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def sub(cpu, tgt, op1, op2):
 	res = twoc_unsign(op1 - op2)
 	cpu.rset(tgt, res)
 
 @op
-def and_(cpu, tgt, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def and_(cpu, tgt, op1, op2):
 	cpu.rset(tgt, op1 & op2)
 
 @op
-def or_(cpu, tgt, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def or_(cpu, tgt, op1, op2):
 	cpu.rset(tgt, op1 | op2)
 
 @op
-def xor(cpu, tgt, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def xor(cpu, tgt, op1, op2):
 	cpu.rset(tgt, op1 ^ op2)
 
 @op
-def s(cpu, cond, op1, op2, ir):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def s(cpu, cond, op1, op2):
 	func = condition_func[cond]
 	if func(op1, op2):
 		cpu.reg[R_PC] += 1
 		cpu.stall()
 
 @op
-def as_z(cpu, ir, op1, op2, tgt):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def as_z(cpu, op1, op2, tgt):
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res == 0:
@@ -197,9 +178,7 @@ def as_z(cpu, ir, op1, op2, tgt):
 		cpu.stall()
 
 @op
-def as_nz(cpu, ir, op1, op2, tgt):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def as_nz(cpu, op1, op2, tgt):
 	res = (op1 + op2) & 0xFFFF
 	cpu.rset(tgt, res)
 	if res != 0:
@@ -219,21 +198,15 @@ def addi(cpu, imm, tgt):
 	cpu.rset(tgt, cpu.rget(tgt) + imm)
 
 @op
-def shl(cpu, ir, op1, op2, tgt):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def shl(cpu, op1, op2, tgt):
 	cpu.rset(tgt, op1 << op2)
 
 @op
-def shr(cpu, ir, op1, op2, tgt):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def shr(cpu, op1, op2, tgt):
 	cpu.rset(tgt, op1 >> op2)
 
 @op
-def sar(cpu, ir, op1, op2, tgt):
-	op1 = cpu.rget(op1)
-	if not ir: op2 = cpu.rget(op2)
+def sar(cpu, op1, op2, tgt):
 	res = op1 >> op2
 	mask = ~(2**(16-op2) - 1) if op1 & 0x8000 else 0
 	cpu.rset(tgt, res | mask)
@@ -250,7 +223,6 @@ def lcr(cpu, tgt, cr):
 
 @op
 def scr(cpu, cr, src):
-	value = cpu.rget(src)
 	def update():
 		cpu.crset(cr, value)
 		cpu._load_segment(cpu.dsegment)
@@ -262,16 +234,12 @@ def scr(cpu, cr, src):
 		update()
 
 @op
-def ldiw(cpu, tgt, base, index, ir):
-	base = cpu.rget(base)
-	if not ir: index = cpu.rget(index)
+def ldiw(cpu, tgt, base, index):
 	cpu.rset(tgt, cpu.iget(base + index))
 
 
 @op
-def stiw(cpu, base, src, index, ir):
-	base = cpu.rget(base)
-	if not ir: index = cpu.rget(index)
+def stiw(cpu, base, src, index):
 	cpu.iset(index + base, cpu.rget(src))
 
 
@@ -382,7 +350,14 @@ class CPU(object):
 	@send_listeners
 	def execute(self, tok):
 		func = lookup_op(tok)
-		func(self, **tok.arguments())
+		def _expand_arg(name, arg):
+			if isinstance(arg, asm.tokens.ImmRegister):
+				arg = arg.value
+			if isinstance(arg, asm.tokens.Register) and name != "tgt":
+				return self.rget(arg.value)
+			return arg.value
+		args = {k:_expand_arg(k,v) for k,v in tok.arguments().items()}
+		func(self, **args)
 
 	def stall(self, count=1):
 		self.stalls += count

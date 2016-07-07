@@ -37,17 +37,7 @@ class Instruction(Token):
 		self.name = args[0]
 		self.args = list(args[1:])
 		self.size = 2
-
-		# construct special tokens
-		for arg in self.args:
-			if arg.type == "ir":
-				break
-			if arg.type == "ireg":
-				ir = not isinstance(arg, Register)
-				tok = Bit(ir, "ir")
-				tok.type = "bit"
-				self.args.append(tok)
-		self._arguments =  dict((a.name, a.value) for a in self.args)
+		self._arguments = {a.name:a for a in self.args}
 
 	def arguments(self):
 		return self._arguments
@@ -150,6 +140,32 @@ class Immediate(Token):
 
 	def __repr__(self):
 		return "<Imm %d>" % self.number.value
+
+
+class ImmRegister(Token):
+	def __init__(self, value, name="", decode=False):
+		self.name = name
+		if decode:
+			self.imm = (value & 1) == 1
+			value >>= 1
+			if self.imm:
+				imm = isa.immediates_rev[value]
+				num = Number((imm, 10), 5, True)
+				self.value = Immediate(num, name)
+			else:
+				self.value = Register(value & 0x07, name)
+		else:
+			self.imm = isinstance(value, Immediate)
+			self.value = value
+
+	def binary(self):
+		return (self.value.binary() << 1) | (1 if self.imm else 0)
+
+	def __str__(self):
+		return str(self.value)
+
+	def __repr__(self):
+		return "<IReg %s>" % repr(self.value)
 
 
 class Condition(Token):

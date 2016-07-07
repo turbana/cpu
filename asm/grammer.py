@@ -174,6 +174,7 @@ comment = ";" + restOfLine
 creg.addParseAction(_build(tokens.ControlRegister))
 reg.addParseAction(_build(tokens.Register))
 cond.addParseAction(_build(tokens.Condition))
+ireg.addParseAction(_build(tokens.ImmRegister))
 label_name.addParseAction(_build(tokens.Label))
 iden = label_name.copy() # used in macros
 
