@@ -4,14 +4,18 @@ SCHEM		= schem
 DOC			= ../doc
 WF			= $(BUILD)/waveforms
 FAILON		= ./failon.sh
-GNETLIST	= /usr/bin/gnetlist
+GNETLIST    = gnetlist
+GAF			= gaf
+IVERILOG	= iverilog
+GTKWAVE		= gtkwave
+GSCHEM		= gschem
 
 ALL_SCHEMS = $(SCHEM)/*.sch
 SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
 
 
-.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall
+.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(WF)/%.vcd
 
 
@@ -23,6 +27,7 @@ help:
 	@echo "make doc                   -- generate documentation"
 	@echo "make renum                 -- name all unset refdes (U?)"
 	@echo "make renumall              -- overwrite all refdes"
+	@echo "make versions              -- print versions of required programs"
 
 
 # generate dependencies
@@ -68,7 +73,7 @@ $(BUILD)/%.v: $(wildcard $(BUILD)/%.sch)
 
 $(BUILD)/test_%: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/clock.v
 	@echo "Cmpl TB : $(@F)"
-	@iverilog $^ -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
+	@$(IVERILOG) $^ -o $@ 2>&1 | $(FAILON) "error\|\(was already declared here\)"
 
 
 $(WF)/%.vcd: $(BUILD)/test_%
@@ -78,16 +83,16 @@ $(WF)/%.vcd: $(BUILD)/test_%
 
 $(DOC)/%.png: %.sch
 	@echo "PNG     : $(@F)"
-	@gaf export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
+	@$(GAF) export --size=auto --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
 $(DOC)/schematics.pdf: $(DOC_SCHEMS)
 	@echo "PDF     : $(@F)"
-	@gaf export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
+	@$(GAF) export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
 
 
-wave: $(BUILD) $(WF) $(WF)/$(TARGET).vcd
-	@gtkwave $(WF)/$(TARGET).vcd
+wave: $(BUILD) $(WF) $(WF)/$(target).vcd
+	@$(GTKWAVE) $(WF)/$(target).vcd
 
 
 netlist:	$(BUILD) $(BUILD)/$(target).v
@@ -101,6 +106,13 @@ renum:
 
 renumall:
 	@python renum.py --overwrite $(ALL_SCHEMS)
+
+versions:
+	@echo "gnetlist `$(GNETLIST) --version | head -n1 | cut -f2 -d' '`"
+	@echo "iverilog `$(IVERILOG) -V 2>&1 | head -n1 | cut -f4 -d' '`"
+	@echo "gaf      `$(GAF) --version | head -n1 | cut -f2 -d' '`"
+	@echo "gschem   `$(GSCHEM) --version | head -n1 | cut -f2 -d' '`"
+	@echo "gtkwave  `$(GTKWAVE) --version | head -n1 | cut -f3 -d' '`"
 
 clean:
 	@rm -rf -- $(BUILD)/* Makefile.deps $(DOC)/block_diagram.png $(DOC)/schematics.pdf
