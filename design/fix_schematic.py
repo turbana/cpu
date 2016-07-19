@@ -37,7 +37,7 @@ def main(args):
     filename = args[0]
     schem = schematic.Schematic(open(filename))
     fix_wires(schem, filename)
-    fix_busses(schem)
+    fix_busses(schem, filename)
     add_title_block(schem, filename)
     schem.save(open(args[1], "w"))
 
@@ -45,20 +45,36 @@ def main(args):
 def fix_wires(schem, prefix):
     count = 0
     for pad in schem.findall(type="component", basename="[io]pad-1.sym"):
-        value = "%s:1" % pad.netlabel
-        refdes = "%s_%s%d" % (prefix, pad.netlabel, count)
         count += 1
+        refdes = clean_refdes("%s_%s_%d" % (prefix, pad.netlabel, count))
+        net = "%s:1" % pad.netlabel
         set_attribute(pad, "refdes", refdes)
-        set_attribute(pad, "net", value)
+        set_attribute(pad, "net", net)
 
 
-def fix_busses(schem):
+def fix_busses(schem, prefix):
+    count = 0
     for pad in schem.findall(type="component", basename="[io]pad-2.sym"):
-        name = pad.netlabel.split("[")[0]
+        count += 1
+        refdes = clean_refdes("%s_%s_%d" % (prefix, pad.netlabel, count))
+        name, size = pad_name_size(pad.netlabel)
+        set_attribute(pad, "refdes", refdes)
+        set_attribute(pad, "net", "%s:%d" % (name, size))
         search = "netname=%s[0-9]+" % name
         for net in schem.findall(type="net", attr=search):
             num = net.netname[len(name):]
             net.netname = "%s[%s]" %  (name, num)
+
+
+def clean_refdes(refdes):
+    for char in (".:/()[]"):
+        refdes = refdes.replace(char, "_")
+    return refdes
+
+
+def pad_name_size(label):
+    parts = label.split("[")
+    return parts[0], 1+int(parts[1].split(":")[0])
 
 
 def set_attribute(pad, attr, value):
