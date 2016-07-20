@@ -108,14 +108,14 @@ def truth_tables(inputs, outputs):
 	all_values_ints = lambda k: all(map(is_int, set(out[k] for out in outputs)))
 	keys = set(outputs[0].keys()) - set(["Inst"])
 	int_keys = [k for k in keys if all_values_ints(k)]
-	mux_keys = keys - set(int_keys)
+	mux_keys = sorted(keys - set(int_keys))
 	mux_bits = dict(all_mux_bits(outputs, mux_keys))
-	out_keys = int_keys
-	out_names = out_keys + ["%s.%s" % (k,b)
+	out_keys = sorted(int_keys)
+	out_names = out_keys + ["m_%s_%s" % (clean_name(k),b)
 							for k,bits in all_mux_bits(outputs, mux_keys)
 							for b in xrange(bits)]
 	in_keys = xrange(ENCODING_BITS)
-	in_names = ["I%d" % (15-i) for i in in_keys]
+	in_names = ["I[%d]" % (15-i) for i in in_keys]
 	table = {
 		"inputs": in_names,
 		"outputs": out_names,
@@ -123,18 +123,17 @@ def truth_tables(inputs, outputs):
 		"data": initial_data(inputs, outputs, in_keys, out_keys, mux_keys),
 		"mux_configs": None,
 	}
-	mux_index = {mux:out_names.index("%s.0" % mux) for mux in mux_keys}
+	mux_index = {mux:5+out_names.index("m_%s_0" % clean_name(mux)) for mux in mux_keys}
 	# first output is total number of possible tables
 	yield 2**sum(mux_bits.values())
 	for muxes in iterate_muxes(outputs, mux_keys):
-		# table["mux_configs"] = [config for _, config in muxes]
 		table["mux_configs"] = muxes
 		for row, output in enumerate(outputs):
 			for mux, config in muxes:
 				key = config["key"]
 				i = mux_index[key]
 				val = output[key]
-				for b,v in enumerate(mux[str(val)]):
+				for b,v in enumerate(reversed(mux[str(val)])):
 					table["data"][row][i+b] = v
 		yield table
 
@@ -180,18 +179,19 @@ def gen_muxes(key, possible):
 	possible += "X" * ((2**bits) - len(possible))
 	bit_patterns = list(itertools.product((0, 1), repeat=bits))
 	config = {
-		"names": ["%s.%s" % (key,str(i)) for i in xrange(bits)],
+		"names": ["m_%s_%s" % (clean_name(key),str(i)) for i in xrange(bits)],
 		"key": key,
 		"bits": bits,
 	}
-	#for ordering in itertools.permutations(xrange(count), count):
 	for chosen in itertools.permutations(possible, len(possible)):
-		# chosen = [possible[i] for i in ordering]
 		mux = dict(zip(chosen, bit_patterns))
 		mux["None"] = "-" * bits
 		config["chosen"] = chosen
-		# config["pretty"] = "MUX:%d(%s)" % (bits, ",".join(chosen)),
 		yield mux, config
+
+
+def clean_name(name):
+	return name.replace("[", "").replace("]", "")
 
 
 def score(solution):
@@ -199,7 +199,7 @@ def score(solution):
 	if solution is None:
 		return INF
 	if "score" not in solution:
-		simplify(solution)
+		#simplify(solution)
 		count_operators = lambda s: s.count("&") + s.count("!") + s.count("|")
 		solution["score"] = sum(map(count_operators, solution["decoding"].values()))
 	return solution["score"]
@@ -221,7 +221,7 @@ def simplify(solution):
 	terms = sorted(all_terms(logic), key=len, reverse=True)
 	count = 0
 	for term in common_terms(logic, terms):
-		name = "#" + str(count)
+		name = "w" + str(count)
 		count += 1
 		replace(term, name)
 		logic[name] = term
@@ -265,7 +265,10 @@ def espresso_file(table):
 	file.write(".ilb\t%s\n" % " ".join(table["inputs"]))
 	file.write(".ob\t%s\n" % " ".join(table["outputs"]))
 	for line in table["data"]:
-		for value in line:
+		for value in line[:5]:
+			file.write("-" if value is None else str(value))
+		file.write(" ")
+		for value in line[5:]:
 			file.write("-" if value is None else str(value))
 		file.write("\n")
 	file.write(".e\n")
@@ -284,7 +287,6 @@ def solve(table):
 		if stdout is not None: print stdout
 		if stderr is not None: print stderr
 		raise Exception("received exit %d from espresso" % proc.returncode)
-	#open("stdout.log", "w").write(stdout)
 	return {
 		"decoding": dict(l.split(" = ") for l in stdout.replace("\n", "").replace("  ", "").split(";") if l),
 		"encoding": table["encoding"],
@@ -304,7 +306,7 @@ def write_solution(solution, stream):
 		stream.write("%-8s %s\n" % (i, "".join(map(str, solution["encoding"][i]))))
 	stream.write("\n")
 	configs = [c for m,c in solution["mux_configs"]]
-	for config in configs:
+	for config in sorted(configs, key=lambda c: c["key"]):
 		pretty = "MUX:%d(%s)" % (config["bits"], ",".join(config["chosen"]))
 		stream.write("%-6s = %s\n" % (config["key"], pretty))
 	stream.write("\n")
@@ -322,6 +324,22 @@ def skip_random(iter):
 			iter.next()
 
 
+def show_table(table, stream=sys.stdout):
+	fmt = "%12s"
+	j = " "
+	def number(t, n=0):
+		if not t: return n
+		return number(t[1:], (n<<1)+t[0])
+	enc = {number(t):i for i,t in table["encoding"].items()}
+	def write_row(row):
+		stream.write(j.join(fmt % x for x in row))
+	write_row(["", "enc"] + table["outputs"])
+	stream.write("\n")
+	for i,row in enumerate(table["data"]):
+		write_row([enc[i], hex(i)] + row[5:])
+		stream.write("\n")
+
+
 def main(args):
 	outputs = load_truth_table(CSV_FILE)
 	running_log = open(RUNNING_LOG, "w")
@@ -329,7 +347,6 @@ def main(args):
 	x = 0
 	enc_count = 0
 	encodings = iter([1, simple_encoding()])
-	# encodings = all_encodings()
 	encoding_total = float(encodings.next())
 	for encoding in encodings:
 		enc_count += 1
@@ -354,6 +371,8 @@ def main(args):
 			sys.stdout.flush()
 			if _count == MAX_TABLES:
 				break
+			# XXX
+			return 0
 	show(best_solution)
 	write_solution(solution, open(BEST_LOG, "w"))
 
