@@ -1,6 +1,7 @@
 """ Generate test cases for the specified verilog module. """
 
 import copy
+import os.path
 import sys
 import re
 import json
@@ -10,6 +11,7 @@ import pyparsing as pp
 
 
 CONFIG_FILE = "tests.json"
+DECODE_FILE = "tests-decode.json"
 WAVEFORM_DIR = "build/waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False
@@ -31,7 +33,8 @@ def main(args):
         return 2
     module, wires = parse_module(args[0])
     stream = sys.stdout
-    config = parse_config(CONFIG_FILE, module)
+    data = load_json(CONFIG_FILE, DECODE_FILE)
+    config = parse_config(data, module)
     try:
         tests = generate_tests(config, wires)
         emit_header(stream, module, wires, config)
@@ -40,6 +43,14 @@ def main(args):
     except FatalTestException, e:
         sys.stderr.write(str(e))
         return 1
+
+
+def load_json(tests, decode):
+    data = json.loads(open(tests).read())
+    if os.path.exists(decode):
+    	decode = json.loads(open(decode).read())
+    	data["decode_decode"]["values"] = decode["values"]
+    return data
 
 
 def emit(stream, msg):
@@ -250,8 +261,7 @@ def grammer():
     return g
 
 
-def parse_config(filename, module):
-    data = json.loads(open(filename).read())
+def parse_config(data, module):
     expand_config(data, module)
     return data[module]
 

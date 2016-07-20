@@ -41,6 +41,14 @@
 			"DC_S:1 = 0 if nop else D_S"
 		]
 	},
+	"decode_decode": {
+		"inputs": {
+			"FD_I": {"width": 16},
+			"R_A":  {"width": 16},
+			"R_B":  {"width": 16}
+		},
+		"values": ["PLACEHOLDER: filled in from tests-decode.json"]
+	},
 	"decode_hazard": {
 		"inputs": {
 			"EM_J":  {"width": 1},
