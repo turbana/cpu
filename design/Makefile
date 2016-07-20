@@ -71,9 +71,6 @@ $(BUILD)/decode_decode.v: $(BUILD)/decode.log
 	@python $(BIN)/gen_decode_verilog.py $^ > $@
 
 
-$(BUILD)/tb_decode_decode.v: $(BUILD)/decode-test-cases.json
-
-
 $(BUILD)/tb_%.v: $(BUILD)/%.v $(CONFIG)/test-cases.json
 	@echo "Build TB: $(@F)"
 	@python $(BIN)/gen_test_bench.py $< > $@

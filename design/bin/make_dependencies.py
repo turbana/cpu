@@ -19,6 +19,11 @@ TESTS_CONFIG = "config/test-cases.json"
 CLOCK_SCH = "clock.sch"
 CLOCK_SCH_FILENAME = "schem/clock.sch"
 
+STATIC_DEPENDENCIES = [
+	"$(BUILD)/tb_decode_decode.v: $(BUILD)/decode-test-cases.json",
+	"$(BUILD)/test_decode_decode: $(BUILD)/7408.v $(BUILD)/7474.v"
+]
+
 
 def main(args):
 	if len(args) == 0:
@@ -30,6 +35,9 @@ def main(args):
 	base = lambda fn: os.path.basename(fn).replace(".sch", "")
 	deps = {base(fn): dependencies(fn) for fn in args}
 	expand(deps)
+	# print static dependencies
+	for line in STATIC_DEPENDENCIES:
+		print line
 	# print chip dependencies
 	for key in deps:
 		_deps = " ".join("$(BUILD)/%s.v" % x for x in deps[key])
