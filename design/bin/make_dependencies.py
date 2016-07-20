@@ -15,7 +15,7 @@ import json
 
 import schematic
 
-TESTS_CONFIG = "tests.json"
+TESTS_CONFIG = "config/test-cases.json"
 CLOCK_SCH = "clock.sch"
 CLOCK_SCH_FILENAME = "schem/clock.sch"
 

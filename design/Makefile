@@ -1,9 +1,11 @@
 
 BUILD		= build
+BIN         = bin
+CONFIG      = config
 SCHEM		= schem
 DOC			= ../doc
 WF			= $(BUILD)/waveforms
-FAILON		= ./failon.sh
+FAILON		= $(BIN)/failon.sh
 GNETLIST    = gnetlist
 GAF			= gaf
 IVERILOG	= iverilog
@@ -15,7 +17,7 @@ SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
 
 
-.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions
+.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode
 .PRECIOUS: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/%.sch $(BUILD)/test_% $(WF)/%.vcd
 
 
@@ -28,11 +30,12 @@ help:
 	@echo "make renum                 -- name all unset refdes (U?)"
 	@echo "make renumall              -- overwrite all refdes"
 	@echo "make versions              -- print versions of required programs"
+	@echo "make decode                -- run decode searcher"
 
 
 # generate dependencies
-Makefile.deps: $(ALL_SCHEMS) makedeps.py
-	@python makedeps.py $(ALL_SCHEMS) > $@
+Makefile.deps: $(ALL_SCHEMS) $(BIN)/make_dependencies.py
+	@python $(BIN)/make_dependencies.py $(ALL_SCHEMS) > $@
 -include Makefile.deps
 
 
@@ -50,17 +53,30 @@ $(DOC):
 
 $(BUILD)/%.sch: $(SCHEM)/%.sch
 	@echo "Fix Sch : $(@F)"
-	@python fix_schematic.py $< $@
+	@python $(BIN)/fix_schematic.py $< $@
 
 
-$(BUILD)/74%.v: gengate.py 74HCxxx.json
+$(BUILD)/74%.v: $(BIN)/gen_gate.py $(CONFIG)/74-series-chips.json
 	@echo "Gen Gate: $(@F)"
-	@python gengate.py $(basename $(@F)) > $@
+	@python $(BIN)/gen_gate.py $(basename $(@F)) > $@
 
 
-$(BUILD)/tb_%.v: $(BUILD)/%.v tests.json
+$(BUILD)/decode-test-cases.json: $(CONFIG)/decode.csv $(BUILD)/decode.log
+	@echo "Gen Test: $(@F)"
+	@python $(BIN)/gen_decode_test_json.py $^ > $@
+
+
+$(BUILD)/decode_decode.v: $(BUILD)/decode.log
+	@echo "Gen Veri: $(@F)"
+	@python $(BIN)/gen_decode_verilog.py $^ > $@
+
+
+$(BUILD)/tb_decode_decode.v: $(BUILD)/decode-test-cases.json
+
+
+$(BUILD)/tb_%.v: $(BUILD)/%.v $(CONFIG)/test-cases.json
 	@echo "Build TB: $(@F)"
-	@python testmod.py $< > $@
+	@python $(BIN)/gen_test_bench.py $< > $@
 
 
 $(BUILD)/%.v: $(wildcard $(BUILD)/%.sch)
@@ -68,7 +84,7 @@ $(BUILD)/%.v: $(wildcard $(BUILD)/%.sch)
 	@$(GNETLIST) -g verilog $^ -o $@ 2>&1 | grep -v "^Loading schematic" | grep -v "is not likely a valid Verilog identifier" | $(FAILON) '.*'
 	@grep unconnected_pin $@ | cut -f2 -d' ' | $(FAILON) '.*'
 	@echo "Fix Net : $(@F)"
-	@python fix_netlist.py $@ $^
+	@python $(BIN)/fix_netlist.py $@ $^
 
 
 $(BUILD)/test_%: $(BUILD)/%.v $(BUILD)/tb_%.v $(BUILD)/clock.v
@@ -95,6 +111,10 @@ wave: $(BUILD) $(WF) $(WF)/$(target).vcd
 	@$(GTKWAVE) $(WF)/$(target).vcd
 
 
+decode:
+	@python bin/decode_search.py
+
+
 netlist:	$(BUILD) $(BUILD)/$(target).v
 testbench:	$(BUILD) $(BUILD)/tb_$(target).v
 test: 		$(BUILD) $(WF) $(WF)/$(target).vcd
@@ -102,10 +122,10 @@ testall:	$(BUILD) $(WF) $(ALL_TESTS)
 doc:		$(DOC) $(DOC)/block_diagram.png $(DOC)/schematics.pdf
 
 renum:
-	@python renum.py $(ALL_SCHEMS)
+	@python $(BIN)/refdes_renum.py $(ALL_SCHEMS)
 
 renumall:
-	@python renum.py --overwrite $(ALL_SCHEMS)
+	@python $(BIN)/refdes_renum.py --overwrite $(ALL_SCHEMS)
 
 versions:
 	@echo "gnetlist `$(GNETLIST) --version | head -n1 | cut -f2 -d' '`"
@@ -115,4 +135,5 @@ versions:
 	@echo "gtkwave  `$(GTKWAVE) --version | head -n1 | cut -f3 -d' '`"
 
 clean:
-	@rm -rf -- $(BUILD)/* Makefile.deps $(DOC)/block_diagram.png $(DOC)/schematics.pdf
+	@rm -rf -- $(BUILD)/* Makefile.deps
+#$(DOC)/block_diagram.png $(DOC)/schematics.pdf

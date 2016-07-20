@@ -6,7 +6,7 @@ import math
 import re
 import sys
 
-import genverilog
+import gen_decode_verilog
 
 DONTCARE = 0
 
@@ -46,7 +46,7 @@ def read_csv(filename):
 
 
 def read_log(filename):
-	data = genverilog.parse(open(filename))
+	data = gen_decode_verilog.parse(open(filename))
 	for inst, opcode in data["encoding"].items():
 		new_inst = clean_keyword(inst)
 		if new_inst != inst:

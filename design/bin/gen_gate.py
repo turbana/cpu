@@ -10,7 +10,7 @@ import re
 import functools
 import collections
 
-DEFINITIONS = "74HCxxx.json"
+DEFINITIONS = "config/74-series-chips.json"
 
 _SPACE_CHARS		= "(){},;|"
 _BASIC_WIRE_REGEX	= "[0-9A-Z]+(?!')"

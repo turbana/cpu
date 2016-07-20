@@ -10,13 +10,13 @@ import random
 
 ENCODING_BITS = 5
 ANY = "X"
-CSV_FILE = "decode.csv"
-RUNNING_LOG = "running.log"
-BEST_LOG = "best.log"
+CSV_FILE = "config/decode.csv"
+RUNNING_LOG = "build/running.log"
+BEST_LOG = "build/decode.log"
 SKIP_RANGE = 2**4, 2**10
 MAX_TABLES = 0
 
-ESPRESSO = "./espresso -o eqntott".split()
+ESPRESSO = "bin/espresso -o eqntott".split()
 INF = 2**32-1
 
 
@@ -273,7 +273,7 @@ def espresso_file(table):
 		file.write("\n")
 	file.write(".e\n")
 	file.seek(0)
-	open("table.dat", "w").write("".join(file.readlines()))
+	# open("table.dat", "w").write("".join(file.readlines()))
 	file.seek(0)
 	return file
 
@@ -372,6 +372,7 @@ def main(args):
 			if _count == MAX_TABLES:
 				break
 			# XXX
+			print
 			return 0
 	show(best_solution)
 	write_solution(solution, open(BEST_LOG, "w"))

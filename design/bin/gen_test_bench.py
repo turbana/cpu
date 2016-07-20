@@ -10,8 +10,8 @@ import random
 import pyparsing as pp
 
 
-CONFIG_FILE = "tests.json"
-DECODE_FILE = "tests-decode.json"
+CONFIG_FILE = "config/test-cases.json"
+DECODE_FILE = "build/decode-test-cases.json"
 WAVEFORM_DIR = "build/waveforms"
 TEST_COUNT = 2**8
 SHOW_WAVEFORM = False

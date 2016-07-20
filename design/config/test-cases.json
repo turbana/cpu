@@ -47,7 +47,7 @@
 			"R_A":  {"width": 16},
 			"R_B":  {"width": 16}
 		},
-		"values": ["PLACEHOLDER: filled in from tests-decode.json"]
+		"values": ["PLACEHOLDER: filled in from decode-test-cases.json"]
 	},
 	"decode_hazard": {
 		"inputs": {
