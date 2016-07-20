@@ -1,0 +1,8 @@
+0 eq
+1 ne
+2 gt
+3 gte
+4 lt
+5 lte
+6 ult
+7 ulte

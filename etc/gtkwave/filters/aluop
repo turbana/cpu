@@ -5,4 +5,4 @@
 4 shr
 5 sar
 6 shl
-7 !invld
+7 sex
