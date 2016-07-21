@@ -12,9 +12,9 @@ module tb_tim;
 
    initial
      begin
-        $dumpfile("tim.vcd");
+        $dumpfile("build/waveforms/tim.vcd");
         $dumpvars;
-        $readmemh("data.bin", TIM.DEVICES.mem);
+        $readmemh("build/tim.bin", TIM.DEVICES.mem);
         _CLK = 0;
 
         #1000000 $finish;

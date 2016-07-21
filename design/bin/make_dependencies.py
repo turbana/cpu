@@ -9,6 +9,7 @@ execute_forward   -> 7486, 7408, 7432
 execute           -> 7486, 7408, 7432
 """
 
+import collections
 import sys
 import os.path
 import json
@@ -31,27 +32,63 @@ def main(args):
 		return 2
 	config = json.loads(open(TESTS_CONFIG).read())
 	filename = args[0]
-	base = os.path.basename(filename).replace(".sch", "")
-	base = lambda fn: os.path.basename(fn).replace(".sch", "")
-	deps = {base(fn): dependencies(fn) for fn in args}
-	expand(deps)
-	# print static dependencies
+	deps = collections.defaultdict(set)
+	schem_args = [fn for fn in args if fn.endswith(".sch")]
+	verilog_args = [fn for fn in args if fn.endswith(".v")]
+	schems = {base(fn): dependencies(fn) for fn in schem_args}
+	verilogs = {base(fn): vdependencies(fn) for fn in verilog_args}
+	expand(schems)
+	add_schematics(deps, schems, schem_args, config)
+	add_verilog(deps, verilogs, schems)
+	emit_deps(sys.stdout, deps)
+
+
+def emit_deps(stream, deps):
 	for line in STATIC_DEPENDENCIES:
-		print line
-	# print chip dependencies
-	for key in deps:
-		_deps = " ".join("$(BUILD)/%s.v" % x for x in deps[key])
-		print "$(BUILD)/test_%s: %s" % (key, _deps)
-	# print schematic dependencies
-	for key in deps:
-		schems = schematics(key, map(base, args))
-		_deps = " ".join("$(BUILD)/%s.sch" % x for x in schems)
-		if _deps:
-			print "$(BUILD)/%s.v: %s" % (key, _deps)
+		stream.write(line + "\n")
+	for mod, mod_deps in sorted(deps.items()):
+		if mod == "ALL_TESTS": continue
+		stream.write("$(BUILD)/%s: " % mod)
+		stream.write(" ".join("$(BUILD)/%s" % x for x in sorted(mod_deps)))
+		stream.write("\n")
+	stream.write("ALL_TESTS := ")
+	stream.write(" ".join("$(WF)/%s" % x for x in deps["ALL_TESTS"]))
+	stream.write("\n")
+
+
+def add_deps(deps, name, values):
+	deps[name] |= set(values)
+
+
+def add_dep(deps, name, value):
+	add_deps(deps, name, [value])
+
+
+def base(fn):
+	return os.path.basename(fn).replace(".sch", "").replace(".v", "")
+
+
+def add_schematics(deps, schems, args, config):
+	for mod, mod_deps in schems.items():
+		mod_test = "test_%s" % mod
+		mod_v = "%s.v" % mod
+		add_deps(deps, mod_test, ["%s.v" % fn for fn in mod_deps])
+		schem_deps = schematics(mod, map(base, args))
+		if schem_deps:
+			add_deps(deps, mod_v, ["%s.sch" % fn for fn in schem_deps])
 		else:
-			print  "$(BUILD)/%s.v: $(BUILD)/%s.sch" % (key, key)
-		if key in config:
-			print "ALL_TESTS := $(ALL_TESTS) $(WF)/%s.vcd" % key
+			add_dep(deps, mod_v, "%s.sch" % mod)
+		if mod in config:
+			add_dep(deps, "ALL_TESTS", "%s.vcd" % mod)
+
+
+def add_verilog(deps, verilogs, schems):
+	for mod, mod_deps in verilogs.items():
+		mod_test = "test_%s" % mod
+		add_deps(deps, mod_test, ["%s.v" % x for x in mod_deps])
+		for mod_dep in mod_deps:
+			sub_deps = deps["test_%s" % mod_dep]
+			add_deps(deps, mod_test, sub_deps)
 
 
 def schematics(key, keys):
@@ -76,6 +113,12 @@ def dependencies(filename):
 	if filename != CLOCK_SCH_FILENAME:
 		chips |= dependencies(CLOCK_SCH_FILENAME)
 	return chips
+
+
+def vdependencies(filename):
+	data = open(filename).readlines()
+	decls = [line for line in data if line.endswith("(\n")]
+	return set(line.split()[0] for line in decls)
 
 
 if __name__ == "__main__":

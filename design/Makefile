@@ -4,6 +4,8 @@ BIN         = bin
 CONFIG      = config
 SCHEM		= schem
 DOC			= ../doc
+VERILOG     = verilog
+ASM_BUILD   = ../tests/build
 WF			= $(BUILD)/waveforms
 FAILON		= $(BIN)/failon.sh
 GNETLIST    = gnetlist
@@ -15,6 +17,7 @@ GSCHEM		= gschem
 ALL_SCHEMS = $(SCHEM)/*.sch
 SCHEMS = $(filter-out $(wildcard $(SCHEM)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM),$(BUILD),$(SCHEMS)))
+ALL_VERILOG = $(subst .sch,.v,$(DOC_SCHEMS))
 
 
 .PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode
@@ -35,7 +38,7 @@ help:
 
 # generate dependencies
 Makefile.deps: $(ALL_SCHEMS) $(BIN)/make_dependencies.py
-	@python $(BIN)/make_dependencies.py $(ALL_SCHEMS) > $@
+	@python $(BIN)/make_dependencies.py $(VERILOG)/*.v $(ALL_SCHEMS) > $@
 -include Makefile.deps
 
 
@@ -49,6 +52,16 @@ $(WF):
 
 $(DOC):
 	@mkdir $(DOC)
+
+
+$(BUILD)/tb_tim.v: $(VERILOG)/tb_tim.v
+	@echo "Copy    : $(@F)"
+	@cp $^ $@
+
+
+$(BUILD)/%.v: $(VERILOG)/%.v
+	@echo "Copy    : $(@F)"
+	@cp $^ $@
 
 
 $(BUILD)/%.sch: $(SCHEM)/%.sch
@@ -109,7 +122,18 @@ wave: $(BUILD) $(WF) $(WF)/$(target).vcd
 
 
 decode:
-	@python bin/decode_search.py
+	@python bin/decode_search.py > /dev/null
+
+
+$(BUILD)/%.bin: $(ASM_BUILD)/%.o
+	@echo "Gen Bin : $(@F)"
+	@python bin/to_verilog_dump.py $^ > $@
+
+
+tim: $(BUILD) $(WF) $(BUILD)/test_tim $(BUILD)/$(target).bin
+	@echo "Run TIM :"
+	@cp $(BUILD)/$(target).bin $(BUILD)/tim.bin
+	@$(BUILD)/test_tim
 
 
 netlist:	$(BUILD) $(BUILD)/$(target).v
