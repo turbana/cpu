@@ -101,7 +101,7 @@
 			"F_A":      {"width": 16, "alias": "a"},
 			"F_B":      {"width": 16, "alias": "b"},
 			"DE_Ca":    {"width": 1, "alias": "ca"},
-			"DE_ALUop": {"width": 3, "alias": "op"}
+			"DE_Op":    {"width": 3, "alias": "op"}
 		},
 		"assert": "op != 7",
 		"values": [
@@ -119,7 +119,7 @@
 		"inputs": {
 			"F_A":      {"width": 16, "alias": "a"},
 			"F_B":      {"width": 16, "alias": "b"},
-			"DE_ALUop": {"width": 3, "alias": "op"}
+			"DE_Op":    {"width": 3, "alias": "op"}
 		},
 		"assert": "(op & 3) != 3",
 		"values": [
