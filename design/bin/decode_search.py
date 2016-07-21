@@ -1,3 +1,4 @@
+import argparse
 import csv
 import sys
 import StringIO
@@ -13,8 +14,7 @@ ANY = "X"
 CSV_FILE = "config/decode.csv"
 RUNNING_LOG = "build/running.log"
 BEST_LOG = "build/decode.log"
-SKIP_RANGE = 2**4, 2**10
-MAX_TABLES = 0
+SKIP_RANGE = 2**1, 2**6
 
 ESPRESSO = "bin/espresso -o eqntott".split()
 INF = 2**32-1
@@ -294,11 +294,6 @@ def solve(table):
 	}
 
 
-def show(solution):
-	# display solution
-	write_solution(solution, sys.stdout)
-
-
 def write_solution(solution, stream):
 	insts = solution["encoding"].keys()
 	insts.sort(key=solution["encoding"].get)
@@ -340,43 +335,63 @@ def show_table(table, stream=sys.stdout):
 		stream.write("\n")
 
 
+class NullStream(object):
+	def write(self, *args):
+		pass
+	def flush(self):
+		pass
+
+
+def parse_args():
+	parser = argparse.ArgumentParser(description="Searches for efficient encoding of opcodes and decode stage")
+	parser.add_argument("--max-iterations", type=int, default=0, help="Maximum iterations to search")
+	parser.add_argument("-q", "--quiet", action="store_true", help="Suppress output")
+	return parser.parse_args()
+
+
 def main(args):
+	args = parse_args()
 	outputs = load_truth_table(CSV_FILE)
 	running_log = open(RUNNING_LOG, "w")
 	best_solution = None
+	out_stream = NullStream() if args.quiet else sys.stdout
 	x = 0
 	enc_count = 0
+	iterations = 0
+	done = False
 	encodings = iter([1, simple_encoding()])
 	encoding_total = float(encodings.next())
 	for encoding in encodings:
 		enc_count += 1
 		count = 0
-		_count = 0
 		table_iter = truth_tables(encoding, outputs)
 		table_count = float(table_iter.next())
 		for skipped, table in skip_random(table_iter):
 			count += 1 + skipped
-			_count += 1
+			iterations += 1
 			solution = solve(table)
 			if score(solution) < score(best_solution):
 				best_solution = solution
-				print
-				show(solution)
-				print
+				out_stream.write("\n")
+				write_solution(solution, out_stream)
+				out_stream.write("\n")
 				write_solution(solution, running_log)
 				write_solution(solution, open(BEST_LOG, "w"))
-			sys.stdout.write("\rencoding=%d/%d (%1.2f%%)  table=%d/%d (%1.2f%%)  score=%s   " % (
+			out_stream.write("\rencoding=%d/%d (%1.2f%%)  table=%d/%d (%1.2f%%)  score=%s   " % (
 				enc_count, encoding_total, (enc_count*100/encoding_total),
 				count, table_count, (count*100/table_count), str(score(solution))))
-			sys.stdout.flush()
-			if _count == MAX_TABLES:
+			out_stream.flush()
+			if iterations == args.max_iterations:
+				done = True
 				break
-			# XXX
-			print
-			return 0
-	show(best_solution)
+		if done:
+			break
+	write_solution(solution, out_stream)
 	write_solution(solution, open(BEST_LOG, "w"))
 
 
 if __name__ == "__main__":
-	sys.exit(main(sys.argv[1:]))
+	try:
+		sys.exit(main(sys.argv[1:]))
+	except KeyboardInterrupt:
+		pass
