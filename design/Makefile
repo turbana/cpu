@@ -122,12 +122,12 @@ wave: $(BUILD) $(WF) $(WF)/$(target).vcd
 
 
 decode:
-	@python bin/decode_search.py
+	python bin/decode_search.py 100
 
 
 $(BUILD)/decode.log: $(CONFIG)/decode.csv
 	@echo "Decode  : $(@F)"
-	@python bin/decode_search.py --quiet --max-iterations 1
+	@python bin/decode_search.py 0 --quiet
 
 
 $(BUILD)/%.bin: $(ASM_BUILD)/%.o
