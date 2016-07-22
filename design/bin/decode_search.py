@@ -226,22 +226,95 @@ class SearchState(object):
 		return self._result
 
 
-def sim_anneal(state, args, emit=None):
-	temp = 100.0
+class MetaState(object):
+	RANGES = {
+		"temp": (0.5, 1000.0),
+		"settle": (10, 100),
+		# max_iterations remains unchanged (acts as escape valve)
+		"cool_mod": (5, 1000),
+		"cool_base": (0.05, 0.5),
+		"_cool_mult": (0.10, 0.99),
+	}
+
+	def __init__(self, config, seed, options):
+		self.config = config
+		self.seed = seed
+		self.options = options
+		self.options["cool_func"] = lambda temp, _: temp * options["_cool_mult"]
+		self._score = None
+
+	def solve(self):
+		# XXX
+		print "solve", self.options, "     ",
+		sys.stdout.flush()
+		randstate = random.getstate()
+		random.seed(self.seed)
+		initial = SearchState(self.config)
+		solution = sim_anneal(initial, self.options)
+		self._score = solution.score
+		random.setstate(randstate)
+
+	def neighbor(self):
+		options = dict(self.options)
+		key = random.choice(MetaState.RANGES.keys())
+		rand = random.randint if isinstance(MetaState.RANGES[key][0], int) else random.uniform
+		options[key] = rand(*MetaState.RANGES[key])
+		return MetaState(self.config, self.seed, options)
+
+	@property
+	def score(self):
+		if self._score is None:
+			self.solve()
+		return self._score
+
+
+def meta_anneal(config, seed):
+	def emit(message):
+		sys.stdout.write(message)
+		sys.stdout.flush()
+	meta_options = {
+		"temp": 10.0,
+		"settle": 50,
+		"max_iterations": 1000,
+		"cool_mod": 10,
+		"cool_base": 0.1,
+		"cool_func": lambda temp, _: temp * 0.85,
+	}
+	initial_options = {
+		"temp": 100.0,
+		"settle": 100,
+		"max_iterations": 1000,
+		"cool_mod": 100,
+		"cool_base": 0.01,
+		"_cool_mult": 0.85,
+	}
+	initial = MetaState(config, seed, initial_options)
+	solution = sim_anneal(initial, meta_options, emit)
+	print
+	print solution.options
+
+
+def sim_anneal(state, options, emit=None, emit_mod=1):
 	iterations = 0
 	settle = 0
-	while iterations != args.max_iterations and settle != args.iterations:
+	temp = options["temp"]
+	settle_at = options["settle"]
+	max_iterations = options["max_iterations"]
+	cool_mod = options["cool_mod"]
+	cool_base = options["cool_base"]
+	cool_func = options["cool_func"]
+	while settle != settle_at and iterations != max_iterations:
 		iterations += 1
 		settle += 1
-		if emit and iterations % 10 == 0:
+		if emit and iterations % emit_mod == 0:
 			emit("\rscore=%4d temp=%0.2f iterations=%d settle=%2d    " % (state.score, temp, iterations, settle))
 		neighbor = state.neighbor()
 		delta = neighbor.score - state.score
 		if delta <= 0 or random.random() < math.exp(-delta/temp):
 			state = neighbor
 			if delta != 0: settle = 0
-		if iterations % 100 == 0 and temp > 0.01:
-			temp *= 0.85
+		if iterations % cool_mod == 0 and temp > cool_base:
+			temp = cool_func(temp, iterations)
 	return state
 
 
@@ -251,6 +324,7 @@ def parse_args():
 	parser.add_argument("-q", "--quiet", action="store_true", help="Suppress output")
 	parser.add_argument("-m", "--max-iterations", type=int, default=-1, help="Maximum iterations to search")
 	parser.add_argument("-s", "--seed", type=int, default=None, help="Random number generator seed")
+	parser.add_argument("--meta-anneal", action="store_true", help="Perform a meta search to find optimal annealing parameters")
 	return parser.parse_args()
 
 
@@ -263,7 +337,17 @@ def main(args):
 		if not args.quiet:
 			sys.stdout.write(message)
 			sys.stdout.flush()
-	solution = sim_anneal(initial, args, emit)
+	options = {
+		"temp": 100.0,
+		"settle": args.iterations,
+		"max_iterations": args.max_iterations,
+		"cool_mod": 100,
+		"cool_base": 0.01,
+		"cool_func": lambda temp, _: temp * 0.85,
+	}
+	if args.meta_anneal:
+		return meta_anneal(outputs, args.seed)
+	solution = sim_anneal(initial, options, emit, emit_mod=10)
 	solution.dump(open(BEST_LOG, "w"))
 
 
