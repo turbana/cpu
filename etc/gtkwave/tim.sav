@@ -1,0 +1,273 @@
+[*]
+[*] GTKWave Analyzer v3.3.62 (w)1999-2014 BSI
+[*] Sat Jul 23 22:22:37 2016
+[*]
+[dumpfile] "/home/ian/src/cpu/design/build/waveforms/tim.vcd"
+[dumpfile_mtime] "Sat Jul 23 21:40:11 2016"
+[dumpfile_size] 2673301
+[savefile] "/home/ian/src/cpu/etc/gtkwave/tim.sav"
+[timestart] 0
+[size] 1920 1060
+[pos] -1 -1
+*-19.000000 935000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_tim.
+[treeopen] tb_tim.TIM.
+[sst_width] 210
+[signals_width] 242
+[sst_expanded] 1
+[sst_vpaned_height] 316
+@28
+tb_tim.TIM.CLK0
+@c00200
+-CLOCKS
+@28
+tb_tim.TIM.CLK2
+tb_tim.TIM.CLK1
+tb_tim.TIM.CLK3
+@1401200
+-CLOCKS
+@c00200
+-BUS
+@28
+tb_tim.TIM.BUS_R
+tb_tim.TIM.BUS_W
+@22
++{BUS_A} tb_tim.TIM.BUS_A[22:0]
++{BUS_D} tb_tim.TIM.BUS_D[15:0]
+@1401200
+-BUS
+@c00200
+-Fetch
+@22
++{F_PC} tb_tim.TIM.F_PC[15:0]
++{F_I} tb_tim.TIM.F_I[15:0]
+@4022
+^>1 /home/ian/src/cpu/asm/disop.py
++{F_I} tb_tim.TIM.F_I[15:0]
+@22
++{FC_I} tb_tim.TIM.FC_I[15:0]
+@4022
+^>1 /home/ian/src/cpu/asm/disop.py
++{FC_I} tb_tim.TIM.FC_I[15:0]
+@1401200
+-Fetch
+@c00200
+-FD
+@22
++{FD_PC} tb_tim.TIM.FD_PC[15:0]
++{FD_I} tb_tim.TIM.FD_I[15:0]
+@4022
+^>1 /home/ian/src/cpu/asm/disop.py
++{FD_I} tb_tim.TIM.FD_I[15:0]
+@1401200
+-FD
+@c00200
+-Register File
+@28
+tb_tim.TIM.R_IE
+tb_tim.TIM.R_M
+@22
++{R_CS} tb_tim.TIM.R_CS[5:0]
++{R_DS} tb_tim.TIM.R_DS[5:0]
++{R_A} tb_tim.TIM.R_A[15:0]
++{R_B} tb_tim.TIM.R_B[15:0]
+@1401200
+-Register File
+@c00200
+-Decode
+@22
++{D_A} tb_tim.TIM.D_A[15:0]
++{D_B} tb_tim.TIM.D_B[15:0]
++{D_C} tb_tim.TIM.D_C[15:0]
+@28
+tb_tim.TIM.D_Ca
+tb_tim.TIM.D_H
+tb_tim.TIM.D_J
+tb_tim.TIM.D_Mr
+tb_tim.TIM.D_Mt
+tb_tim.TIM.D_Mw
+@2022
+^2 /home/ian/src/cpu/etc/gtkwave/filters/aluop
++{D_Op} tb_tim.TIM.D_Op[2:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_RFa} tb_tim.TIM.D_RFa[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_RFb} tb_tim.TIM.D_RFb[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_Ra} tb_tim.TIM.D_Ra[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_Rb} tb_tim.TIM.D_Rb[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_Rc} tb_tim.TIM.D_Rc[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{D_Rd} tb_tim.TIM.D_Rd[3:0]
+@28
+tb_tim.TIM.D_S
++{D_SF} tb_tim.TIM.D_SF[2:0]
+tb_tim.TIM.D_T
+@1401200
+-Decode
+@c00200
+-Decode Control
+@28
+tb_tim.TIM.DC_J
+tb_tim.TIM.DC_Mr
+tb_tim.TIM.DC_Mw
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{DC_Rd} tb_tim.TIM.DC_Rd[3:0]
+@28
+tb_tim.TIM.DC_S
+tb_tim.TIM.DC_T
+@1401200
+-Decode Control
+@c00200
+-Hazard
+@28
+tb_tim.TIM.H_H
+@1401200
+-Hazard
+@c00200
+-DE
+@22
++{DE_A} tb_tim.TIM.DE_A[15:0]
++{DE_B} tb_tim.TIM.DE_B[15:0]
++{DE_C} tb_tim.TIM.DE_C[15:0]
+@28
+tb_tim.TIM.DE_Ca
+tb_tim.TIM.DE_J
+tb_tim.TIM.DE_Mr
+tb_tim.TIM.DE_Mt
+tb_tim.TIM.DE_Mw
+@2022
+^2 /home/ian/src/cpu/etc/gtkwave/filters/aluop
++{DE_Op} tb_tim.TIM.DE_Op[2:0]
+@22
++{DE_PC} tb_tim.TIM.DE_PC[15:0]
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{DE_Ra} tb_tim.TIM.DE_Ra[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{DE_Rb} tb_tim.TIM.DE_Rb[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{DE_Rc} tb_tim.TIM.DE_Rc[3:0]
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{DE_Rd} tb_tim.TIM.DE_Rd[3:0]
+@28
+tb_tim.TIM.DE_S
++{DE_SF} tb_tim.TIM.DE_SF[2:0]
+tb_tim.TIM.DE_T
+@1401200
+-DE
+@c00200
+-Forward
+@22
++{F_A} tb_tim.TIM.F_A[15:0]
++{F_B} tb_tim.TIM.F_B[15:0]
++{F_C} tb_tim.TIM.F_C[15:0]
+@1401200
+-Forward
+@c00200
+-ALU
+@22
++{A_D} tb_tim.TIM.A_D[15:0]
+@28
++{A_F} tb_tim.TIM.A_F[3:0]
+@1401200
+-ALU
+@c00200
+-Execute Control
+@22
++{EC_D} tb_tim.TIM.EC_D[15:0]
+@28
+tb_tim.TIM.EC_I
+tb_tim.TIM.EC_J
+tb_tim.TIM.EC_Mr
+tb_tim.TIM.EC_Mt
+tb_tim.TIM.EC_Mw
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{EC_Rd} tb_tim.TIM.EC_Rd[3:0]
+@28
+tb_tim.TIM.EC_S
+tb_tim.TIM.EC_T
+@1401200
+-Execute Control
+@c00200
+-EM
+@28
++{EM_AF} tb_tim.TIM.EM_AF[3:0]
+@22
++{EM_C} tb_tim.TIM.EM_C[15:0]
++{EM_D} tb_tim.TIM.EM_D[15:0]
+@28
+tb_tim.TIM.EM_I
+tb_tim.TIM.EM_J
+tb_tim.TIM.EM_Mr
+tb_tim.TIM.EM_Mt
+tb_tim.TIM.EM_Mw
+@22
++{EM_PC} tb_tim.TIM.EM_PC[15:0]
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{EM_Rd} tb_tim.TIM.EM_Rd[3:0]
+@28
+tb_tim.TIM.EM_S
++{EM_SF} tb_tim.TIM.EM_SF[2:0]
+tb_tim.TIM.EM_T
+@1401200
+-EM
+@c00200
+-Skip
+@28
+tb_tim.TIM.S_S
+@1401200
+-Skip
+@c00200
+-Memory
+@22
++{M_D} tb_tim.TIM.M_D[15:0]
+@1401200
+-Memory
+@c00200
+-Memory Control
+@28
+tb_tim.TIM.MC_Ir
+tb_tim.TIM.MC_Mr
+tb_tim.TIM.MC_Mw
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{MC_Rd} tb_tim.TIM.MC_Rd[3:0]
+@1401200
+-Memory Control
+@c00200
+-MW
+@22
++{MW_D} tb_tim.TIM.MW_D[15:0]
+@28
+tb_tim.TIM.MW_I
+tb_tim.TIM.MW_IE
+@22
++{MW_PC} tb_tim.TIM.MW_PC[15:0]
+@2022
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{MW_Rd} tb_tim.TIM.MW_Rd[3:0]
+@28
+tb_tim.TIM.MW_T
+@1401200
+-MW
+@800201
+-Interrupts
+@23
++{I_D} tb_tim.TIM.I_D[15:0]
+@29
+tb_tim.TIM.I_I
+@2023
+^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
++{I_Rd} tb_tim.TIM.I_Rd[3:0]
+@29
+tb_tim.TIM.I_T
+@1000201
+-Interrupts
+[pattern_trace] 1
+[pattern_trace] 0
