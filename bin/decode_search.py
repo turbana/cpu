@@ -11,7 +11,7 @@ import random
 
 ENCODING_BITS = 5
 ANY = "X"
-CSV_FILE = "config/decode.csv"
+CSV_FILE = "etc/decode.csv"
 RUNNING_LOG = "build/running.log"
 BEST_LOG = "build/decode.log"
 SKIP_RANGE = 2**1, 2**6

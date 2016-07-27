@@ -7,5 +7,5 @@
 *.log
 *.gtkw
 *.vcd
-design/build
-design/Makefile.deps
+build
+Makefile.deps

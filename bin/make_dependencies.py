@@ -16,13 +16,13 @@ import json
 
 import schematic
 
-TESTS_CONFIG = "config/test-cases.json"
-CLOCK_SCH = "clock.sch"
-CLOCK_SCH_FILENAME = "schem/clock.sch"
+TESTS_CONFIG = "etc/test-cases.json"
+CLOCK_SCH = "design/clock.sch"
+CLOCK_SCH_FILENAME = "design/schem/clock.sch"
 
 STATIC_DEPENDENCIES = [
-	"$(BUILD)/tb_decode_decode.v: $(BUILD)/decode-test-cases.json",
-	"$(BUILD)/test_decode_decode: $(BUILD)/7408.v $(BUILD)/7474.v"
+	"$(BUILD_DIR)/tb_decode_decode.v: $(BUILD_DIR)/decode-test-cases.json",
+	"$(BUILD_DIR)/test_decode_decode: $(BUILD_DIR)/7408.v $(BUILD_DIR)/7474.v"
 ]
 
 
@@ -48,11 +48,11 @@ def emit_deps(stream, deps):
 		stream.write(line + "\n")
 	for mod, mod_deps in sorted(deps.items()):
 		if mod == "ALL_TESTS": continue
-		stream.write("$(BUILD)/%s: " % mod)
-		stream.write(" ".join("$(BUILD)/%s" % x for x in sorted(mod_deps)))
+		stream.write("$(BUILD_DIR)/%s: " % mod)
+		stream.write(" ".join("$(BUILD_DIR)/%s" % x for x in sorted(mod_deps)))
 		stream.write("\n")
-	stream.write("ALL_TESTS := ")
-	stream.write(" ".join("$(WF)/%s" % x for x in deps["ALL_TESTS"]))
+	stream.write("ALL_TESTS := $(ALL_TESTS) ")
+	stream.write(" ".join("$(WF_DIR)/%s" % x for x in deps["ALL_TESTS"]))
 	stream.write("\n")
 
 
