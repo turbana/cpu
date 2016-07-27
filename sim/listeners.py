@@ -103,3 +103,12 @@ class TestOutput(object):
 		clock_rate_first = cpu_clock == 0 and self.clock_rate == 1
 		if clock_match or clock_rate or clock_rate_first:
 			print "%d (%s)" % (cpu_clock, registers(self.cpu, 1, 11))
+
+
+class ReplayGenerator(object):
+	def __init__(self, cpu, stream):
+		self.cpu = cpu
+		self.stream = stream
+
+	def after_rset(self, val, reg, _):
+		self.stream.write(";; |@| %d ($%d=%04X)\n" % (self.cpu.clock, reg, val))

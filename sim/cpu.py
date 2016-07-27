@@ -431,8 +431,9 @@ class CPU(object):
 	def rset(self, reg, value):
 		# ignore writes to $0 and (when in user mode) writes to control registers
 		if reg == R_ZERO or (reg >= 8 and self.reg[R_FLAGS] & FLAGS_M):
-			return
+			return self.rget(reg)
 		self.reg[reg] = (value & 0xFFFF)
+		return self.rget(reg)
 
 	@send_listeners
 	def crget(self, cr):
@@ -450,8 +451,9 @@ class CPU(object):
 		cr += 8
 		# ignore writes to $pc and (when in user mode) writes to control registers
 		if cr == R_PC or self.reg[R_FLAGS] & FLAGS_M:
-			return
+			return self.crget(cr-8)
 		self.reg[cr] = (value & 0xFFFF)
+		return self.crget(cr-8)
 
 	def add_listener(self, listener):
 		for attr in dir(listener):
@@ -730,6 +732,7 @@ def load_args(args):
 	#p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
 	p.add_argument("--keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
 	#p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
+	p.add_argument("--save-replay", dest="replay", metavar="FILE", help="save replay to file (used to generate tests)")
 
 	#g = p.add_argument_group("load-options")
 	#g.add_argument("--load-rom", metavar="FILE", dest="rom", type=binfile, help="load FILE into ROM")
@@ -788,6 +791,11 @@ def main(args):
 	if opts.stop_clock:
 		stopper = listeners.StopClock(cpu, opts.stop_clock)
 		cpu.add_listener(stopper)
+
+	if opts.replay:
+		stream = open(opts.replay, "w")
+		replay = listeners.ReplayGenerator(cpu, stream)
+		cpu.add_listener(replay)
 
 	if opts.exe:
 		chunks = parse_file(opts.exe)
