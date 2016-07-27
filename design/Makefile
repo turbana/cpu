@@ -1,15 +1,15 @@
 
 BUILD		= build
-BIN         = bin
-CONFIG      = config
+BIN		= bin
+CONFIG		= config
 SCHEM		= schem
-DOC			= ../doc
-VERILOG     = verilog
-ASM_BUILD   = ../tests/build
-WF			= $(BUILD)/waveforms
+DOC		= ../doc
+VERILOG		= verilog
+ASM_BUILD	= ../tests/build
+WF		= $(BUILD)/waveforms
 FAILON		= $(BIN)/failon.sh
-GNETLIST    = gnetlist
-GAF			= gaf
+GNETLIST	= gnetlist
+GAF		= gaf
 IVERILOG	= iverilog
 GTKWAVE		= gtkwave
 GSCHEM		= gschem
@@ -34,6 +34,7 @@ help:
 	@echo "make renumall              -- overwrite all refdes"
 	@echo "make versions              -- print versions of required programs"
 	@echo "make decode                -- run decode searcher"
+	@echo "make asm=foo tim           -- full tim integration run against foo.o"
 
 
 # generate dependencies
@@ -118,7 +119,7 @@ $(DOC)/schematics.pdf: $(DOC_SCHEMS)
 
 
 wave: $(BUILD) $(WF) $(WF)/$(target).vcd
-	@$(GTKWAVE) $(WF)/$(target).vcd
+	@$(GTKWAVE) $(WF)/$(target).vcd ../etc/gtkwave/$(target).sav
 
 
 decode:
@@ -130,14 +131,17 @@ $(BUILD)/decode.log: $(CONFIG)/decode.csv
 	@python bin/decode_search.py --quiet --max-iterations 1
 
 
-$(BUILD)/%.bin: $(ASM_BUILD)/%.o
-	@echo "Gen Bin : $(@F)"
+$(BUILD)/tim.bin: $(ASM_BUILD)/$(asm).o
+	@echo "Gen Bin : $(asm).o"
 	@python bin/to_verilog_dump.py $^ > $@
 
 
-tim: $(BUILD) $(WF) $(BUILD)/test_tim $(BUILD)/$(target).bin
+$(WF)/tim.vcd: $(BUILD)/tim.bin
+
+
+tim: $(BUILD) $(WF) $(BUILD)/test_tim $(BUILD)/$(asm).bin
 	@echo "Run TIM :"
-	@cp $(BUILD)/$(target).bin $(BUILD)/tim.bin
+	@cp $(BUILD)/$(asm).bin $(BUILD)/tim.bin
 	@$(BUILD)/test_tim
 
 
@@ -162,4 +166,3 @@ versions:
 
 clean:
 	@rm -rf -- $(BUILD)/* Makefile.deps
-#$(DOC)/block_diagram.png $(DOC)/schematics.pdf
