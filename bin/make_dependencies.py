@@ -20,11 +20,6 @@ TESTS_CONFIG = "etc/test-cases.json"
 CLOCK_SCH = "design/clock.sch"
 CLOCK_SCH_FILENAME = "design/schem/clock.sch"
 
-STATIC_DEPENDENCIES = [
-	"$(BUILD_DIR)/tb_decode_decode.v: $(BUILD_DIR)/decode-test-cases.json",
-	"$(BUILD_DIR)/test_decode_decode: $(BUILD_DIR)/7408.v $(BUILD_DIR)/7474.v"
-]
-
 
 def main(args):
 	if len(args) == 0:
@@ -44,8 +39,6 @@ def main(args):
 
 
 def emit_deps(stream, deps):
-	for line in STATIC_DEPENDENCIES:
-		stream.write(line + "\n")
 	for mod, mod_deps in sorted(deps.items()):
 		if mod == "ALL_TESTS": continue
 		stream.write("$(BUILD_DIR)/%s: " % mod)
