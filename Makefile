@@ -4,9 +4,10 @@ BIN_DIR		= bin
 CONFIG_DIR	= etc
 DESIGN_DIR	= design
 SCHEM_DIR	= $(DESIGN_DIR)/schem
-DOC_DIR		= doc/
+DOC_DIR		= doc
 VERILOG_DIR	= design/verilog
 WF_DIR		= $(BUILD_DIR)/waveforms
+ASM_DIR		= tests
 
 FAILON		= $(BIN_DIR)/failon.sh
 GNETLIST	= gnetlist
@@ -14,14 +15,26 @@ GAF		= gaf
 IVERILOG	= iverilog
 GTKWAVE		= gtkwave
 GSCHEM		= gschem
+ASM		= asm/asm.py
+SIM		= sim/cpu.py
+SIM_TEST	= $(BIN_DIR)/simtest.py
 
+
+ALL_BIN = test1
+ALL_ASM = bigintadd bigintsub fib immediates macros pow testisa
 ALL_SCHEMS = $(SCHEM_DIR)/*.sch
 SCHEMS = $(filter-out $(wildcard $(SCHEM_DIR)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM_DIR),$(BUILD_DIR),$(SCHEMS)))
 ALL_VERILOG = $(subst .sch,.v,$(DOC_SCHEMS))
+# ALL_SCHEM_TESTS are populated in Makefile.deps
+ALL_SCHEM_TESTS =
+ALL_BIN_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .o.chk,$(ALL_BIN)))
+ALL_ASM_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .o.test,$(ALL_ASM)))
+ALL_TESTS = $(ALL_BIN_TESTS) $(ALL_ASM_TESTS) $(ALL_SCHEM_TESTS)
+
 
 .PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode
-.PRECIOUS: $(BUILD_DIR)/%.v $(BUILD_DIR)/tb_%.v $(BUILD_DIR)/%.sch $(BUILD_DIR)/test_% $(WF_DIR)/%.vcd
+.PRECIOUS: $(BUILD_DIR)/%.v $(BUILD_DIR)/tb_%.v $(BUILD_DIR)/%.sch $(BUILD_DIR)/test_% $(WF_DIR)/%.vcd $(BUILD_DIR)/%.o
 
 # show 'make help' by default
 help:
@@ -37,10 +50,11 @@ Makefile.deps: $(ALL_SCHEMS) $(BIN_DIR)/make_dependencies.py
 # ##############################################################################
 
 help:
-	@echo "make target=foo test       -- run full netlist and testbench for foo"
+	@echo "make target=foo nettest    -- run full netlist and testbench for foo"
 	@echo "make target=foo netlist    -- generate netlist for foo"
 	@echo "make target=foo testbench  -- generate testbench for foo"
-	@echo "make testall               -- run full test against all schematics"
+	@echo "make nettestall            -- run full test against all schematics"
+	@echo "make testall               -- run all project tests"
 	@echo "make doc                   -- generate documentation"
 	@echo "make renum                 -- name all unset refdes (U?)"
 	@echo "make renumall              -- overwrite all refdes"
@@ -50,7 +64,8 @@ help:
 
 netlist:	$(BUILD_DIR) $(BUILD_DIR)/$(target).v
 testbench:	$(BUILD_DIR) $(BUILD_DIR)/tb_$(target).v
-test: 		$(BUILD_DIR) $(WF_DIR) $(WF_DIR)/$(target).vcd
+nettest:	$(BUILD_DIR) $(WF_DIR) $(WF_DIR)/$(target).vcd
+nettestall:	$(BUILD_DIR) $(WF_DIR) $(ALL_SCHEM_TESTS)
 testall:	$(BUILD_DIR) $(WF_DIR) $(ALL_TESTS)
 doc:		$(DOC_DIR) $(DOC_DIR)/block_diagram.png $(DOC_DIR)/schematics.pdf
 

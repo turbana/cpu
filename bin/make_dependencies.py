@@ -40,12 +40,12 @@ def main(args):
 
 def emit_deps(stream, deps):
 	for mod, mod_deps in sorted(deps.items()):
-		if mod == "ALL_TESTS": continue
+		if mod == "ALL_SCHEM_TESTS": continue
 		stream.write("$(BUILD_DIR)/%s: " % mod)
 		stream.write(" ".join("$(BUILD_DIR)/%s" % x for x in sorted(mod_deps)))
 		stream.write("\n")
-	stream.write("ALL_TESTS := $(ALL_TESTS) ")
-	stream.write(" ".join("$(WF_DIR)/%s" % x for x in deps["ALL_TESTS"]))
+	stream.write("ALL_SCHEM_TESTS := $(ALL_SCHEM_TESTS) ")
+	stream.write(" ".join("$(WF_DIR)/%s" % x for x in deps["ALL_SCHEM_TESTS"]))
 	stream.write("\n")
 
 
@@ -72,7 +72,7 @@ def add_schematics(deps, schems, args, config):
 		else:
 			add_dep(deps, mod_v, "%s.sch" % mod)
 		if mod in config:
-			add_dep(deps, "ALL_TESTS", "%s.vcd" % mod)
+			add_dep(deps, "ALL_SCHEM_TESTS", "%s.vcd" % mod)
 
 
 def add_verilog(deps, verilogs, schems):
