@@ -309,6 +309,111 @@
 			"S_S:1 = EM_S & conds[EM_SF]"
 		]
 	},
+	"register_de": {
+		"inputs": {
+			"DC_J": {"width": 1},
+			"DC_Mr": {"width": 1},
+			"DC_Mw": {"width": 1},
+			"DC_Rd": {"width": 4},
+			"DC_S": {"width": 1},
+			"DC_T": {"width": 1},
+			"D_A": {"width": 16},
+			"D_B": {"width": 16},
+			"D_C": {"width": 16},
+			"D_Ca": {"width": 1},
+			"D_Mt": {"width": 1},
+			"D_Op": {"width": 3},
+			"D_Ra": {"width": 4},
+			"D_Rb": {"width": 4},
+			"D_Rc": {"width": 4},
+			"D_SF": {"width": 3},
+			"FD_PC": {"width": 16}
+		},
+		"values": [
+			"DE_A:16 = D_A",
+			"DE_B:16 = D_B",
+			"DE_C:16 = D_C",
+			"DE_Ca:1 = D_Ca",
+			"DE_J:1 = DC_J",
+			"DE_Mr:1 = DC_Mr",
+			"DE_Mt:1 = D_Mt",
+			"DE_Mw:1 = DC_Mw",
+			"DE_Op:3 = D_Op",
+			"DE_PC:16 = FD_PC",
+			"DE_Ra:4 = D_Ra",
+			"DE_Rb:4 = D_Rb",
+			"DE_Rc:4 = D_Rc",
+			"DE_Rd:4 = DC_Rd",
+			"DE_S:1 = DC_S",
+			"DE_SF:3 = D_SF",
+			"DE_T:1 = DC_T"
+		]
+	},
+	"register_em": {
+		"inputs": {
+			"A_F": {"width": 4},
+			"DE_PC": {"width": 16},
+			"DE_SF": {"width": 3},
+			"EC_D": {"width": 16},
+			"EC_I": {"width": 1},
+			"EC_J": {"width": 1},
+			"EC_Mr": {"width": 1},
+			"EC_Mt": {"width": 1},
+			"EC_Mw": {"width": 1},
+			"EC_Rd": {"width": 4},
+			"EC_S": {"width": 1},
+			"EC_T": {"width": 1},
+			"F_C": {"width": 16}
+		},
+		"values": [
+			"EM_AF:4 = A_F",
+			"EM_C:16 = F_C",
+			"EM_D:16 = EC_D",
+			"EM_I:1 = EC_I",
+			"EM_J:1 = EC_J",
+			"EM_Mr:1 = EC_Mr",
+			"EM_Mt:1 = EC_Mt",
+			"EM_Mw:1 = EC_Mw",
+			"EM_PC:16 = DE_PC",
+			"EM_Rd:4 = EC_Rd",
+			"EM_S:1 = EC_S",
+			"EM_SF:3 = DE_SF",
+			"EM_T:1 = EC_T"
+		]
+	},
+	"register_fd": {
+		"inputs": {
+			"F_I": {"width": 16},
+			"F_PC": {"width": 16},
+			"H_H": {"width": 1}
+		},
+		"initial": {
+			"FD_I": 0,
+			"FD_PC": 0
+		},
+		"values": [
+			"FD_I:16 = FD_I if H_H else F_I",
+			"FD_PC:16 = FD_PC if H_H else F_PC"
+		]
+	},
+	"register_mw": {
+		"inputs": {
+			"EM_I": {"width": 1},
+			"EM_PC": {"width": 16},
+			"EM_T": {"width": 1},
+			"MC_Rd": {"width": 4},
+			"M_D": {"width": 16},
+			"R_IE": {"width": 1}
+		},
+		"values": [
+			"MW_D:16 = M_D",
+			"MW_I:1 = EM_I",
+			"MW_IE:1 = R_IE",
+			"MW_PC:16 = EM_PC",
+			"MW_Rd:4 = MC_Rd",
+			"MW_T:1 = EM_T"
+		]
+	},
 	"writeback_interrupts": {
 		"inputs": {
 			"MW_PC": {"width": 16},
@@ -316,7 +421,7 @@
 			"MW_T":  {"width": 1},
 			"MW_I":  {"width": 1},
 			"MW_D":  {"width": 16},
-			"MW_IE":  {"width": 1}
+			"MW_IE": {"width": 1}
 		},
 		"values": [
 			"int = MW_I & MW_IE",
