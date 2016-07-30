@@ -60,7 +60,7 @@ help:
 	@echo "make renumall              -- overwrite all refdes"
 	@echo "make versions              -- print versions of required programs"
 	@echo "make decode                -- run decode searcher"
-	@echo "make asm=foo tim           -- full tim integration run against foo.o"
+	@echo "make asm=foo tim           -- full tim integration run against $(ASM_DIR)/foo.asm"
 
 netlist:	$(BUILD_DIR) $(BUILD_DIR)/$(target).v
 testbench:	$(BUILD_DIR) $(BUILD_DIR)/tb_$(target).v
@@ -89,7 +89,7 @@ wave: $(BUILD_DIR) $(WF_DIR) $(WF_DIR)/$(target).vcd
 	@$(GTKWAVE) $(WF_DIR)/$(target).vcd $(CONFIG_DIR)/gtkwave/$(target).sav
 
 decode:
-	@python bin/decode_search.py 1000
+	@python $(BIN_DIR)/decode_search.py 1000
 
 $(BUILD_DIR):
 	@mkdir $(BUILD_DIR)
@@ -127,11 +127,11 @@ $(BUILD_DIR)/decode_decode.v: $(BUILD_DIR)/decode.log
 
 $(BUILD_DIR)/decode.log: $(CONFIG_DIR)/decode.csv
 	@echo "Decode  : $(@F)"
-	@python bin/decode_search.py --quiet 1
+	@python $(BIN_DIR)/decode_search.py --quiet 1
 
 $(BUILD_DIR)/tim.bin: $(BUILD_DIR)/$(asm).o
 	@echo "Gen Bin : $(asm).o"
-	@python bin/to_verilog_dump.py $^ > $@
+	@python $(BIN_DIR)/to_verilog_dump.py $^ > $@
 
 tim: $(BUILD_DIR) $(WF_DIR) $(BUILD_DIR)/test_tim $(BUILD_DIR)/tim.bin
 	@echo "Run TIM :"
