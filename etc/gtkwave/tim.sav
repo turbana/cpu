@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.62 (w)1999-2014 BSI
-[*] Sat Jul 23 22:22:37 2016
+[*] Sat Jul 30 22:16:22 2016
 [*]
-[dumpfile] "/home/ian/src/cpu/design/build/waveforms/tim.vcd"
-[dumpfile_mtime] "Sat Jul 23 21:40:11 2016"
-[dumpfile_size] 2673301
+[dumpfile] "/home/ian/src/cpu/build/waveforms/tim.vcd"
+[dumpfile_mtime] "Sat Jul 30 22:15:46 2016"
+[dumpfile_size] 15612016
 [savefile] "/home/ian/src/cpu/etc/gtkwave/tim.sav"
 [timestart] 0
 [size] 1920 1060
 [pos] -1 -1
-*-19.000000 935000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.000000 770000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_tim.
 [treeopen] tb_tim.TIM.
 [sst_width] 210
@@ -26,7 +26,20 @@ tb_tim.TIM.CLK1
 tb_tim.TIM.CLK3
 @1401200
 -CLOCKS
-@c00200
+@800200
+-Test Bench
+@24
++{Clock#} tb_tim._TB_CLOCK[31:0]
+@2022
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
++{Test Register} tb_tim._TB_REGISTER[3:0]
+@22
++{Test Value} tb_tim._TB_VALUE[15:0]
+@25
++{Errors} tb_tim._TB_ERRORS[31:0]
+@1000200
+-Test Bench
+@800200
 -BUS
 @28
 tb_tim.TIM.BUS_R
@@ -34,7 +47,7 @@ tb_tim.TIM.BUS_W
 @22
 +{BUS_A} tb_tim.TIM.BUS_A[22:0]
 +{BUS_D} tb_tim.TIM.BUS_D[15:0]
-@1401200
+@1000200
 -BUS
 @c00200
 -Fetch
@@ -42,22 +55,42 @@ tb_tim.TIM.BUS_W
 +{F_PC} tb_tim.TIM.F_PC[15:0]
 +{F_I} tb_tim.TIM.F_I[15:0]
 @4022
-^>1 /home/ian/src/cpu/asm/disop.py
+^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
 +{F_I} tb_tim.TIM.F_I[15:0]
 @22
 +{FC_I} tb_tim.TIM.FC_I[15:0]
 @4022
-^>1 /home/ian/src/cpu/asm/disop.py
+^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
 +{FC_I} tb_tim.TIM.FC_I[15:0]
 @1401200
 -Fetch
 @c00200
 -FD
-@22
+@c00022
 +{FD_PC} tb_tim.TIM.FD_PC[15:0]
+@28
+(0)tb_tim.TIM.FD_PC[15:0]
+(1)tb_tim.TIM.FD_PC[15:0]
+(2)tb_tim.TIM.FD_PC[15:0]
+(3)tb_tim.TIM.FD_PC[15:0]
+(4)tb_tim.TIM.FD_PC[15:0]
+(5)tb_tim.TIM.FD_PC[15:0]
+(6)tb_tim.TIM.FD_PC[15:0]
+(7)tb_tim.TIM.FD_PC[15:0]
+(8)tb_tim.TIM.FD_PC[15:0]
+(9)tb_tim.TIM.FD_PC[15:0]
+(10)tb_tim.TIM.FD_PC[15:0]
+(11)tb_tim.TIM.FD_PC[15:0]
+(12)tb_tim.TIM.FD_PC[15:0]
+(13)tb_tim.TIM.FD_PC[15:0]
+(14)tb_tim.TIM.FD_PC[15:0]
+(15)tb_tim.TIM.FD_PC[15:0]
+@1401200
+-group_end
+@22
 +{FD_I} tb_tim.TIM.FD_I[15:0]
 @4022
-^>1 /home/ian/src/cpu/asm/disop.py
+^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
 +{FD_I} tb_tim.TIM.FD_I[15:0]
 @1401200
 -FD
@@ -73,6 +106,220 @@ tb_tim.TIM.R_M
 +{R_B} tb_tim.TIM.R_B[15:0]
 @1401200
 -Register File
+@800200
+-Registers
+@c00022
+#{$1} tb_tim.TIM.DECODE_RF.U119.\19 tb_tim.TIM.DECODE_RF.U119.\16 tb_tim.TIM.DECODE_RF.U119.\15 tb_tim.TIM.DECODE_RF.U119.\12 tb_tim.TIM.DECODE_RF.U119.\9 tb_tim.TIM.DECODE_RF.U119.\6 tb_tim.TIM.DECODE_RF.U119.\5 tb_tim.TIM.DECODE_RF.U119.\2 tb_tim.TIM.DECODE_RF.U118.\19 tb_tim.TIM.DECODE_RF.U118.\16 tb_tim.TIM.DECODE_RF.U118.\15 tb_tim.TIM.DECODE_RF.U118.\12 tb_tim.TIM.DECODE_RF.U118.\9 tb_tim.TIM.DECODE_RF.U118.\6 tb_tim.TIM.DECODE_RF.U118.\5 tb_tim.TIM.DECODE_RF.U118.\2
+@28
+tb_tim.TIM.DECODE_RF.U118.\2
+tb_tim.TIM.DECODE_RF.U118.\5
+tb_tim.TIM.DECODE_RF.U118.\6
+tb_tim.TIM.DECODE_RF.U118.\9
+tb_tim.TIM.DECODE_RF.U118.\12
+tb_tim.TIM.DECODE_RF.U118.\15
+tb_tim.TIM.DECODE_RF.U118.\16
+tb_tim.TIM.DECODE_RF.U118.\19
+tb_tim.TIM.DECODE_RF.U119.\2
+tb_tim.TIM.DECODE_RF.U119.\5
+tb_tim.TIM.DECODE_RF.U119.\6
+tb_tim.TIM.DECODE_RF.U119.\9
+tb_tim.TIM.DECODE_RF.U119.\12
+tb_tim.TIM.DECODE_RF.U119.\15
+tb_tim.TIM.DECODE_RF.U119.\16
+tb_tim.TIM.DECODE_RF.U119.\19
+@1401200
+-group_end
+@c00022
+#{$2} tb_tim.TIM.DECODE_RF.U121.\19 tb_tim.TIM.DECODE_RF.U121.\16 tb_tim.TIM.DECODE_RF.U121.\15 tb_tim.TIM.DECODE_RF.U121.\12 tb_tim.TIM.DECODE_RF.U121.\9 tb_tim.TIM.DECODE_RF.U121.\6 tb_tim.TIM.DECODE_RF.U121.\5 tb_tim.TIM.DECODE_RF.U121.\2 tb_tim.TIM.DECODE_RF.U120.\19 tb_tim.TIM.DECODE_RF.U120.\16 tb_tim.TIM.DECODE_RF.U120.\15 tb_tim.TIM.DECODE_RF.U120.\12 tb_tim.TIM.DECODE_RF.U120.\9 tb_tim.TIM.DECODE_RF.U120.\6 tb_tim.TIM.DECODE_RF.U120.\5 tb_tim.TIM.DECODE_RF.U120.\2
+@28
+tb_tim.TIM.DECODE_RF.U120.\2
+tb_tim.TIM.DECODE_RF.U120.\5
+tb_tim.TIM.DECODE_RF.U120.\6
+tb_tim.TIM.DECODE_RF.U120.\9
+tb_tim.TIM.DECODE_RF.U120.\12
+tb_tim.TIM.DECODE_RF.U120.\15
+tb_tim.TIM.DECODE_RF.U120.\16
+tb_tim.TIM.DECODE_RF.U120.\19
+tb_tim.TIM.DECODE_RF.U121.\2
+tb_tim.TIM.DECODE_RF.U121.\5
+tb_tim.TIM.DECODE_RF.U121.\6
+tb_tim.TIM.DECODE_RF.U121.\9
+tb_tim.TIM.DECODE_RF.U121.\12
+tb_tim.TIM.DECODE_RF.U121.\15
+tb_tim.TIM.DECODE_RF.U121.\16
+tb_tim.TIM.DECODE_RF.U121.\19
+@1401200
+-group_end
+@c00022
+#{$3} tb_tim.TIM.DECODE_RF.U123.\19 tb_tim.TIM.DECODE_RF.U123.\16 tb_tim.TIM.DECODE_RF.U123.\15 tb_tim.TIM.DECODE_RF.U123.\12 tb_tim.TIM.DECODE_RF.U123.\9 tb_tim.TIM.DECODE_RF.U123.\6 tb_tim.TIM.DECODE_RF.U123.\5 tb_tim.TIM.DECODE_RF.U123.\2 tb_tim.TIM.DECODE_RF.U122.\19 tb_tim.TIM.DECODE_RF.U122.\16 tb_tim.TIM.DECODE_RF.U122.\15 tb_tim.TIM.DECODE_RF.U122.\12 tb_tim.TIM.DECODE_RF.U122.\9 tb_tim.TIM.DECODE_RF.U122.\6 tb_tim.TIM.DECODE_RF.U122.\5 tb_tim.TIM.DECODE_RF.U122.\2
+@28
+tb_tim.TIM.DECODE_RF.U122.\2
+tb_tim.TIM.DECODE_RF.U122.\5
+tb_tim.TIM.DECODE_RF.U122.\6
+tb_tim.TIM.DECODE_RF.U122.\9
+tb_tim.TIM.DECODE_RF.U122.\12
+tb_tim.TIM.DECODE_RF.U122.\15
+tb_tim.TIM.DECODE_RF.U122.\16
+tb_tim.TIM.DECODE_RF.U122.\19
+tb_tim.TIM.DECODE_RF.U123.\2
+tb_tim.TIM.DECODE_RF.U123.\5
+tb_tim.TIM.DECODE_RF.U123.\6
+tb_tim.TIM.DECODE_RF.U123.\9
+tb_tim.TIM.DECODE_RF.U123.\12
+tb_tim.TIM.DECODE_RF.U123.\15
+tb_tim.TIM.DECODE_RF.U123.\16
+tb_tim.TIM.DECODE_RF.U123.\19
+@1401200
+-group_end
+@c00022
+#{$4} tb_tim.TIM.DECODE_RF.U125.\19 tb_tim.TIM.DECODE_RF.U125.\16 tb_tim.TIM.DECODE_RF.U125.\15 tb_tim.TIM.DECODE_RF.U125.\12 tb_tim.TIM.DECODE_RF.U125.\9 tb_tim.TIM.DECODE_RF.U125.\6 tb_tim.TIM.DECODE_RF.U125.\5 tb_tim.TIM.DECODE_RF.U125.\2 tb_tim.TIM.DECODE_RF.U124.\19 tb_tim.TIM.DECODE_RF.U124.\16 tb_tim.TIM.DECODE_RF.U124.\15 tb_tim.TIM.DECODE_RF.U124.\12 tb_tim.TIM.DECODE_RF.U124.\9 tb_tim.TIM.DECODE_RF.U124.\6 tb_tim.TIM.DECODE_RF.U124.\5 tb_tim.TIM.DECODE_RF.U124.\2
+@28
+tb_tim.TIM.DECODE_RF.U124.\2
+tb_tim.TIM.DECODE_RF.U124.\5
+tb_tim.TIM.DECODE_RF.U124.\6
+tb_tim.TIM.DECODE_RF.U124.\9
+tb_tim.TIM.DECODE_RF.U124.\12
+tb_tim.TIM.DECODE_RF.U124.\15
+tb_tim.TIM.DECODE_RF.U124.\16
+tb_tim.TIM.DECODE_RF.U124.\19
+tb_tim.TIM.DECODE_RF.U125.\2
+tb_tim.TIM.DECODE_RF.U125.\5
+tb_tim.TIM.DECODE_RF.U125.\6
+tb_tim.TIM.DECODE_RF.U125.\9
+tb_tim.TIM.DECODE_RF.U125.\12
+tb_tim.TIM.DECODE_RF.U125.\15
+tb_tim.TIM.DECODE_RF.U125.\16
+tb_tim.TIM.DECODE_RF.U125.\19
+@1401200
+-group_end
+@c00022
+#{$5} tb_tim.TIM.DECODE_RF.U127.\19 tb_tim.TIM.DECODE_RF.U127.\16 tb_tim.TIM.DECODE_RF.U127.\15 tb_tim.TIM.DECODE_RF.U127.\12 tb_tim.TIM.DECODE_RF.U127.\9 tb_tim.TIM.DECODE_RF.U127.\6 tb_tim.TIM.DECODE_RF.U127.\5 tb_tim.TIM.DECODE_RF.U127.\2 tb_tim.TIM.DECODE_RF.U126.\19 tb_tim.TIM.DECODE_RF.U126.\16 tb_tim.TIM.DECODE_RF.U126.\15 tb_tim.TIM.DECODE_RF.U126.\12 tb_tim.TIM.DECODE_RF.U126.\9 tb_tim.TIM.DECODE_RF.U126.\6 tb_tim.TIM.DECODE_RF.U126.\5 tb_tim.TIM.DECODE_RF.U126.\2
+@28
+tb_tim.TIM.DECODE_RF.U126.\2
+tb_tim.TIM.DECODE_RF.U126.\5
+tb_tim.TIM.DECODE_RF.U126.\6
+tb_tim.TIM.DECODE_RF.U126.\9
+tb_tim.TIM.DECODE_RF.U126.\12
+tb_tim.TIM.DECODE_RF.U126.\15
+tb_tim.TIM.DECODE_RF.U126.\16
+tb_tim.TIM.DECODE_RF.U126.\19
+tb_tim.TIM.DECODE_RF.U127.\2
+tb_tim.TIM.DECODE_RF.U127.\5
+tb_tim.TIM.DECODE_RF.U127.\6
+tb_tim.TIM.DECODE_RF.U127.\9
+tb_tim.TIM.DECODE_RF.U127.\12
+tb_tim.TIM.DECODE_RF.U127.\15
+tb_tim.TIM.DECODE_RF.U127.\16
+tb_tim.TIM.DECODE_RF.U127.\19
+@1401200
+-group_end
+@c00022
+#{$6} tb_tim.TIM.DECODE_RF.U129.\19 tb_tim.TIM.DECODE_RF.U129.\16 tb_tim.TIM.DECODE_RF.U129.\15 tb_tim.TIM.DECODE_RF.U129.\12 tb_tim.TIM.DECODE_RF.U129.\9 tb_tim.TIM.DECODE_RF.U129.\6 tb_tim.TIM.DECODE_RF.U129.\5 tb_tim.TIM.DECODE_RF.U129.\2 tb_tim.TIM.DECODE_RF.U128.\19 tb_tim.TIM.DECODE_RF.U128.\16 tb_tim.TIM.DECODE_RF.U128.\15 tb_tim.TIM.DECODE_RF.U128.\12 tb_tim.TIM.DECODE_RF.U128.\9 tb_tim.TIM.DECODE_RF.U128.\6 tb_tim.TIM.DECODE_RF.U128.\5 tb_tim.TIM.DECODE_RF.U128.\2
+@28
+tb_tim.TIM.DECODE_RF.U128.\2
+tb_tim.TIM.DECODE_RF.U128.\5
+tb_tim.TIM.DECODE_RF.U128.\6
+tb_tim.TIM.DECODE_RF.U128.\9
+tb_tim.TIM.DECODE_RF.U128.\12
+tb_tim.TIM.DECODE_RF.U128.\15
+tb_tim.TIM.DECODE_RF.U128.\16
+tb_tim.TIM.DECODE_RF.U128.\19
+tb_tim.TIM.DECODE_RF.U129.\2
+tb_tim.TIM.DECODE_RF.U129.\5
+tb_tim.TIM.DECODE_RF.U129.\6
+tb_tim.TIM.DECODE_RF.U129.\9
+tb_tim.TIM.DECODE_RF.U129.\12
+tb_tim.TIM.DECODE_RF.U129.\15
+tb_tim.TIM.DECODE_RF.U129.\16
+tb_tim.TIM.DECODE_RF.U129.\19
+@1401200
+-group_end
+@c00022
+#{$7} tb_tim.TIM.DECODE_RF.U131.\19 tb_tim.TIM.DECODE_RF.U131.\16 tb_tim.TIM.DECODE_RF.U131.\15 tb_tim.TIM.DECODE_RF.U131.\12 tb_tim.TIM.DECODE_RF.U131.\9 tb_tim.TIM.DECODE_RF.U131.\6 tb_tim.TIM.DECODE_RF.U131.\5 tb_tim.TIM.DECODE_RF.U131.\2 tb_tim.TIM.DECODE_RF.U130.\19 tb_tim.TIM.DECODE_RF.U130.\16 tb_tim.TIM.DECODE_RF.U130.\15 tb_tim.TIM.DECODE_RF.U130.\12 tb_tim.TIM.DECODE_RF.U130.\9 tb_tim.TIM.DECODE_RF.U130.\6 tb_tim.TIM.DECODE_RF.U130.\5 tb_tim.TIM.DECODE_RF.U130.\2
+@28
+tb_tim.TIM.DECODE_RF.U130.\2
+tb_tim.TIM.DECODE_RF.U130.\5
+tb_tim.TIM.DECODE_RF.U130.\6
+tb_tim.TIM.DECODE_RF.U130.\9
+tb_tim.TIM.DECODE_RF.U130.\12
+tb_tim.TIM.DECODE_RF.U130.\15
+tb_tim.TIM.DECODE_RF.U130.\16
+tb_tim.TIM.DECODE_RF.U130.\19
+tb_tim.TIM.DECODE_RF.U131.\2
+tb_tim.TIM.DECODE_RF.U131.\5
+tb_tim.TIM.DECODE_RF.U131.\6
+tb_tim.TIM.DECODE_RF.U131.\9
+tb_tim.TIM.DECODE_RF.U131.\12
+tb_tim.TIM.DECODE_RF.U131.\15
+tb_tim.TIM.DECODE_RF.U131.\16
+tb_tim.TIM.DECODE_RF.U131.\19
+@1401200
+-group_end
+@c00022
+#{$cr1} tb_tim.TIM.DECODE_RF.U100.\19 tb_tim.TIM.DECODE_RF.U100.\16 tb_tim.TIM.DECODE_RF.U100.\15 tb_tim.TIM.DECODE_RF.U100.\12 tb_tim.TIM.DECODE_RF.U100.\9 tb_tim.TIM.DECODE_RF.U100.\6 tb_tim.TIM.DECODE_RF.U100.\5 tb_tim.TIM.DECODE_RF.U100.\2 tb_tim.TIM.DECODE_RF.U101.\19 tb_tim.TIM.DECODE_RF.U101.\16 tb_tim.TIM.DECODE_RF.U101.\15 tb_tim.TIM.DECODE_RF.U101.\12 tb_tim.TIM.DECODE_RF.U101.\9 tb_tim.TIM.DECODE_RF.U101.\6 tb_tim.TIM.DECODE_RF.U101.\5 tb_tim.TIM.DECODE_RF.U101.\2
+@28
+tb_tim.TIM.DECODE_RF.U101.\2
+tb_tim.TIM.DECODE_RF.U101.\5
+tb_tim.TIM.DECODE_RF.U101.\6
+tb_tim.TIM.DECODE_RF.U101.\9
+tb_tim.TIM.DECODE_RF.U101.\12
+tb_tim.TIM.DECODE_RF.U101.\15
+tb_tim.TIM.DECODE_RF.U101.\16
+tb_tim.TIM.DECODE_RF.U101.\19
+tb_tim.TIM.DECODE_RF.U100.\2
+tb_tim.TIM.DECODE_RF.U100.\5
+tb_tim.TIM.DECODE_RF.U100.\6
+tb_tim.TIM.DECODE_RF.U100.\9
+tb_tim.TIM.DECODE_RF.U100.\12
+tb_tim.TIM.DECODE_RF.U100.\15
+tb_tim.TIM.DECODE_RF.U100.\16
+tb_tim.TIM.DECODE_RF.U100.\19
+@1401200
+-group_end
+@c00022
+#{$cr2} tb_tim.TIM.DECODE_RF.U102.\19 tb_tim.TIM.DECODE_RF.U102.\16 tb_tim.TIM.DECODE_RF.U102.\15 tb_tim.TIM.DECODE_RF.U102.\12 tb_tim.TIM.DECODE_RF.U102.\9 tb_tim.TIM.DECODE_RF.U102.\6 tb_tim.TIM.DECODE_RF.U102.\5 tb_tim.TIM.DECODE_RF.U102.\2 tb_tim.TIM.DECODE_RF.U103.\19 tb_tim.TIM.DECODE_RF.U103.\16 tb_tim.TIM.DECODE_RF.U103.\15 tb_tim.TIM.DECODE_RF.U103.\12 tb_tim.TIM.DECODE_RF.U103.\9 tb_tim.TIM.DECODE_RF.U103.\6 tb_tim.TIM.DECODE_RF.U103.\5 tb_tim.TIM.DECODE_RF.U103.\2
+@28
+tb_tim.TIM.DECODE_RF.U103.\2
+tb_tim.TIM.DECODE_RF.U103.\5
+tb_tim.TIM.DECODE_RF.U103.\6
+tb_tim.TIM.DECODE_RF.U103.\9
+tb_tim.TIM.DECODE_RF.U103.\12
+tb_tim.TIM.DECODE_RF.U103.\15
+tb_tim.TIM.DECODE_RF.U103.\16
+tb_tim.TIM.DECODE_RF.U103.\19
+tb_tim.TIM.DECODE_RF.U102.\2
+tb_tim.TIM.DECODE_RF.U102.\5
+tb_tim.TIM.DECODE_RF.U102.\6
+tb_tim.TIM.DECODE_RF.U102.\9
+tb_tim.TIM.DECODE_RF.U102.\12
+tb_tim.TIM.DECODE_RF.U102.\15
+tb_tim.TIM.DECODE_RF.U102.\16
+tb_tim.TIM.DECODE_RF.U102.\19
+@1401200
+-group_end
+@c00022
+#{$cr3} tb_tim.TIM.DECODE_RF.U104.\19 tb_tim.TIM.DECODE_RF.U104.\16 tb_tim.TIM.DECODE_RF.U104.\15 tb_tim.TIM.DECODE_RF.U104.\12 tb_tim.TIM.DECODE_RF.U104.\9 tb_tim.TIM.DECODE_RF.U104.\6 tb_tim.TIM.DECODE_RF.U104.\5 tb_tim.TIM.DECODE_RF.U104.\2 tb_tim.TIM.DECODE_RF.U105.\19 tb_tim.TIM.DECODE_RF.U105.\16 tb_tim.TIM.DECODE_RF.U105.\15 tb_tim.TIM.DECODE_RF.U105.\12 tb_tim.TIM.DECODE_RF.U105.\9 tb_tim.TIM.DECODE_RF.U105.\6 tb_tim.TIM.DECODE_RF.U105.\5 tb_tim.TIM.DECODE_RF.U105.\2
+@28
+tb_tim.TIM.DECODE_RF.U105.\2
+tb_tim.TIM.DECODE_RF.U105.\5
+tb_tim.TIM.DECODE_RF.U105.\6
+tb_tim.TIM.DECODE_RF.U105.\9
+tb_tim.TIM.DECODE_RF.U105.\12
+tb_tim.TIM.DECODE_RF.U105.\15
+tb_tim.TIM.DECODE_RF.U105.\16
+tb_tim.TIM.DECODE_RF.U105.\19
+tb_tim.TIM.DECODE_RF.U104.\2
+tb_tim.TIM.DECODE_RF.U104.\5
+tb_tim.TIM.DECODE_RF.U104.\6
+tb_tim.TIM.DECODE_RF.U104.\9
+tb_tim.TIM.DECODE_RF.U104.\12
+tb_tim.TIM.DECODE_RF.U104.\15
+tb_tim.TIM.DECODE_RF.U104.\16
+tb_tim.TIM.DECODE_RF.U104.\19
+@1401200
+-group_end
+@1000200
+-Registers
 @c00200
 -Decode
 @22
@@ -87,19 +334,19 @@ tb_tim.TIM.D_Mr
 tb_tim.TIM.D_Mt
 tb_tim.TIM.D_Mw
 @2022
-^2 /home/ian/src/cpu/etc/gtkwave/filters/aluop
+^2 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/aluop
 +{D_Op} tb_tim.TIM.D_Op[2:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_RFa} tb_tim.TIM.D_RFa[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_RFb} tb_tim.TIM.D_RFb[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_Ra} tb_tim.TIM.D_Ra[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_Rb} tb_tim.TIM.D_Rb[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_Rc} tb_tim.TIM.D_Rc[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_Rd} tb_tim.TIM.D_Rd[3:0]
 @28
 tb_tim.TIM.D_S
@@ -114,7 +361,7 @@ tb_tim.TIM.DC_J
 tb_tim.TIM.DC_Mr
 tb_tim.TIM.DC_Mw
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{DC_Rd} tb_tim.TIM.DC_Rd[3:0]
 @28
 tb_tim.TIM.DC_S
@@ -140,18 +387,18 @@ tb_tim.TIM.DE_Mr
 tb_tim.TIM.DE_Mt
 tb_tim.TIM.DE_Mw
 @2022
-^2 /home/ian/src/cpu/etc/gtkwave/filters/aluop
+^2 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/aluop
 +{DE_Op} tb_tim.TIM.DE_Op[2:0]
 @22
 +{DE_PC} tb_tim.TIM.DE_PC[15:0]
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{DE_Ra} tb_tim.TIM.DE_Ra[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{DE_Rb} tb_tim.TIM.DE_Rb[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{DE_Rc} tb_tim.TIM.DE_Rc[3:0]
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{DE_Rd} tb_tim.TIM.DE_Rd[3:0]
 @28
 tb_tim.TIM.DE_S
@@ -186,7 +433,7 @@ tb_tim.TIM.EC_Mr
 tb_tim.TIM.EC_Mt
 tb_tim.TIM.EC_Mw
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{EC_Rd} tb_tim.TIM.EC_Rd[3:0]
 @28
 tb_tim.TIM.EC_S
@@ -209,7 +456,7 @@ tb_tim.TIM.EM_Mw
 @22
 +{EM_PC} tb_tim.TIM.EM_PC[15:0]
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{EM_Rd} tb_tim.TIM.EM_Rd[3:0]
 @28
 tb_tim.TIM.EM_S
@@ -236,7 +483,7 @@ tb_tim.TIM.MC_Ir
 tb_tim.TIM.MC_Mr
 tb_tim.TIM.MC_Mw
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{MC_Rd} tb_tim.TIM.MC_Rd[3:0]
 @1401200
 -Memory Control
@@ -250,24 +497,24 @@ tb_tim.TIM.MW_IE
 @22
 +{MW_PC} tb_tim.TIM.MW_PC[15:0]
 @2022
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{MW_Rd} tb_tim.TIM.MW_Rd[3:0]
 @28
 tb_tim.TIM.MW_T
 @1401200
 -MW
-@800201
+@c00200
 -Interrupts
-@23
+@22
 +{I_D} tb_tim.TIM.I_D[15:0]
-@29
+@28
 tb_tim.TIM.I_I
-@2023
-^1 /home/ian/src/cpu/etc/gtkwave/filters/registers
+@2022
+^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{I_Rd} tb_tim.TIM.I_Rd[3:0]
-@29
+@28
 tb_tim.TIM.I_T
-@1000201
+@1401200
 -Interrupts
 [pattern_trace] 1
 [pattern_trace] 0

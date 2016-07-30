@@ -31,7 +31,7 @@ def main(args):
 
 
 def emit_test_bench(stream, all_checks):
-	last_clock = 0
+	last_clock = -1
 	all_checks = sorted(all_checks.values(), key=lambda tup: tup[0])
 	e = stream.write
 	e("`timescale 1 ns / 100 ps\n\n")
@@ -41,6 +41,7 @@ def emit_test_bench(stream, all_checks):
 	e("  reg [15:0] _TB_VALUE;\n")
 	e("  reg [3:0] _TB_REGISTER;\n")
 	e("  integer _TB_ERRORS;\n")
+	e("  integer _TB_CLOCK;\n")
 	for n in range(1, 8):
 		e("  wire [15:0] R%d;\n" % n)
 	e("\n")
@@ -52,16 +53,18 @@ def emit_test_bench(stream, all_checks):
 		wires = "{ %s , %s }" % (wires_high, wires_low)
 		e("  assign R%d = %s;\n" % (n, wires))
 	e("\n")
-	e("  always #%s _CLK = ~_CLK;\n\n" % (CLOCK_TICK/8))
+	e("  always #%s _CLK = ~_CLK;\n" % (CLOCK_TICK/8))
+	e("  always @ (posedge TIM.CLOCK.CLK0) _TB_CLOCK = _TB_CLOCK + 1;\n\n")
 	e("  initial\n    begin\n")
 	e('      $dumpfile("build/waveforms/tim.vcd");\n')
 	e("      $dumpvars;\n")
 	e('      $readmemh("build/tim.bin", TIM.DEVICES.mem);\n')
 	e("      _CLK = 0;\n")
+	e("      _TB_CLOCK = -1; /* warmup */\n")
 	e("      _TB_ERRORS = 0;\n")
 	e('      _TB_REGISTER = 0;\n')
 	e("      _TB_VALUE = 0;\n")
-	e("      #1000 /* warmup */\n\n")
+	e("      @(posedge TIM.CLOCK.CLK0)  /* warmup */\n\n")
 	e("      /* test cases */\n")
 	for clock, (reg_name, value) in all_checks:
 		delta = clock - last_clock
@@ -78,6 +81,11 @@ def emit_test_bench(stream, all_checks):
 		e('        $display("\\nFAIL @%d");\n'  % clock)
 		e('        $display("%8s=%%16b\\nExpected=%s", %s);\n' % (reg_name, expected, reg))
 		e("      end\n")
+	e("      /* end test bench */\n")
+	e("      if (_TB_ERRORS > 0)\n")
+	e("      begin\n")
+	e('        $display("\\nFAILURE %d error(s) testing tim", _TB_ERRORS);\n')
+	e("      end\n")
 	e("      $finish;\n")
 	e("    end\n")
 	e("endmodule\n")
