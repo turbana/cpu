@@ -415,7 +415,7 @@ module tim (_CLK);
        .F_C	(F_C)
    );
 
-   register_fd REGISTER_IF (
+   register_fd REGISTER_FD (
        .CLK0	(CLK0),
        .FD_I	(FD_I),
        .FD_PC	(FD_PC),
