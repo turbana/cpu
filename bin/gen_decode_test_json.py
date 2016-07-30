@@ -56,6 +56,7 @@ def read_log(filename):
 
 
 def clean_keyword(inst):
+	inst = inst.strip()
 	if inst == "and": inst = "_and"
 	if inst == "or":  inst = "_or"
 	return inst.replace(".", "_")

@@ -56,16 +56,24 @@ def parse(stream):
 		"muxes": {},
 		"wires": {},
 	}
+	clean = lambda val: 0 if val == "X" else val
 	for line in section(stream):
-		inst, value = line.split()
+		inst, value = line.split("=")
 		data["encoding"][inst] = value
 	for line in section(stream):
-		name, mux = line.split("=")
-		mux = mux.strip()[6:-1].split(",")
-		mux = [s if s!="X" else 0 for s in mux]
+		i = line.find("=")
+		name = line[:i].strip()
+		mux_def = line[i+1:].strip()
+		mux_def = mux_def.strip()[6:-1].split(",")
+		mux_def = dict(val.split("=") for val in mux_def)
+		mux = []
+		for key, val in sorted(mux_def.items()):
+			mux.append(clean(val))
 		data["muxes"][name.strip()] = mux
 	for line in section(stream):
 		name, value = line.split("=")
+		if name.startswith("m_"):
+			name = name.replace("[", "").replace("]", "")
 		data["wires"][name.strip()] = value.strip()
 	return data
 
@@ -104,7 +112,9 @@ def wire_size(name, names):
 	def index(n):
 		if "[" not in n:
 			return 0
-		return int(n.replace("]", "").split("[")[1])
+		i = n.index("[")
+		j = n.index("]")
+		return int(n[i+1:j])
 	if name in PARAMETERS:
 		return PARAMETERS[name][1]
 	match = re.compile("^%s\W" % name).match
@@ -156,7 +166,7 @@ def emit_module(data):
 		e(lhs)
 		e(join.join("(%s == %d) ? %s :" % (var, i, val)
 					# for i, val in enumerate(mux)))
-					for i, val in enumerate(reversed(mux))))
+					for i, val in enumerate(mux)))
 		e(" Z;\n")
 	e("\nendmodule\n")
 
