@@ -34,7 +34,7 @@ ALL_TESTS = $(ALL_BIN_TESTS) $(ALL_ASM_TESTS) $(ALL_SCHEM_TESTS)
 
 
 .PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode
-.PRECIOUS: $(BUILD_DIR)/%.v $(BUILD_DIR)/tb_%.v $(BUILD_DIR)/%.sch $(BUILD_DIR)/test_% $(WF_DIR)/%.vcd $(BUILD_DIR)/%.o
+.PRECIOUS: $(BUILD_DIR)/%.v $(BUILD_DIR)/tb_%.v $(BUILD_DIR)/%.sch $(BUILD_DIR)/test_% $(WF_DIR)/%.vcd $(BUILD_DIR)/%.o $(BUILD_DIR)/%.replay
 
 # show 'make help' by default
 help:
@@ -113,9 +113,9 @@ $(DOC_DIR)/schematics.pdf: $(DOC_SCHEMS)
 # SCHEMATICS SPECIAL
 # ##############################################################################
 
-$(BUILD_DIR)/tb_tim.v: $(VERILOG_DIR)/tb_tim.v
-	@echo "Copy    : $(@F)"
-	@cp $^ $@
+$(BUILD_DIR)/tb_tim.v: $(BUILD_DIR)/$(asm).replay
+	@echo "Gen TB  : $(@F)"
+	@python $(BIN_DIR)/gen_test_bench_integ.py $< > $@
 
 $(BUILD_DIR)/decode-test-cases.json: $(CONFIG_DIR)/decode.csv $(BUILD_DIR)/decode.log
 	@echo "Gen Test: $(@F)"
@@ -195,6 +195,10 @@ $(BUILD_DIR)/%.o.test: $(ASM_DIR)/%.asm $(BUILD_DIR)/%.o
 	@echo "Test Asm: $(*F)"
 	@$(SIM_TEST) $^
 	@touch $@
+
+$(BUILD_DIR)/%.replay: $(BUILD_DIR)/%.o
+	@echo "Replay  : $(*F)"
+	@$(SIM) $< --no-debugger --save-replay $@ --stop-clock 100000
 
 
 # ##############################################################################
