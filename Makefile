@@ -4,7 +4,8 @@ BIN_DIR		= bin
 CONFIG_DIR	= etc
 DESIGN_DIR	= design
 SCHEM_DIR	= $(DESIGN_DIR)/schem
-DOC_DIR		= doc
+# DOC_DIR needs to end in a / to not conflict with the 'doc' target
+DOC_DIR		= doc/
 VERILOG_DIR	= design/verilog
 WF_DIR		= $(BUILD_DIR)/waveforms
 ASM_DIR		= tests
