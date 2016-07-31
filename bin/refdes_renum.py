@@ -7,7 +7,7 @@ import os.path
 import schematic
 
 
-SYMBOL_PATH = "symbols/74xxx"
+SYMBOL_PATH = "design/symbols/74xxx"
 
 
 def main(args):
