@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.62 (w)1999-2014 BSI
-[*] Sat Jul 30 22:16:22 2016
+[*] Sun Jul 31 17:51:53 2016
 [*]
 [dumpfile] "/home/ian/src/cpu/build/waveforms/tim.vcd"
-[dumpfile_mtime] "Sat Jul 30 22:15:46 2016"
-[dumpfile_size] 15612016
+[dumpfile_mtime] "Sun Jul 31 17:50:25 2016"
+[dumpfile_size] 15615107
 [savefile] "/home/ian/src/cpu/etc/gtkwave/tim.sav"
-[timestart] 0
+[timestart] 200923000
 [size] 1920 1060
 [pos] -1 -1
-*-20.000000 770000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.000000 203881000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_tim.
 [treeopen] tb_tim.TIM.
 [sst_width] 210
-[signals_width] 242
+[signals_width] 293
 [sst_expanded] 1
-[sst_vpaned_height] 316
+[sst_vpaned_height] 306
 @28
 tb_tim.TIM.CLK0
 @c00200
@@ -35,7 +35,7 @@ tb_tim.TIM.CLK3
 +{Test Register} tb_tim._TB_REGISTER[3:0]
 @22
 +{Test Value} tb_tim._TB_VALUE[15:0]
-@25
+@24
 +{Errors} tb_tim._TB_ERRORS[31:0]
 @1000200
 -Test Bench
@@ -49,63 +49,6 @@ tb_tim.TIM.BUS_W
 +{BUS_D} tb_tim.TIM.BUS_D[15:0]
 @1000200
 -BUS
-@c00200
--Fetch
-@22
-+{F_PC} tb_tim.TIM.F_PC[15:0]
-+{F_I} tb_tim.TIM.F_I[15:0]
-@4022
-^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
-+{F_I} tb_tim.TIM.F_I[15:0]
-@22
-+{FC_I} tb_tim.TIM.FC_I[15:0]
-@4022
-^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
-+{FC_I} tb_tim.TIM.FC_I[15:0]
-@1401200
--Fetch
-@c00200
--FD
-@c00022
-+{FD_PC} tb_tim.TIM.FD_PC[15:0]
-@28
-(0)tb_tim.TIM.FD_PC[15:0]
-(1)tb_tim.TIM.FD_PC[15:0]
-(2)tb_tim.TIM.FD_PC[15:0]
-(3)tb_tim.TIM.FD_PC[15:0]
-(4)tb_tim.TIM.FD_PC[15:0]
-(5)tb_tim.TIM.FD_PC[15:0]
-(6)tb_tim.TIM.FD_PC[15:0]
-(7)tb_tim.TIM.FD_PC[15:0]
-(8)tb_tim.TIM.FD_PC[15:0]
-(9)tb_tim.TIM.FD_PC[15:0]
-(10)tb_tim.TIM.FD_PC[15:0]
-(11)tb_tim.TIM.FD_PC[15:0]
-(12)tb_tim.TIM.FD_PC[15:0]
-(13)tb_tim.TIM.FD_PC[15:0]
-(14)tb_tim.TIM.FD_PC[15:0]
-(15)tb_tim.TIM.FD_PC[15:0]
-@1401200
--group_end
-@22
-+{FD_I} tb_tim.TIM.FD_I[15:0]
-@4022
-^>1 /tmp/../home/ian/src/cpu/etc/gtkwave/../../asm/disop.py
-+{FD_I} tb_tim.TIM.FD_I[15:0]
-@1401200
--FD
-@c00200
--Register File
-@28
-tb_tim.TIM.R_IE
-tb_tim.TIM.R_M
-@22
-+{R_CS} tb_tim.TIM.R_CS[5:0]
-+{R_DS} tb_tim.TIM.R_DS[5:0]
-+{R_A} tb_tim.TIM.R_A[15:0]
-+{R_B} tb_tim.TIM.R_B[15:0]
-@1401200
--Register File
 @800200
 -Registers
 @c00022
@@ -320,7 +263,64 @@ tb_tim.TIM.DECODE_RF.U104.\19
 -group_end
 @1000200
 -Registers
+@800200
+-Fetch
+@22
++{F_PC} tb_tim.TIM.F_PC[15:0]
+@4022
+^>1 /home/ian/src/cpu/asm/disop.py
++{F_I} tb_tim.TIM.F_I[15:0]
+^>0 disabled
++{F_I} tb_tim.TIM.F_I[15:0]
+^>1 /home/ian/src/cpu/asm/disop.py
++{FC_I} tb_tim.TIM.FC_I[15:0]
+@22
++{FC_I} tb_tim.TIM.FC_I[15:0]
+@1000200
+-Fetch
+@800200
+-FD
+@c00022
++{FD_PC} tb_tim.TIM.FD_PC[15:0]
+@28
+(0)tb_tim.TIM.FD_PC[15:0]
+(1)tb_tim.TIM.FD_PC[15:0]
+(2)tb_tim.TIM.FD_PC[15:0]
+(3)tb_tim.TIM.FD_PC[15:0]
+(4)tb_tim.TIM.FD_PC[15:0]
+(5)tb_tim.TIM.FD_PC[15:0]
+(6)tb_tim.TIM.FD_PC[15:0]
+(7)tb_tim.TIM.FD_PC[15:0]
+(8)tb_tim.TIM.FD_PC[15:0]
+(9)tb_tim.TIM.FD_PC[15:0]
+(10)tb_tim.TIM.FD_PC[15:0]
+(11)tb_tim.TIM.FD_PC[15:0]
+(12)tb_tim.TIM.FD_PC[15:0]
+(13)tb_tim.TIM.FD_PC[15:0]
+(14)tb_tim.TIM.FD_PC[15:0]
+(15)tb_tim.TIM.FD_PC[15:0]
+@1401200
+-group_end
+@4023
+^>1 /home/ian/src/cpu/asm/disop.py
++{FD_I} tb_tim.TIM.FD_I[15:0]
+@22
++{FD_I} tb_tim.TIM.FD_I[15:0]
+@1000200
+-FD
 @c00200
+-Register File
+@28
+tb_tim.TIM.R_IE
+tb_tim.TIM.R_M
+@22
++{R_CS} tb_tim.TIM.R_CS[5:0]
++{R_DS} tb_tim.TIM.R_DS[5:0]
++{R_A} tb_tim.TIM.R_A[15:0]
++{R_B} tb_tim.TIM.R_B[15:0]
+@1401200
+-Register File
+@800200
 -Decode
 @22
 +{D_A} tb_tim.TIM.D_A[15:0]
@@ -338,8 +338,17 @@ tb_tim.TIM.D_Mw
 +{D_Op} tb_tim.TIM.D_Op[2:0]
 ^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_RFa} tb_tim.TIM.D_RFa[3:0]
+@c02022
 ^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_RFb} tb_tim.TIM.D_RFb[3:0]
+@28
+(0)tb_tim.TIM.D_RFb[3:0]
+(1)tb_tim.TIM.D_RFb[3:0]
+(2)tb_tim.TIM.D_RFb[3:0]
+(3)tb_tim.TIM.D_RFb[3:0]
+@1401200
+-group_end
+@2022
 ^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
 +{D_Ra} tb_tim.TIM.D_Ra[3:0]
 ^1 /tmp/../home/ian/src/cpu/etc/gtkwave/filters/registers
@@ -352,7 +361,7 @@ tb_tim.TIM.D_Mw
 tb_tim.TIM.D_S
 +{D_SF} tb_tim.TIM.D_SF[2:0]
 tb_tim.TIM.D_T
-@1401200
+@1000200
 -Decode
 @c00200
 -Decode Control
@@ -374,7 +383,7 @@ tb_tim.TIM.DC_T
 tb_tim.TIM.H_H
 @1401200
 -Hazard
-@c00200
+@800200
 -DE
 @22
 +{DE_A} tb_tim.TIM.DE_A[15:0]
@@ -404,7 +413,7 @@ tb_tim.TIM.DE_Mw
 tb_tim.TIM.DE_S
 +{DE_SF} tb_tim.TIM.DE_SF[2:0]
 tb_tim.TIM.DE_T
-@1401200
+@1000200
 -DE
 @c00200
 -Forward
