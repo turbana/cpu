@@ -78,10 +78,22 @@ def zero(count):
 
 @macro("reg s16")
 def ldi(reg, imm):
-	return """
-		lui  {reg}, (({imm} & 0xFF00) >> 8) + (({imm} & 0x0080) >> 7)
-		addi {reg}, ({imm} & 0x00FF)
-	"""
+	if isinstance(imm, tokens.Label):
+		return """
+			lui  {reg}, (({imm} & 0xFF00) >> 8) + (({imm} & 0x0080) >> 7)
+			addi {reg}, ({imm} & 0x00FF)
+		"""
+	n = imm.value
+	value = (n - (2**16)) if n >= (2**15) else n  # twos complement
+	high = ((value >> 8) + ((value & 0x0080) >> 7)) & 0xFF
+	low = value & 0xFF
+	if value == 0:
+		return "add {reg}, $0, $0"
+	elif value in range(-8, 9):
+		return "add {reg}, $0, %d" % value
+	high_inst = "lui {reg}, 0x%X" % high if high else "add {reg}, $0, $0"
+	low_inst = "addi {reg}, 0x%X" % low if low else ""
+	return high_inst + "\n" + low_inst
 
 
 @macro("reg")
