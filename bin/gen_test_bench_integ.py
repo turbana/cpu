@@ -7,6 +7,7 @@ import simtest
 
 
 CLOCK_TICK = 1000
+CLOCK_RUNOFF = 100
 REGISTERS = {
 	# reg: High, Low
 	"$1": ("U119", "U118"),
@@ -78,14 +79,15 @@ def emit_test_bench(stream, all_checks):
 		e("      _TB_VALUE = %d;\n" % value)
 		e("      if (%s !== %d) begin\n" % (reg, value))
 		e("        _TB_ERRORS = _TB_ERRORS + 1;\n")
-		e('        $display("\\nFAIL @%d");\n'  % clock)
-		e('        $display("%8s=%%16b\\nExpected=%s", %s);\n' % (reg_name, expected, reg))
+		# e('        $display("\\nFAIL @%d");\n'  % clock)
+		# e('        $display("%8s=%%16b\\nExpected=%s", %s);\n' % (reg_name, expected, reg))
 		e("      end\n")
 	e("      /* end test bench */\n")
 	e("      if (_TB_ERRORS > 0)\n")
 	e("      begin\n")
 	e('        $display("\\nFAILURE %d error(s) testing tim", _TB_ERRORS);\n')
 	e("      end\n")
+	e("      #%d\n" % (CLOCK_TICK * CLOCK_RUNOFF))
 	e("      $finish;\n")
 	e("    end\n")
 	e("endmodule\n")
