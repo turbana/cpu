@@ -54,12 +54,12 @@
 			"EM_J":  {"width": 1},
 			"DE_Mr": {"width": 1},
 			"DE_Rd": {"width": 4},
-			"D_Ra":  {"width": 4},
-			"D_Rb":  {"width": 4}
+			"D_RFa": {"width": 4},
+			"D_RFb": {"width": 4}
 		},
 		"values": [
-			"ma = 1 if DE_Rd == D_Ra else 0",
-			"mb = 1 if DE_Rd == D_Rb else 0",
+			"ma = 1 if DE_Rd == D_RFa else 0",
+			"mb = 1 if DE_Rd == D_RFb else 0",
 			"zero = 1 if DE_Rd == 0 else 0",
 			"match = ~zero & (ma | mb)",
 			"H_H:1 = DE_Mr & match & ~EM_J"
@@ -71,8 +71,8 @@
 			"I_Rd":  {"width": 4},
 			"I_I":   {"width": 1},
 			"FD_PC": {"width": 16},
-			"D_Ra":  {"width": 4},
-			"D_Rb":  {"width": 4}
+			"D_RFa": {"width": 4},
+			"D_RFb": {"width": 4}
 		},
 		"initial": {
 			"rf": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -92,8 +92,8 @@
 			"R_M:1  = rf[FLAGS] >> 1",
 			"R_CS:6 = rf[FLAGS] >> 4",
 			"R_DS:6 = rf[FLAGS] >> 10",
-			"R_A:16 = DONTCARE if D_Ra in (12, 13, 14, 15) else (0 if D_Ra==0 else (FD_PC if D_Ra==PC else rf[D_Ra]))",
-			"R_B:16 = DONTCARE if D_Rb in (12, 13, 14, 15) else (0 if D_Rb==0 else (FD_PC if D_Rb==PC else rf[D_Rb]))"
+			"R_A:16 = DONTCARE if D_RFa in (12, 13, 14, 15) else (0 if D_RFa==0 else (FD_PC if D_RFa==PC else rf[D_RFa]))",
+			"R_B:16 = DONTCARE if D_RFb in (12, 13, 14, 15) else (0 if D_RFb==0 else (FD_PC if D_RFb==PC else rf[D_RFb]))"
 		]
 	},
 	"execute_alu": {

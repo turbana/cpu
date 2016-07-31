@@ -192,8 +192,8 @@ module tim (_CLK);
    decode_hazard DECODE_HAZARD (
        .DE_Mr	(DE_Mr),
        .DE_Rd	(DE_Rd),
-       .D_Ra	(D_Ra),
-       .D_Rb	(D_Rb),
+       .D_RFa	(D_RFa),
+       .D_RFb	(D_RFb),
        .EM_J	(EM_J),
        .H_H	(H_H)
    );
@@ -201,8 +201,8 @@ module tim (_CLK);
 
    decode_rf DECODE_RF (
        .CLK2	(CLK2),
-       .D_Ra	(D_Ra),
-       .D_Rb	(D_Rb),
+       .D_RFa	(D_RFa),
+       .D_RFb	(D_RFb),
        .FD_PC	(FD_PC),
        .I_D	(I_D),
        .I_I	(I_I),

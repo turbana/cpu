@@ -1541,7 +1541,7 @@ U 44600 41300 44600 41900 10 -1
 N 44800 42100 45600 42100 4
 {
 T 44800 42100 6 10 1 1 0 0 1
-netname=D_Rb2
+netname=D_RFb2
 }
 C 44800 42100 1 180 0 busripper-1.sym
 {
@@ -1551,7 +1551,7 @@ device=none
 N 44800 41900 45800 41900 4
 {
 T 44800 41900 6 10 1 1 0 0 1
-netname=D_Rb1
+netname=D_RFb1
 }
 C 44800 41900 1 180 0 busripper-1.sym
 {
@@ -1561,7 +1561,7 @@ device=none
 N 44800 41700 46000 41700 4
 {
 T 44800 41700 6 10 1 1 0 0 1
-netname=D_Rb0
+netname=D_RFb0
 }
 C 44800 41700 1 180 0 busripper-1.sym
 {
@@ -1576,7 +1576,7 @@ C 43100 41200 1 0 0 ipad-2.sym
 T 43200 41400 5 10 0 1 0 0 1
 device=IPAD
 T 43100 41300 5 10 1 1 0 1 1
-netlabel=D_Rb[3:0]
+netlabel=D_RFb[3:0]
 }
 C 40300 55600 1 0 0 ipad-2.sym
 {
