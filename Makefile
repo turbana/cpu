@@ -22,19 +22,20 @@ SIM_TEST	= $(BIN_DIR)/simtest.py
 
 
 ALL_BIN = test1
-ALL_ASM = bigintadd bigintsub fib immediates macros pow testisa
+ALL_ASM = bigintadd bigintsub fib immediates macros pow
 ALL_SCHEMS = $(SCHEM_DIR)/*.sch
 SCHEMS = $(filter-out $(wildcard $(SCHEM_DIR)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM_DIR),$(BUILD_DIR),$(SCHEMS)))
 ALL_VERILOG = $(subst .sch,.v,$(DOC_SCHEMS))
 # ALL_SCHEM_TESTS are populated in Makefile.deps
 ALL_SCHEM_TESTS =
-ALL_BIN_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .o.chk,$(ALL_BIN)))
+ALL_BIN_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .bin.test,$(ALL_BIN)))
 ALL_ASM_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .o.test,$(ALL_ASM)))
-ALL_TESTS = $(ALL_BIN_TESTS) $(ALL_ASM_TESTS) $(ALL_SCHEM_TESTS)
+ALL_INTEG_TESTS = $(addprefix $(BUILD_DIR)/,$(addsuffix .integ.test,$(ALL_ASM)))
+ALL_TESTS = $(ALL_BIN_TESTS) $(ALL_ASM_TESTS) $(ALL_SCHEM_TESTS) integtestall
 
 
-.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode
+.PHONY: clean help netlist testbench test testall protopcb doc wave renum renumall versions decode integtestall
 .PRECIOUS: $(BUILD_DIR)/%.v $(BUILD_DIR)/tb_%.v $(BUILD_DIR)/%.sch $(BUILD_DIR)/test_% $(WF_DIR)/%.vcd $(BUILD_DIR)/%.o $(BUILD_DIR)/%.replay
 
 # show 'make help' by default
@@ -55,6 +56,7 @@ help:
 	@echo "make target=foo netlist    -- generate netlist for foo"
 	@echo "make target=foo testbench  -- generate testbench for foo"
 	@echo "make nettestall            -- run full test against all schematics"
+	@echo "make integtestall          -- run all integration tests"
 	@echo "make testall               -- run all project tests"
 	@echo "make doc                   -- generate documentation"
 	@echo "make renum                 -- name all unset refdes (U?)"
@@ -65,7 +67,7 @@ help:
 
 netlist:	$(BUILD_DIR) $(BUILD_DIR)/$(target).v
 testbench:	$(BUILD_DIR) $(BUILD_DIR)/tb_$(target).v
-nettest:	$(BUILD_DIR) $(WF_DIR) $(WF_DIR)/$(target).vcd
+nettest:	$(BUILD_DIR) $(WF_DIR) clean_nettest $(WF_DIR)/$(target).vcd
 nettestall:	$(BUILD_DIR) $(WF_DIR) $(ALL_SCHEM_TESTS)
 testall:	$(BUILD_DIR) $(WF_DIR) $(ALL_TESTS)
 doc:		$(DOC_DIR) $(DOC_DIR)/block_diagram.png $(DOC_DIR)/schematics.pdf
@@ -85,6 +87,9 @@ versions:
 
 clean:
 	@rm -rf -- $(BUILD_DIR)/* Makefile.deps
+
+clean_nettest:
+	@rm -f -- $(BUILD_DIR)/tim.bin $(BUILD_DIR)/tb_tim.v
 
 wave: $(BUILD_DIR) $(WF_DIR) $(WF_DIR)/$(target).vcd
 	@$(GTKWAVE) $(WF_DIR)/$(target).vcd $(CONFIG_DIR)/gtkwave/$(target).sav
@@ -108,6 +113,12 @@ $(DOC_DIR)/%.png: $(DESIGN_DIR)/%.sch
 $(DOC_DIR)/schematics.pdf: $(DOC_SCHEMS)
 	@echo "PDF     : $(@F)"
 	@$(GAF) export --color --output=$@ $^ 2>&1 | grep -v "^\*\* Message:" | sed '/^$$/d'
+
+integtestall:
+	@for asm in $(ALL_ASM); do \
+		echo "Int Test: $$asm"; \
+		$(MAKE) --no-print-directory asm=$$asm target=tim nettest; \
+	done
 
 
 # ##############################################################################
@@ -184,7 +195,7 @@ $(BUILD_DIR)/%.o: $(ASM_DIR)/%.asm
 	@echo "Asm     : $(*F)"
 	@$(ASM) $^ $@
 
-$(BUILD_DIR)/%.o.chk: $(ASM_DIR)/%.asm $(BUILD_DIR)/%.o
+$(BUILD_DIR)/%.bin.test: $(ASM_DIR)/%.asm $(BUILD_DIR)/%.o
 	@echo "Test Bin: $(@F)"
 	@cat $< | egrep -o '; [ 01]* \|' | tr -d ' ;|' > $@.good
 	@xxd -b -c 1 $(BUILD_DIR)/$*.o | cut -f2 -d' ' | sed 'N;s/\n//' > $@.check
