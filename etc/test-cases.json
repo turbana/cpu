@@ -105,11 +105,12 @@
 		},
 		"assert": "op != 7",
 		"values": [
+			"b = (~b & 2**16-1) if op==0 and ca==1 else b",
 			"A_D:16 = a+b+ca if op==0 else (a&b if op==1 else (a|b if op==2 else (a^b if op==3 else _E_S)))",
-			"sa = a >> 15",
-			"sb = b >> 15",
-			"sr = A_D >> 15",
-			"cf = (a+b) >> 16",
+			"sa = (a >> 15) & 1",
+			"sb = (b >> 15) & 1",
+			"sr = (A_D >> 15) & 1",
+			"cf = ((a+b+ca) >> 16) & 1",
 			"of = (~sa & ~sb & sr) | (sa & sb & ~sr)",
 			"zf = 1 if A_D==0 else 0",
 			"A_F:4 = (sr << 3) | (cf << 2) | (of << 1) | zf"

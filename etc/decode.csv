@@ -1,13 +1,13 @@
 Inst,D_Op[2],D_Op[1],D_Op[0],D_RFa[3],D_RFa[2],D_RFa[1],D_RFa[0],D_RFb[3],D_RFb[2],D_RFb[1],D_RFb[0],D_Rd[3],D_Rd[2],D_Rd[1],D_Rd[0],D_Ra,D_Rb,D_Rc,D_A,D_B,D_C,D_Ca,D_Mr,D_Mw,D_Mt,D_J,D_S,D_T,D_H,D_SF[2],D_SF[1],D_SF[0]
 add,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,0,0,0,X,0,0,0,0,X,X,X
-sub,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,~(RFB_I),X,1,0,0,X,0,0,0,0,X,X,X
+sub,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,1,0,0,X,0,0,0,0,X,X,X
 and,0,0,1,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
 or,0,1,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
 shl,1,1,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
 shr,1,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
 sar,1,0,1,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
 xor,0,1,1,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,X,0,0,X,0,0,0,0,X,X,X
-s.cond,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,0,0,0,D_RFa,D_RFb_I,X,R_A,~(RFB_I),X,1,0,0,X,0,1,0,0,I[2],I[1],I[0]
+s.cond,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,0,0,0,D_RFa,D_RFb_I,X,R_A,RFB_I,X,1,0,0,X,0,1,0,0,I[2],I[1],I[0]
 as.z,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,0,0,0,X,0,1,0,0,0,0,0
 as.nz,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,I[2],I[1],I[0],D_RFa,D_RFb_I,X,R_A,RFB_I,X,0,0,0,X,0,1,0,0,0,0,1
 jmp,0,0,0,0,I[5],I[4],I[3],0,I[9],I[8],I[7],0,0,0,0,D_RFa,D_RFb_I,X,R_A,RFB_I,X,0,0,0,X,1,0,0,0,X,X,X
