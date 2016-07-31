@@ -331,6 +331,8 @@ class CPU(object):
 	def reset(self):
 		self.reg[R_PC] = 0
 		self.reg[R_FLAGS] = 0
+		# HACK get around test bench one cycle delay
+		self.reg[R_PC] = 1
 
 	@send_listeners
 	def cycle(self):
@@ -800,6 +802,8 @@ def main(args):
 	if opts.exe:
 		chunks = parse_file(opts.exe)
 		cpu.reset()
+		# HACK offset instruction loading by 1 word to get around test bench one cycle delay
+		chunks[1][0] = (chunks[1][0][0]+1, chunks[1][0][1])
 		map(cpu.dload, chunks[0])
 		map(cpu.iload, chunks[1])
 
