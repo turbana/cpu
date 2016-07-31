@@ -96,6 +96,7 @@ def gen_testcase(table, solution):
 		("s11imm", "sign(slice(0, 11), 11)"),
 		("SPI", "s4imm+1 if s4imm>=0 else s4imm"),
 		("RFB_I", "SPI if I[6]==1 else R_B"),
+		("D_RFb_I", "D_RFb if I[6]==0 else 0"),
 	]
 	exports = [clean_wire(w) for w in table.pop(0)[1:]]
 	insts = [clean_keyword(row[0]) for row in table]
@@ -103,6 +104,7 @@ def gen_testcase(table, solution):
 	tests += gen_opcodes(solution)
 	tests += gen_instructions(exports, insts, table)
 	tests += gen_exports(exports)
+	tests = topo_sort(tests)
 	return ["%s = %s" % (name, expr) for name, expr in tests]
 
 
@@ -140,6 +142,34 @@ def gen_exports(exports):
 		width = bit_widths.get(stem, 1)
 		tests.append(("%s:%d" % (stem, width), stem))
 	return tests
+
+
+def topo_sort(tests):
+	# not really a topo sort, but super simple
+	nodes = find_dependencies(tests)
+	done = set()
+	while nodes:
+		node = nodes.pop(0)
+		name, expr, deps = node
+		for dep in deps:
+			if dep not in done:
+				nodes.append(node)
+				break
+		else:
+			done.add(name)
+			yield (name, expr)
+
+
+def find_dependencies(tests):
+	tests = list(tests)
+	results = []
+	for name, expr in tests:
+		deps = []
+		for stem, _ in tests:
+			if re.search(r'\b%s\b' % stem, expr) and stem != name:
+				deps.append(stem)
+		results.append((name, expr, deps))
+	return results
 
 
 if __name__ == "__main__":
