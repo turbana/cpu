@@ -316,8 +316,15 @@ def generate_tests(config, wires):
         yield generate_test(config, wires, env)
 
 
-def randbits(bits):
-    return random.randint(0, (2**bits)-1)
+def randbits(bits, weights):
+    if not weights:
+        return random.randint(0, (2**bits)-1)
+    roll = random.random()
+    for value, weight in weights:
+        roll -= weight
+        if roll <= 0:
+            return int(value)
+    raise Exception("Failed to generate random number with weights: %s" % weights)
 
 
 def generate_test(config, wires, env, _count=0):
@@ -332,7 +339,8 @@ def generate_test(config, wires, env, _count=0):
     for name in config.get("inputs", {}).keys():
         width = config["inputs"][name]["width"]
         alias = config["inputs"][name].get("alias", None)
-        value = randbits(width)
+        weights = config["inputs"][name].get("weights", {}).items()
+        value = randbits(width, weights)
         inout = name in inouts
         test["inputs"].append({"value": value, "width": width, "name": name, "inout": inout})
         env[name] = value
