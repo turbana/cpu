@@ -122,6 +122,7 @@ module tim (_CLK);
    wire   [5:0] R_DS;
    wire         R_IE;
    wire         R_M;
+   wire         _RST;
    wire         S_S;
 
 
@@ -133,6 +134,7 @@ module tim (_CLK);
        .CLK1	(CLK1),
        .CLK2	(CLK2),
        .CLK3	(CLK3),
+       ._RST	(_RST),
        ._CLK	(_CLK)
    );
 
@@ -212,7 +214,8 @@ module tim (_CLK);
        .R_CS	(R_CS),
        .R_DS	(R_DS),
        .R_IE	(R_IE),
-       .R_M	(R_M)
+       .R_M	(R_M),
+       ._RST	(_RST)
    );
 
 
@@ -296,7 +299,8 @@ module tim (_CLK);
        .F_I	(F_I),
        .F_PC	(F_PC),
        .R_CS	(R_CS),
-       .R_M	(R_M)
+       .R_M	(R_M),
+       ._RST	(_RST)
    );
 
 
@@ -305,7 +309,8 @@ module tim (_CLK);
        .EM_D	(EM_D),
        .EM_J	(EM_J),
        .F_PC	(F_PC),
-       .H_H	(H_H)
+       .H_H	(H_H),
+       ._RST	(_RST)
    );
 
 
@@ -336,7 +341,8 @@ module tim (_CLK);
        .MC_Mw	(MC_Mw),
        .M_D	(M_D),
        .R_CS	(R_CS),
-       .R_DS	(R_DS)
+       .R_DS	(R_DS),
+       ._RST	(_RST)
    );
 
 
@@ -382,7 +388,8 @@ module tim (_CLK);
        .D_Rb	(D_Rb),
        .D_Rc	(D_Rc),
        .D_SF	(D_SF),
-       .FD_PC	(FD_PC)
+       .FD_PC	(FD_PC),
+       ._RST	(_RST)
    );
 
    register_em REGISTER_EM (
@@ -412,7 +419,8 @@ module tim (_CLK);
        .EM_S	(EM_S),
        .EM_SF	(EM_SF),
        .EM_T	(EM_T),
-       .F_C	(F_C)
+       .F_C	(F_C),
+       ._RST	(_RST)
    );
 
    register_fd REGISTER_FD (
@@ -421,7 +429,8 @@ module tim (_CLK);
        .FD_PC	(FD_PC),
        .F_I	(F_I),
        .F_PC	(F_PC),
-       .H_H	(H_H)
+       .H_H	(H_H),
+       ._RST	(_RST)
    );
 
    register_mw REGISTER_MW (
@@ -437,7 +446,8 @@ module tim (_CLK);
        .MW_Rd	(MW_Rd),
        .MW_T	(MW_T),
        .M_D	(M_D),
-       .R_IE	(R_IE)
+       .R_IE	(R_IE),
+       ._RST	(_RST)
    );
 
    writeback_interrupts WRITEBACK_INTERRUPTS (

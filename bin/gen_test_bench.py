@@ -86,6 +86,7 @@ def emit_header(stream, module, wires, config):
     e("  .CLK1 (CLK1),\n")
     e("  .CLK2 (CLK2),\n")
     e("  .CLK3 (CLK3)\n")
+    e("/*,  ._RST (_RST) */ /* skipping so we can set _RST in the test bench */\n")
     e(");\n\n")
     e("%s DUT (\n" % module)
     e(",\n".join("  .%s (%s)" % (name, name) for name in wires))
