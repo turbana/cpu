@@ -100,6 +100,17 @@
 		"names": ["S", "1A", "1B", "1Y", "2A", "2B", "2Y", "GND", "3Y", "3B", "3A", "4Y", "4B", "4A", "G", "VCC"],
 		"assign": {"?Y": "~G & (S ? ?B : ?A)"}
 	},
+	"74194": {
+		"desc": "Quad directional shift register with reset; positive edge-trigered",
+		"delay": 36,
+		"package": "DIP16",
+		"names": ["MR", "DSR", "0D", "1D", "2D", "3D", "DSL", "GND", "S0", "S1", "CP", "3Q", "2Q", "1Q", "0Q", "VCC"],
+		"registers": ["0Q", "1Q", "2Q", "3Q"],
+		"clocked": {
+			"posedge CP": "if (MR & S0 & S1) begin ?Q <= ?D; end",
+			"MR": "if (~MR) begin 0Q = 1'b0; 1Q = 1'b0; 2Q = 1'b0; 3Q = 1'b0; end"
+		}
+	},
 	"74244": {
 		"desc": "Octal buffer/line driver; 3-state",
 		"delay": 14,
@@ -110,6 +121,17 @@
 			"?Y1": "!?OE ? ?A1 : Z",
 			"?Y2": "!?OE ? ?A2 : Z",
 			"?Y3": "!?OE ? ?A3 : Z"
+		}
+	},
+	"74273": {
+		"desc": "Octal D-type flip-flow with asynchronous clear; positive edge-triggered",
+		"delay": 30,
+		"package": "DIP20",
+		"names": ["MR", "0Q", "0D", "1D", "1Q", "2Q", "2D", "3D", "3Q", "GND", "CP", "4Q", "4D", "5D", "5Q", "6Q", "6D", "7D", "7Q", "VCC"],
+		"registers": ["0Q", "1Q", "2Q", "3Q", "4Q", "5Q", "6Q", "7Q"],
+		"clocked": {
+			"posedge CP": "if (MR) begin ?Q <= ?D; end",
+			"MR": "if (~MR) begin 0Q = 1'b0; 1Q = 1'b0; 2Q = 1'b0; 3Q = 1'b0; 4Q = 1'b0; 5Q = 1'b0; 6Q = 1'b0; 7Q = 1'b0; end"
 		}
 	},
 	"74283": {
