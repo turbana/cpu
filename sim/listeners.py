@@ -111,4 +111,5 @@ class ReplayGenerator(object):
 		self.stream = stream
 
 	def after_rset(self, val, reg, _):
+		if reg == 0: return
 		self.stream.write(";; |@| %d ($%d=%04X)\n" % (self.cpu.clock, reg, val))
