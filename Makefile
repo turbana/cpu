@@ -219,4 +219,4 @@ $(BUILD_DIR)/%.replay: $(BUILD_DIR)/%.o
 
 $(WF_DIR)/tim.vcd: $(BUILD_DIR)/tim.bin
 $(BUILD_DIR)/tb_decode_decode.v: $(BUILD_DIR)/decode-test-cases.json
-$(BUILD_DIR)/test_decode_decode: $(BUILD_DIR)/7408.v $(BUILD_DIR)/7474.v
+$(BUILD_DIR)/test_decode_decode: $(BUILD_DIR)/7408.v $(BUILD_DIR)/7474.v $(BUILD)/TC1232.v

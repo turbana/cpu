@@ -7,5 +7,5 @@
 *.log
 *.gtkw
 *.vcd
-build
+build/
 Makefile.deps
