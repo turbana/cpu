@@ -19,6 +19,7 @@ import schematic
 TESTS_CONFIG = "etc/test-cases.json"
 CLOCK_SCH = "design/clock.sch"
 CLOCK_SCH_FILENAME = "design/schem/clock.sch"
+IGNORE_CHIPS = ["busripper", "ipad", "opad", "iopad", "gnd"]
 
 
 def main(args):
@@ -100,12 +101,11 @@ def expand(deps):
 
 def dependencies(filename):
 	schem = schematic.Schematic(open(filename))
-	components = set(c["basename"] for c in schem.findall(type="component"))
-	clean = lambda s: s.replace("-1.sym", "").replace("-2.sym", "")
-	chips = set(clean(c) for c in components if c.startswith("74"))
+	devices = set(c.device for c in schem.findall(type="component", attr="device=")
+				  if c.device not in ["none", "IPAD", "OPAD", "IOPAD"])
 	if filename != CLOCK_SCH_FILENAME:
-		chips |= dependencies(CLOCK_SCH_FILENAME)
-	return chips
+		devices |= dependencies(CLOCK_SCH_FILENAME)
+	return devices
 
 
 def vdependencies(filename):
