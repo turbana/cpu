@@ -14,6 +14,10 @@ module tb_tim;
      begin
         $dumpfile("build/waveforms/tim.vcd");
         $dumpvars;
+        // load "bootloader" into ROM
+        // 0x5800 = jmp $0($0)
+        TIM.DEVICES.mem[23'h40E000] = 16'h5800;
+        TIM.DEVICES.mem[23'h40E001] = 16'h5800;
         $readmemh("build/tim.bin", TIM.DEVICES.mem);
         _CLK = 0;
 

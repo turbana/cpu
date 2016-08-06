@@ -25,9 +25,6 @@ def translate(stream, out, offset):
 	for _ in range(chunks):
 		addr = read(stream, 2) + offset
 		out.write("@%X\n" % addr)
-		# HACK write a single word before any instructions as tim currently needs one cycle to "warm up"
-		if offset == IMEM_OFFSET:
-			out.write("0000\n")
 		words = read(stream, 2)
 		for _ in range(words):
 			word = read(stream, 2)

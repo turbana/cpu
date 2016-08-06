@@ -7,7 +7,7 @@ import simtest
 
 
 CLOCK_TICK = 1000
-CLOCK_RUNOFF = 100
+CLOCK_RUNOFF = 1
 REGISTERS = {
 	# reg: High, Low
 	"$1": ("U119", "U118"),
@@ -59,13 +59,16 @@ def emit_test_bench(stream, all_checks):
 	e("  initial\n    begin\n")
 	e('      $dumpfile("build/waveforms/tim.vcd");\n')
 	e("      $dumpvars;\n")
+	e("      // load 'bootloader' into ROM; 0x5800 = jmp $0($0)\n")
+	e("      TIM.DEVICES.mem[23'h40E000] = 16'h5800;\n")
+	e("      TIM.DEVICES.mem[23'h40E001] = 16'h5800;\n")
 	e('      $readmemh("build/tim.bin", TIM.DEVICES.mem);\n')
 	e("      _CLK = 0;\n")
-	e("      _TB_CLOCK = -1; /* warmup */\n")
 	e("      _TB_ERRORS = 0;\n")
 	e('      _TB_REGISTER = 0;\n')
 	e("      _TB_VALUE = 0;\n")
-	e("      @(posedge TIM.CLOCK.CLK0)  /* warmup */\n\n")
+	e("      #4000 @(posedge TIM.CLOCK.CLK0)  /* warmup */\n\n")
+	e("      _TB_CLOCK = -1;\n")
 	e("      /* test cases */\n")
 	for clock, (reg_name, value) in all_checks:
 		delta = clock - last_clock
