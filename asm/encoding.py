@@ -93,8 +93,5 @@ def decode(opcode, _cache={}):
 		else:
 			raise ValueError("Unknown opcode argument type: " + type)
 		arg.type = type
-		arg.dest = False
 		tok_args.append(arg)
-	if tok_args:
-		tok_args[-1].dest = True # set the rightmost argument as the destination (HACK)
 	return Instruction(name, *tok_args)
