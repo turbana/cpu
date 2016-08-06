@@ -238,7 +238,7 @@
 			"F_PC": 0
 		},
 		"values": [
-			"F_PC:16 = 0 if _RST==0 else EM_D if EM_J else (F_PC if H_H else F_PC+1)"
+			"F_PC:16 = 0xE000 if _RST==0 else EM_D if EM_J else (F_PC if H_H else F_PC+1)"
 		]
 	},
 	"memory_control": {
