@@ -22,7 +22,7 @@ SIM_TEST	= $(BIN_DIR)/simtest.py
 
 
 ALL_BIN = test1
-ALL_ASM = bigintadd bigintsub fib immediates macros pow
+ALL_ASM = bigintadd bigintsub fib immediates macros pow testisa
 ALL_SCHEMS = $(SCHEM_DIR)/*.sch
 SCHEMS = $(filter-out $(wildcard $(SCHEM_DIR)/_*.sch),$(wildcard $(ALL_SCHEMS)))
 DOC_SCHEMS = $(sort $(subst $(SCHEM_DIR),$(BUILD_DIR),$(SCHEMS)))
