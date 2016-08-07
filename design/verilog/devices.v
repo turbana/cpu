@@ -12,7 +12,7 @@ module devices (BUS_A, BUS_D, BUS_R, BUS_W);
    assign BUS_D = (BUS_R & !BUS_W) ? mem[BUS_A] : 16'bZ;
 
    always @(BUS_W)
-	  #50
+	  #100
       if (BUS_W)
         mem[BUS_A] = BUS_D;
 
