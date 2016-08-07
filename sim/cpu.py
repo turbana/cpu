@@ -237,13 +237,19 @@ def scr(cpu, cr, src):
 def ldiw(cpu, tgt, base, index):
 	cpu.rset(tgt, cpu.iget(base + index))
 
-
 @op
 def stiw(cpu, base, src, index):
 	cpu.iset(index + base, cpu.rget(src))
 
+@op
+def sex(cpu, tgt, src):
+	val = src & 0x00FF
+	high = 0xFF00 if (val & 0x0080) else 0
+	cpu.rset(tgt, high | val)
 
-# TODO add halt and trap instructions
+@op
+def halt(cpu):
+	cpu.halt = True
 
 
 #
