@@ -29,7 +29,7 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - Precise external interrupts using an 8259A PIC
  - No support for exceptions or control codes
  - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555 timer with room to expand
- - User/Supervisor modes 
+ - User/Supervisor modes
  - Segmentation as a memory protection scheme
  - Separate data and instruction memories
  - 23 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
@@ -52,7 +52,7 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 | xor      | r1, r2, [r3\vert{}sp] | r1 := r2 ^ r3                                                     |
 | shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                                    |
 | shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                                    |
-| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 <<< r3                                                   |
+| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 >>> r3                                                   |
 | as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0                               |
 | as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0                               |
 | s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                                       |
