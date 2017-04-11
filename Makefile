@@ -55,6 +55,7 @@ help:
 	@echo "make target=foo nettest    -- run full netlist and testbench for foo"
 	@echo "make target=foo netlist    -- generate netlist for foo"
 	@echo "make target=foo testbench  -- generate testbench for foo"
+	@echo "make simtestall            -- run all simulation tests"
 	@echo "make nettestall            -- run full test against all schematics"
 	@echo "make integtestall          -- run all integration tests"
 	@echo "make testall               -- run all project tests"
@@ -70,6 +71,7 @@ testbench:	$(BUILD_DIR) $(BUILD_DIR)/tb_$(target).v
 nettest:	$(BUILD_DIR) $(WF_DIR) clean_nettest $(WF_DIR)/$(target).vcd
 nettestall:	$(BUILD_DIR) $(WF_DIR) $(ALL_SCHEM_TESTS)
 testall:	$(BUILD_DIR) $(WF_DIR) $(ALL_TESTS)
+simtestall:	$(BUILD_DIR) $(WF_DIR) $(ALL_ASM_TESTS)
 doc:		$(DOC_DIR) $(DOC_DIR)/block_diagram.png $(DOC_DIR)/schematics.pdf
 
 renum:
