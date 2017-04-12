@@ -3,7 +3,6 @@
 import copy
 import os.path
 import sys
-import re
 import json
 import random
 
@@ -48,8 +47,8 @@ def main(args):
 def load_json(tests, decode):
     data = json.loads(open(tests).read())
     if os.path.exists(decode):
-    	decode = json.loads(open(decode).read())
-    	data["decode_decode"]["values"] = decode["values"]
+        decode = json.loads(open(decode).read())
+        data["decode_decode"]["values"] = decode["values"]
     return data
 
 
@@ -69,7 +68,8 @@ def emit_header(stream, module, wires, config):
     e("wire CLK0, CLK1, CLK2;\n")
     for name in sorted(wires):
         # skip clock wires
-        if name.startswith("CLK"): continue
+        if name.startswith("CLK"):
+            continue
         dir = wires[name]["dir"]
         type = "reg" if dir == "in" else "wire"
         width = "[%d:0]" % (wires[name]["width"] - 1)
@@ -86,7 +86,8 @@ def emit_header(stream, module, wires, config):
     e("  .CLK1 (CLK1),\n")
     e("  .CLK2 (CLK2),\n")
     e("  .CLK3 (CLK3)\n")
-    e("/*,  ._RST (_RST) */ /* skipping so we can set _RST in the test bench */\n")
+    e("/*,  ._RST (_RST) */ /* skipping so we can set _RST in the test bench ")
+    e("*/\n")
     e(");\n\n")
     e("%s DUT (\n" % module)
     e(",\n".join("  .%s (%s)" % (name, name) for name in wires))
@@ -100,16 +101,18 @@ def emit_header(stream, module, wires, config):
     e("\n")
 
     e("/* setup clock */\n")
-    e("always #%s _CLK = ~_CLK;\n" % (CLOCK_TIME/8))
+    e("always #%s _CLK = ~_CLK;\n" % (CLOCK_TIME / 8))
     e("\n")
 
     e("/* setup bidirectional wires */\n")
     for name in sorted(wires):
-        if wires[name]["dir"] != "inout": continue
+        if wires[name]["dir"] != "inout":
+            continue
         clock = config["inputs"].get(name, {}).get("clock", "0")
         delay = config["inputs"].get(name, {}).get("delay", False)
-        delay = "#"+str(delay) if delay else ""
-        e("assign %s = (%s) ? _%s : %d'bZ;\n" % (name, clock, name, wires[name]["width"]))
+        delay = "#" + str(delay) if delay else ""
+        e("assign %s = (%s) ? _%s : %d'bZ;\n" % (
+            name, clock, name, wires[name]["width"]))
     e("\n")
 
     e("/* begin test bench */\n")
@@ -120,7 +123,8 @@ def emit_header(stream, module, wires, config):
     e("  _TB_TEST_ID = 0;\n")
     e("  _CLK = 1;\n")
     for name in sorted(wires):
-        if wires[name]["dir"] != "inout": continue
+        if wires[name]["dir"] != "inout":
+            continue
         e("  _%s_wr = 0;\n" % (name))
     if SHOW_WAVEFORM:
         vars = wires.keys()
@@ -143,7 +147,8 @@ def emit_footer(stream, module, wires):
     e("  /* end test bench */\n")
     e("  if (_TB_ERRORS > 0)\n")
     e("  begin\n")
-    e('    $display("\\nFAILURE %%1d error(s) testing %s", _TB_ERRORS);\n' % module)
+    e('    $display("\\nFAILURE %%1d error(s) testing %s", _TB_ERRORS);\n' % (
+        module))
     e("  end\n")
     e("  $finish;\n")
     e("end\nendmodule\n")
@@ -176,22 +181,26 @@ def emit_test(stream, clock, test, count=[0]):
         if delay != prev_delay:
             e("  #%d\n" % (int((delay - prev_delay) * clock)))
             prev_delay = delay
-        check = "%s !== %s" % (item["name"], binary(item["value"], item["width"]))
+        check = "%s !== %s" % (
+            item["name"], binary(item["value"], item["width"]))
         e("  if (%s)\n" % check)
         name = item["name"]
         disp_name = name + ("" if delay == 1.0 else "@%0.2f" % delay)
         e("  begin\n")
-        e('    if (!_TB_TEST_FAILED) begin $display("\\nFAIL (test #%d)"); end\n' % test_id)
+        e('    if (!_TB_TEST_FAILED) begin $display("\\nFAIL ')
+        e('(test #%d)"); end\n' % test_id)
         e("    _TB_TEST_FAILED = 1;\n")
         e('    $display("%16s=%%36b\\n%16s=%%36s", %s, "%s");\n' % (
-            disp_name, "Expected", item["name"], binary_value(item["value"], item["width"])))
+            disp_name, "Expected", item["name"],
+            binary_value(item["value"], item["width"])))
         e("  end\n")
     # display diag info
     e("  if (_TB_TEST_FAILED)\n")
     e("  begin\n")
     e("    _TB_ERRORS = _TB_ERRORS + 1;\n")
     for item in sorted(test["inputs"]):
-        e('    $display("%16s=%36s");\n' % (item["name"], binary_value(item["value"], item["width"])))
+        e('    $display("%16s=%36s");\n' % (
+            item["name"], binary_value(item["value"], item["width"])))
     e("  end\n\n")
     e("  #%d\n" % (int((1.0 - prev_delay) * clock)))
 
@@ -202,14 +211,7 @@ def binary(n, width):
 
 
 def binary_value(n, width):
-    return "z"*width if n is HIGHZ else bin(n)[2:].zfill(width)
-
-
-def notequal(var, width, value):
-    return " || ".join("%s[%d] != %d" % (var, n, (value >> n) & 1) for n in range(width))
-    msg = ""
-    for n in range(width):
-        cond = "%s[%d] != %d" % (var, n, (value >> n) & 1)
+    return "z" * width if n is HIGHZ else bin(n)[2:].zfill(width)
 
 
 def parse_module(filename):
@@ -242,19 +244,23 @@ def grammer():
     input  = pp.Keyword("input")
     output = pp.Keyword("output")
     inout  = pp.Keyword("inout")
-    num    = pp.Word(pp.nums).addParseAction(lambda s,l,t: int(t[0]))
-    width  = (lbrack + num + colon + num + rbrack).setParseAction(lambda s,l,t: t[0]+1)
+    num    = pp.Word(pp.nums).addParseAction(lambda s, l, t: int(t[0]))
+    width  = (lbrack + num + colon + num + rbrack).setParseAction(
+        lambda s, l, t: t[0] + 1)
     iden   = pp.Word(pp.alphanums + "\\_", pp.alphanums + "_")
     idenlist = pp.delimitedList(iden, delim=",")
 
-    def check_module(s,l,t):
+    def check_module(s, l, t):
         if t[0] == '\\not':
-            raise pp.ParseException(s, l, "Error parsing module definition. Ensure the schematic has a module_name= attribute defined")
+            raise pp.ParseException(
+                s, l, "Error parsing module definition. Ensure the schematic "
+                "has a module_name= attribute defined")
     mod_iden = iden.copy()
     mod_iden.addParseAction(check_module)
 
     defmod  = module + mod_iden + lparen + pp.Group(idenlist) + rparen + scolon
-    wires  = pp.Group(pp.OneOrMore(pp.Group((input | output | inout) + pp.Optional(width) + iden) + scolon))
+    wires  = pp.Group(pp.OneOrMore(pp.Group(
+        (input | output | inout) + pp.Optional(width) + iden) + scolon))
 
     g = defmod + wires
     g.ignore(pp.cStyleComment)
@@ -272,7 +278,8 @@ def expand_config(data, module):
     parent["name"] = module
     data[module] = parent
     depth = module.count("_")
-    children = [name for name in data if name.startswith(module) and name.count("_") == depth+1]
+    children = [name for name in data
+                if name.startswith(module) and name.count("_") == depth + 1]
     for child_name in children:
         expand_config(data, child_name)
         child = data[child_name]
@@ -290,7 +297,9 @@ def config_merge_key(left, right, key):
             lvalue[rkey] = rvalue[rkey]
         elif lvalue[rkey] != rvalue[rkey]:
             name = "%s.%s" % (key, rkey)
-            raise FatalTestException("Config mis-match found for %s in %s and %s" % (name, left["name"], right["name"]))
+            raise FatalTestException(
+                "Config mis-match found for %s in %s and %s" % (
+                    name, left["name"], right["name"]))
     left[key] = lvalue
 
 
@@ -301,7 +310,8 @@ def config_merge_assert(left, right):
 
 
 def config_merge_values(left, right):
-    # strip width from child formulas as we don't want to export child values to test bench
+    # strip width from child formulas as we don't want to export child values
+    # to test bench
     rvalues = []
     for formula in right.get("values", []):
         name, width, delay, expr = parse_formula(formula)
@@ -319,19 +329,22 @@ def generate_tests(config, wires):
 
 def randbits(bits, weights):
     if not weights:
-        return random.randint(0, (2**bits)-1)
+        return random.randint(0, (2**bits) - 1)
     roll = random.random()
     for value, weight in weights:
         roll -= weight
         if roll <= 0:
             return int(value)
-    raise Exception("Failed to generate random number with weights: %s" % weights)
+    raise Exception(
+        "Failed to generate random number with weights: %s" % weights)
 
 
 def generate_test(config, wires, env, _count=0):
-    # copy environment so we don't propagate changes when we have to retry a test
+    # copy environment so we don't propagate changes when we have to retry a
+    # test
     ## don't copy __builtins__ as deepcopy can't handle it
-    orig_env = copy.deepcopy({k:v for k,v in env.items() if k!="__builtins__"})
+    orig_env = copy.deepcopy({k: v for k, v in env.items()
+                              if k != "__builtins__"})
     ## don't deepcopy DONTCARE/Z as we want those addresses changing
     orig_env.update({"DONTCARE": DONTCARE, "Z": HIGHZ})
     test = {"inputs": [], "outputs": []}
@@ -343,7 +356,8 @@ def generate_test(config, wires, env, _count=0):
         weights = config["inputs"][name].get("weights", {}).items()
         value = randbits(width, weights)
         inout = name in inouts
-        test["inputs"].append({"value": value, "width": width, "name": name, "inout": inout})
+        test["inputs"].append({
+            "value": value, "width": width, "name": name, "inout": inout})
         env[name] = value
         if alias:
             env[alias] = value
@@ -362,14 +376,18 @@ def generate_test(config, wires, env, _count=0):
             continue
         if export_width:
             inout = name in inouts
-            test["outputs"].append({"value": value, "width": export_width, "delay": delay, "name": name, "inout": inout})
+            test["outputs"].append({
+                "value": value, "width": export_width, "delay": delay,
+                "name": name, "inout": inout})
     # generate a new test if we only had don't cares
     if not test["outputs"]:
         if _count == MAX_TRIES:
-            raise FatalTestException("Exceeded MAX_TRIES (%d) attempts for %s" % (MAX_TRIES, config["name"]))
+            raise FatalTestException(
+                "Exceeded MAX_TRIES (%d) attempts for %s" % (
+                    MAX_TRIES, config["name"]))
         env.clear()
         env.update(orig_env)
-        return generate_test(config, wires, env, _count+1)
+        return generate_test(config, wires, env, _count + 1)
     return test
 
 
@@ -379,7 +397,7 @@ def parse_formula(formula):
     if formula.startswith("@"):
         i = formula.index(" ")
         delay = float(formula[1:i])
-        formula = formula[i+1:]
+        formula = formula[i + 1:]
     parts = formula.split("=")
     if ":" in parts[0]:
         name, width = parts[0].split(":")
@@ -399,10 +417,11 @@ def eval_formula(formula, env, name, mod_name, width=None):
         # if we have an actual value constrain it to it's width
         val = value()
         if val is not DONTCARE and val is not HIGHZ and width is not None:
-            expr = "%s = (%s) & %d" % (name, val, (2**width)-1)
+            expr = "%s = (%s) & %d" % (name, val, (2**width) - 1)
             exec expr in env
     except Exception, e:
-        message = "Error evaluating formula for %s: %s = %s\n" % (mod_name, name, formula)
+        message = "Error evaluating formula for %s: %s = %s\n" % (
+            mod_name, name, formula)
         message += str(e) + "\n"
         raise FatalTestException(message)
     return value()
