@@ -65,7 +65,7 @@ FLAGS_DSEG = 0xFC00
 
 
 def sbin(n, x=0):
-    return bin(n)[2:].zfill(z)
+    return bin(n)[2:].zfill(x)
 
 
 def shex(n, x=0):
