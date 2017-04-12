@@ -7,8 +7,9 @@ import isa
 
 # pyparsing does magic when calling parse actions that I do not want happening.
 # It tries to guess how many parameters a function has by calling it again with
-# a different number of parameters when an exception is raised. Unfortunately this
-# masks any exception the function would otherwise raise. This disables that.
+# a different number of parameters when an exception is raised. Unfortunately
+# this masks any exception the function would otherwise raise. This disables
+# that.
 pp._trim_arity = lambda func, maxargs=None: func
 
 # turn off skipping newlines by default
@@ -29,10 +30,12 @@ plus = pp.Literal("+")
 
 unsigned = "u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 "
 signed   = "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 "
-atoms = (signed + unsigned + "spec_imm reg ireg jreg creg cond z nz string iden").split()
+atoms = (signed + unsigned +
+         "spec_imm reg ireg jreg creg cond z nz string iden").split()
 
 name = pp.Word(pp.alphas, pp.alphanums)
-inst_name = pp.Combine(pp.Optional(dot) + name + pp.Optional(dot + pp.oneOf(["z", "nz"])))
+inst_name = pp.Combine(pp.Optional(dot) + name +
+                       pp.Optional(dot + pp.oneOf(["z", "nz"])))
 boundry = lparen | rparen | comma
 arg_type = pp.oneOf(atoms) + pp.Optional(plus)
 arg = pp.Group(name + pp.Suppress(colon) + arg_type)
@@ -88,7 +91,8 @@ dot = pp.Suppress(".")
 dquote = pp.Suppress('"')
 nl = pp.Suppress(pp.LineEnd())
 
-label_name = (pp.Word(pp.nums) + pp.Word("fb", exact=1)) | pp.Word(pp.alphanums + "_@")
+_lname = pp.Word(pp.alphanums + "_@")
+label_name = (pp.Word(pp.nums) + pp.Word("fb", exact=1)) | _lname
 label_name.setName("label")
 
 expr_num = num.copy().addParseAction(lambda s, l, t: t[0][0])
@@ -116,8 +120,10 @@ expr.setName("expr")
 
 
 def number(bits, signed):
-    n = num.copy().addParseAction(_build(tokens.Number, bits=bits, signed=signed))
-    e = expr.copy().addParseAction(_build(tokens.Expression, bits=bits, signed=signed))
+    n = num.copy().addParseAction(_build(
+        tokens.Number, bits=bits, signed=signed))
+    e = expr.copy().addParseAction(_build(
+        tokens.Expression, bits=bits, signed=signed))
     return n ^ label_name ^ e
 
 
@@ -171,7 +177,8 @@ reg = pp.Suppress("$") + pp.Word("01234567").setParseAction(to_int)
 ireg = reg | spec_imm
 creg = pp.Suppress("$cr") + pp.Word("0123").setParseAction(to_int)
 cond = pp.oneOf("eq ne gt gte lt lte ult ulte")("cond")
-string = pp.QuotedString(quoteChar='"', escChar="\\", multiline=False, unquoteResults=True)
+string = pp.QuotedString(quoteChar='"', escChar="\\", multiline=False,
+                         unquoteResults=True)
 string.setParseAction(lambda s, l, t: t[0].replace("\\n", "\n"))
 
 comment = ";" + pp.restOfLine
@@ -198,7 +205,8 @@ def parse_ast(syntax):
 
 def build_grammer(ast):
     """ convert parsed instruction format into pyparsing grammer """
-    # ex: ['ldw', ['tgt', 'reg'], ',', ['offset', 's7'], '(', ['base', 'reg'], ')']
+    # example:
+    # ['ldw', ['tgt', 'reg'], ',', ['offset', 's7'], '(', ['base', 'reg'], ')']
     def lookup(name, type, modifier=None):
         g = globals()[type].setResultsName(name).setName(name)
         if modifier == plus:

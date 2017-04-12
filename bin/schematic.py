@@ -1,21 +1,27 @@
 import sys
-import pprint
 import re
 
 # http://wiki.geda-project.org/geda:file_format_spec
 SCH_FORMAT = {
     "v": "version i:version i:fileformat_version",
     "C": "component i:x i:y u:selectable i:angle i:mirror s:basename",
-    "T": "text i:x i:y i:color i:size i:visibility i:show_name_value i:angle i:alignment i:num_lines",
+    "T": "text i:x i:y i:color i:size i:visibility i:show_name_value i:angle "
+         "i:alignment i:num_lines",
     "N": "net i:x1 i:y1 i:x2 i:y2 i:color",
-    "B": "box i:x i:y i:width i:height i:color i:widthline i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
+    "B": "box i:x i:y i:width i:height i:color i:widthline i:capstyle "
+         "i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth "
+         "i:angle1 i:pitch1 i:angle2 i:pitch2",
     "P": "pin i:x1 i:y1 i:x2 i:y2 i:color i:pintype i:whichend",
     "U": "bus i:x1 i:y1 i:x2 i:y2 i:color i:ripperdir",
-    "L": "line i:x1 i:y1 i:x2 i:y2 i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace",
-	"V": "circle i:x i:y i:radius i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 i:angle2 i:pitch2",
-	"A": "arc i:x i:y i:radius i:startangle i:sweepangle i:color i:width i:capstyle i:dashstyle i:dashlength i:dashspace"
+    "L": "line i:x1 i:y1 i:x2 i:y2 i:color i:width i:capstyle i:dashstyle "
+         "i:dashlength i:dashspace",
+    "V": "circle i:x i:y i:radius i:color i:width i:capstyle i:dashstyle "
+         "i:dashlength i:dashspace i:filltype i:fillwidth i:angle1 i:pitch1 "
+         "i:angle2 i:pitch2",
+    "A": "arc i:x i:y i:radius i:startangle i:sweepangle i:color i:width "
+         "i:capstyle i:dashstyle i:dashlength i:dashspace"
 }
-OBJECT_MAP = {fmt.split()[0]:key for key,fmt in SCH_FORMAT.items()}
+OBJECT_MAP = {fmt.split()[0]: key for key, fmt in SCH_FORMAT.items()}
 
 
 TYPE_INTEGER = "i"
@@ -27,6 +33,7 @@ ATTRIBUTES_END = "}"
 class SchematicException(Exception):
     pass
 
+
 class SchematicParseError(SchematicException):
     pass
 
@@ -36,7 +43,8 @@ class Schematic(list):
         if stream:
             objects = _parse(stream)
         else:
-            objects = [object("version", version=20110115, fileformat_version=2)]
+            objects = [object("version", version=20110115,
+                              fileformat_version=2)]
         super(Schematic, self).__init__(objects)
 
     def save(self, stream):
@@ -46,7 +54,7 @@ class Schematic(list):
         self.append(object)
 
     def findall(self, attr=None, **kwargs):
-        terms = [(k, re.compile(v)) for k,v in kwargs.items()]
+        terms = [(k, re.compile(v)) for k, v in kwargs.items()]
         for object in self:
             match_terms = True
             for attribute, regex in terms:
@@ -70,7 +78,8 @@ class SchematicObject(dict):
             name, value = attr["text"].split("=")
             if name == item:
                 return value
-        raise AttributeError("'SchematicObject' object has no attribute '%s'" % item)
+        raise AttributeError(
+            "'SchematicObject' object has no attribute '%s'" % item)
 
     def __setattr__(self, item, value):
         for attr in self.get("attributes", []):
@@ -91,11 +100,14 @@ def object(type, **kwargs):
         raise SchematicException("Unknown object type %s" % type)
     format = SCH_FORMAT[OBJECT_MAP[type]].split()[1:]
     if len(kwargs) != len(format):
-        raise SchematicException("Wrong number of arguments for %s. Received %d expected %d" % (type, len(kwargs), len(format)))
+        raise SchematicException(
+            "Wrong number of arguments for %s. Received %d expected %d" % (
+                type, len(kwargs), len(format)))
     keys = set(item.split(":")[1] for item in format)
     for key in kwargs:
         if key not in keys:
-            raise SchematicException("Unknown argument for %s: %s" % (type, key))
+            raise SchematicException("Unknown argument for %s: %s" % (
+                type, key))
     kwargs["type"] = type
     return SchematicObject(kwargs)
 
@@ -150,7 +162,9 @@ def _parse_line(parts):
         raise SchematicParseError("Unknown object: " + parts[0])
     format = SCH_FORMAT[type].split()
     if len(parts) != len(format):
-        raise SchematicParseError("Item count for object %s (%d) did not match definition (%s)" % (format[0], len(parts), len(format)))
+        raise SchematicParseError(
+            "Item count for object %s (%d) did not match definition (%s)" % (
+                format[0], len(parts), len(format)))
     object = {"type": format[0]}
     for fmt, value in zip(format[1:], parts[1:]):
         type, name = fmt.split(":")
@@ -162,8 +176,10 @@ def _parse_line(parts):
 
 def main(args):
     if len(args) < 3:
-        print "USAGE: %s schematic.sch attr term=value [term2=value2]" % sys.argv[0]
-        print "Search through schematic.sch for all objects matching the terms and print attr"
+        print "USAGE: %s schematic.sch attr term=value [term2=value2]" % (
+            sys.argv[0])
+        print "Search through schematic.sch for all objects matching the",
+        print "terms and print attr"
         return 2
     schem = Schematic(open(args[0]))
     attr = args[1]
