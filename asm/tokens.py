@@ -256,18 +256,30 @@ class Expression(Token):
             # currently
             return None
         # evaluate
-        if op == "~":    res = ~op2
-        elif op == "+":  res = op1 + op2
-        elif op == "-":  res = op1 - op2
-        elif op == "*":  res = op1 * op2
-        elif op == "/":  res = op1 / op2
-        elif op == "%":  res = op1 % op2
-        elif op == "&":  res = op1 & op2
-        elif op == "|":  res = op1 | op2
-        elif op == "^":  res = op1 ^ op2
-        elif op == "<<": res = op1 << op2
-        elif op == ">>": res = op1 >> op2
-        elif op == "**": res = op1 ** op2
+        if op == "~":
+            res = ~op2
+        elif op == "+":
+            res = op1 + op2
+        elif op == "-":
+            res = op1 - op2
+        elif op == "*":
+            res = op1 * op2
+        elif op == "/":
+            res = op1 / op2
+        elif op == "%":
+            res = op1 % op2
+        elif op == "&":
+            res = op1 & op2
+        elif op == "|":
+            res = op1 | op2
+        elif op == "^":
+            res = op1 ^ op2
+        elif op == "<<":
+            res = op1 << op2
+        elif op == ">>":
+            res = op1 >> op2
+        elif op == "**":
+            res = op1 ** op2
         res &= (2 ** self.bits) - 1
         # Number() is unsigned as the result already has the bit pattern we
         # want and is in bounds, so no checking or conversion is neccesary.

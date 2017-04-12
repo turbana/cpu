@@ -182,7 +182,7 @@ class Debugger(object):
                                    "$5": 5, "$6": 6, "$7": 7,
                                    "$cr0": 8, "$cr1": 9, "$cr2": 10}
                     in_mapping = cmd[1] in reg_mapping
-                    reg = reg_mapping[cmd[1]] if in_mapping else int(reg[1])
+                    reg = reg_mapping[cmd[1]] if in_mapping else int(cmd[1])
                     val = int(cmd[2], 16)
                     self.cpu.rset(reg, val)
                 elif cmd[0] == "seg":

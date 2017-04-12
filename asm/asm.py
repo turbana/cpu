@@ -39,7 +39,8 @@ def parse_macro(macro):
         return g.parseString(macro, parseAll=True)
     except RuntimeError:
         print macro
-        print "Error while parsing expanded macro .%s; check macro syntax." % tok.name
+        print "Error while parsing expanded macro .%s; check macro syntax." % (
+            macro.name)
         sys.exit(1)
 
 

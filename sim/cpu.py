@@ -258,6 +258,7 @@ def lcr(cpu, tgt, cr):
 @op
 def scr(cpu, cr, src):
     def update():
+        value = cpu.rget(src)
         cpu.crset(cr, value)
         cpu._load_segment(cpu.dsegment)
         cpu._load_segment(cpu.csegment)
