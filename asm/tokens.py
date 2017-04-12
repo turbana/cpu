@@ -46,13 +46,15 @@ class Instruction(Token):
         for arg in self.args:
             if arg.name == name:
                 return arg
-        raise AttributeError("'Instruction' object has no attribute '%s'" % name)
+        msg = "'Instruction' object has no attribute '%s'" % name
+        raise AttributeError(msg)
 
     def __str__(self):
         import encoding # import late to avoid circular imports
         code = encoding.encoding(self)
         types = code["types"]
-        args = dict((a.name, pretty_print(a, types.get(a.name, ""))) for a in self.args)
+        args = dict((a.name, pretty_print(a, types.get(a.name, "")))
+                    for a in self.args)
         return code["format"].format(**args)
 
     def __repr__(self):
@@ -78,11 +80,11 @@ class Number(Token):
         # check for valid value
         if signed and base == 10:
             if not (-2**(bits - 1) <= n and n <= 2**(bits - 1) - 1):
-                raise ValueError(
-                    "%s out of bounds for a %d bit signed number in base %d" % (n, bits, base))
+                fmt = "%s out of bounds for a %d bit signed number in base %d"
+                raise ValueError(fmt % (n, bits, base))
         elif not (0 <= n and n < 2**bits):
-            raise ValueError(
-                "%s out of bounds for a %d bit unsigned number in base %d" % (n, bits, base))
+            fmt = "%s out of bounds for a %d bit unsigned number in base %d"
+            raise ValueError(fmt % (n, bits, base))
 
     def binary(self):
         if self.signed and self.value < 0:
@@ -191,7 +193,8 @@ class Macro(Token):
 
     def __str__(self):
         if self.args:
-            args = " " + ", ".join(["%s=%s" % (a.name, repr(a)) for a in self.args])
+            args = " " + ", ".join(["%s=%s" % (a.name, repr(a))
+                                    for a in self.args])
         else:
             args = ""
         return "<Macro %s%s>" % (self.name, args)
@@ -249,36 +252,25 @@ class Expression(Token):
         op2 = op2.value if isinstance(op2, Number)     else op2
         op2 = None      if isinstance(op2, Label)      else op2
         if op1 is None or op2 is None:
-            # either op's are a Label or an Expression that can't be evaluated yet
+            # either op's are a Label or an Expression that can't be evaluated
+            # currently
             return None
         # evaluate
-        if op == "~":
-            res = ~op2
-        elif op == "+":
-            res = op1 + op2
-        elif op == "-":
-            res = op1 - op2
-        elif op == "*":
-            res = op1 * op2
-        elif op == "/":
-            res = op1 / op2
-        elif op == "%":
-            res = op1 % op2
-        elif op == "&":
-            res = op1 & op2
-        elif op == "|":
-            res = op1 | op2
-        elif op == "^":
-            res = op1 ^ op2
-        elif op == "<<":
-            res = op1 << op2
-        elif op == ">>":
-            res = op1 >> op2
-        elif op == "**":
-            res = op1 ** op2
+        if op == "~":    res = ~op2
+        elif op == "+":  res = op1 + op2
+        elif op == "-":  res = op1 - op2
+        elif op == "*":  res = op1 * op2
+        elif op == "/":  res = op1 / op2
+        elif op == "%":  res = op1 % op2
+        elif op == "&":  res = op1 & op2
+        elif op == "|":  res = op1 | op2
+        elif op == "^":  res = op1 ^ op2
+        elif op == "<<": res = op1 << op2
+        elif op == ">>": res = op1 >> op2
+        elif op == "**": res = op1 ** op2
         res &= (2 ** self.bits) - 1
-        # Number() is unsigned as the result already has the bit pattern we want
-        # and is in bounds, so no checking or conversion is neccesary.
+        # Number() is unsigned as the result already has the bit pattern we
+        # want and is in bounds, so no checking or conversion is neccesary.
         self._value = Number((res, 10), bits=self.bits, signed=False)
         return self._value
     value = property(_evaluate)

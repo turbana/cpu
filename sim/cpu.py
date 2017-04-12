@@ -415,7 +415,8 @@ class CPU(object):
         read_args = [str(arg) for arg in token.args if not arg == tgt]
         if self.mem_write_reg in read_args:
             self.clock += 1
-        self.mem_write_reg = str(tgt) if token.name in ("ldw", "ldiw") else None
+        reg = str(tgt) if token.name in ("ldw", "ldiw") else None
+        self.mem_write_reg = reg
 
     @send_listeners
     def do_interrupt(self):
@@ -434,7 +435,8 @@ class CPU(object):
         pc = self.reg[R_PC]
         self.reg[R_PC] = (pc + 1) & 0xFFFF
         self._check_addr(pc)
-        # read from code segment when in user mode, supervisor mode is always segment 0
+        # read from code segment when in user mode, supervisor mode is always
+        # segment 0
         seg = self.csegment if (self.reg[R_FLAGS] & FLAGS_M) else 0
         return self.mem[seg][ADDR_TYPE_I][pc]
 
@@ -475,7 +477,7 @@ class CPU(object):
 
     @send_listeners
     def rset(self, reg, value):
-        # ignore writes to $0 and (when in user mode) writes to control registers
+        # ignore writes to $0 and (in user mode) writes to control registers
         if reg == R_ZERO or (reg >= 8 and self.reg[R_FLAGS] & FLAGS_M):
             return self.rget(reg)
         self.reg[reg] = (value & 0xFFFF)
@@ -496,7 +498,7 @@ class CPU(object):
     @send_listeners
     def crset(self, cr, value):
         cr += 8
-        # ignore writes to $pc and (when in user mode) writes to control registers
+        # ignore writes to $pc and (in user mode) writes to control registers
         if cr == R_PC or self.reg[R_FLAGS] & FLAGS_M:
             return self.crget(cr - 8)
         self.reg[cr] = (value & 0xFFFF)
@@ -636,7 +638,8 @@ class PICDevice(Device):
                 level = self.irq if not sl else level
                 self.pending &= ~(1 << level)
         else:
-            show("pic error: unexpected write: reg=%d val=0x%02X" % (addr, value))
+            args = (addr, value)
+            show("pic error: unexpected write: reg=%d val=0x%02X" % args)
 
 
 class KeyboardDevice(Device):
@@ -644,7 +647,8 @@ class KeyboardDevice(Device):
         self.lock = threading.Lock()
         self.buffer = []
         self.pic = None # set in pic device
-        t1 = threading.Thread(target=keyboard_thread, args=(self.lock, self.buffer))
+        t1 = threading.Thread(target=keyboard_thread,
+                              args=(self.lock, self.buffer))
         t1.daemon = True
         t1.start()
 
@@ -769,41 +773,65 @@ def load_args(args):
         return int(s, 16) # def'd so that "addr" will show in error messages
     binfile = argparse.FileType("rb")
     tracefile = argparse.FileType("w")
-    p = argparse.ArgumentParser(description="Functional simulator for XXX cpu", usage="%(prog)s [exe] [options]")
+    parser = argparse.ArgumentParser(
+        description="Functional simulator for TIM-16 cpu",
+        usage="%(prog)s [exe] [options]")
 
-    p.add_argument("exe", nargs="?", type=binfile, help="load executable into memory")
-    p.add_argument("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int, help="stop execution upon reaching CLOCK")
-    p.add_argument("--no-randomize", dest="randomize", action="store_false", help="randomize all memory and registers before execution")
-    p.add_argument("--no-check-errors", dest="check_errors", action="store_false", help="don't check for errors (e.x. mem read before write)")
-    p.add_argument("--no-realistic-clock", dest="real_clock", action="store_false", help="report clock count from WB stage (includes bubbles)")
-    #p.add_argument("--start-at", metavar="ADDR", dest="start", type=addr, help="start executing at instruction memory ADDR")
-    p.add_argument("--keyboard", dest="keyboard", action="store_true", help="enable keyboard input (conflicts with debugger)")
-    #p.add_argument("--clock-speed", dest="clock_speed", metavar="HZ", type=int, help="run at HZ clock speed with realistic delay")
-    p.add_argument("--save-replay", dest="replay", metavar="FILE", help="save replay to file (used to generate tests)")
+    add = parser.add_argument
+    add("exe", nargs="?", type=binfile, help="load executable into memory")
+    add("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int,
+        help="stop execution upon reaching CLOCK")
+    add("--no-randomize", dest="randomize", action="store_false",
+        help="randomize all memory and registers before execution")
+    add("--no-check-errors", dest="check_errors", action="store_false",
+        help="don't check for errors (e.x. mem read before write)")
+    add("--no-realistic-clock", dest="real_clock", action="store_false",
+        help="report clock count from WB stage (includes bubbles)")
+    # add("--start-at", metavar="ADDR", dest="start", type=addr,
+    #     help="start executing at instruction memory ADDR")
+    add("--keyboard", dest="keyboard", action="store_true",
+        help="enable keyboard input (conflicts with debugger)")
+    # add("--clock-speed", dest="clock_speed", metavar="HZ", type=int,
+    #     help="run at HZ clock speed with realistic delay")
+    add("--save-replay", dest="replay", metavar="FILE",
+        help="save replay to file (used to generate tests)")
 
-    #g = p.add_argument_group("load-options")
-    #g.add_argument("--load-rom", metavar="FILE", dest="rom", type=binfile, help="load FILE into ROM")
-    #g.add_argument("--load-serial-0", metavar="FILE", dest="uarta", type=binfile, help="UART0 reads from FILE")
-    #g.add_argument("--load-serial-1", metavar="FILE", dest="uartb", type=binfile, help="UART1 reads from FILE")
-    #g.add_argument("--load-data", metavar="FILE", dest="data", type=binfile, help="load FILE into data memory at address 0")
-    #g.add_argument("--load-inst", metavar="FILE", dest="inst", type=binfile, help="load FILE into instruction memory at address 0")
+    # group = parser.add_argument_group("load-options")
+    # add = group.add_argument
+    # add("--load-rom", metavar="FILE", dest="rom", type=binfile,
+    #     help="load FILE into ROM")
+    # add("--load-serial-0", metavar="FILE", dest="uarta", type=binfile,
+    #     help="UART0 reads from FILE")
+    # add("--load-serial-1", metavar="FILE", dest="uartb", type=binfile,
+    #     help="UART1 reads from FILE")
+    # add("--load-data", metavar="FILE", dest="data", type=binfile,
+    #     help="load FILE into data memory at address 0")
+    # add("--load-inst", metavar="FILE", dest="inst", type=binfile,
+    #     help="load FILE into instruction memory at address 0")
 
-    g = p.add_argument_group("debugger-options")
-    g.add_argument("--no-debugger", dest="debug", action="store_false", help="start without debugger")
-    g.add_argument("--breakpoints", metavar="ADDR", dest="breakpoints", type=addr, nargs="+", help="set debugger breakpoints")
+    group = parser.add_argument_group("debugger-options")
+    add = group.add_argument
+    add("--no-debugger", dest="debug", action="store_false",
+        help="start without debugger")
+    add("--breakpoints", metavar="ADDR", dest="breakpoints", type=addr,
+        nargs="+", help="set debugger breakpoints")
     # TODO other debugger options
 
-    g = p.add_argument_group("output-options")
-    g.add_argument("--trace", metavar="FILE", dest="trace", type=tracefile, help="trace data sent to FILE")
-    g.add_argument("--test-clock", metavar="CLOCK", dest="test_clocks", type=int, nargs="+", default=[None], help="display test output at each CLOCK")
-    g.add_argument("--test-clock-rate", metavar="COUNT", dest="test_clock_rate", type=int, help="display test output every COUNT clocks")
+    group = parser.add_argument_group("output-options")
+    add = group.add_argument
+    add("--trace", metavar="FILE", dest="trace", type=tracefile,
+        help="trace data sent to FILE")
+    add("--test-clock", metavar="CLOCK", dest="test_clocks", type=int,
+        nargs="+", default=[None], help="display test output at each CLOCK")
+    add("--test-clock-rate", metavar="COUNT", dest="test_clock_rate", type=int,
+        help="display test output every COUNT clocks")
     # TODO configure test output
 
     if not args:
-        p.print_help()
+        parser.print_help()
         sys.exit(2)
 
-    return p.parse_args(args)
+    return parser.parse_args(args)
 
 
 def main(args):
@@ -832,7 +860,8 @@ def main(args):
         cpu.add_listener(chk)
 
     if opts.test_clocks or opts.test_clock_rate:
-        tester = listeners.TestOutput(cpu, opts.test_clock_rate, opts.test_clocks)
+        tester = listeners.TestOutput(cpu, opts.test_clock_rate,
+                                      opts.test_clocks)
         cpu.add_listener(tester)
 
     if opts.stop_clock:

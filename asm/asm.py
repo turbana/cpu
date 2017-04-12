@@ -68,7 +68,8 @@ def apply_directives(toks):
                 addr = chunk[CHUNK_ADDR] + chunk_size(chunk)
                 padding = 0 if (addr % align) == 0 else align - (addr % align)
                 for _ in range(padding):
-                    chunk[CHUNK_TOKS].append(tokens.Number((0, 10), bits=16, signed=False))
+                    chunk[CHUNK_TOKS].append(
+                        tokens.Number((0, 10), bits=16, signed=False))
                 continue
             elif tok.name == ".set":
                 name = tok.args[0].value
@@ -138,12 +139,16 @@ def label_apply(labels, tok, pos, signed=True, pc_relative=False):
         elif isinstance(arg, tokens.Label):
             bits = 64
             signed = True
-            # If we found an encoding then we're materializing a label within an instruction and we want to ensure the proper size/sign. Otherwise, we're inside an expression, so use a bit value that won't truncate as expression do their own bit checking.
+            # If we found an encoding then we're materializing a label within
+            # an instruction and we want to ensure the proper size/sign.
+            # Otherwise, we're inside an expression, so use a bit value that
+            # won't truncate as expression do their own bit checking.
             if enc:
                 syntax = [x[1] for x in enc["ast"] if len(x) == 2][j]
                 signed = syntax.startswith("s")
                 bits = int(syntax[1:])
-            tok.args[j] = label_find(labels, arg, pos, bits, signed, pc_relative)
+            tok.args[j] = label_find(labels, arg, pos, bits, signed,
+                                     pc_relative)
 
 
 def label_find(labels, label, pos, bits, signed, pc_relative):
@@ -161,7 +166,8 @@ def label_find(labels, label, pos, bits, signed, pc_relative):
         elif label.direction == "b":
             addr = [l for l in search if l <= pos][-1]
         else:
-            raise Exception("Ambiguous definition for label %s" % repr(label.value))
+            fargs = repr(label.value)
+            raise Exception("Ambiguous definition for label %s" % fargs)
     if pc_relative:
         addr -= pos
     return tokens.Number((addr, 10), bits=bits, signed=signed, name=label.name)

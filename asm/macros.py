@@ -11,7 +11,8 @@ def macro(arg):
         fargs = inspect.getargspec(func).args
         syntax = ".%s " % name
         if format:
-            syntax += " , ".join("%s:%s" % (n, t) for n, t in zip(fargs, format.split()))
+            syntax += " , ".join("%s:%s" % (n, t)
+                                 for n, t in zip(fargs, format.split()))
         def macro_wrapper(*args):
             res = func(*args)
             if isinstance(res, str):
@@ -62,7 +63,8 @@ def set(name, val):
 
 @macro("u16+")
 def word(words):
-    return [tokens.Expression([word, "+", 0], name=".dw", bits=16, signed=False)
+    return [tokens.Expression([word, "+", 0], name=".dw", bits=16,
+                              signed=False)
             for word in words]
 
 
@@ -74,7 +76,8 @@ def ascii(string):
 @macro("u16")
 def zero(count):
     words = count.value
-    return [tokens.Number((0, 10), bits=16, signed=False) for _ in range(words)]
+    return [tokens.Number((0, 10), bits=16, signed=False)
+            for _ in range(words)]
 
 
 @macro("reg s16")

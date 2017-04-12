@@ -48,7 +48,8 @@ def show_chunks(chunks, stream, decode):
             stream.write("\n")
         for i, word in enumerate(words):
             if decode:
-                stream.write("%04X | (%04X)   %s\n" % (addr + i, word, encoding.decode(word)))
+                stream.write("%04X | (%04X)   %s\n" % (
+                    addr + i, word, encoding.decode(word)))
             else:
                 if i % 8 == 0:
                     stream.write("\n%04X:" % (addr + i))
