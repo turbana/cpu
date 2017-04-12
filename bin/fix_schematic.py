@@ -1,5 +1,7 @@
 """
-Update schematic nets from the form A0 to A[0]. This allows us to use gschem's auto text numbering (which doesn't work with A[0]) and also benfit from bus netlisting (which needs A[0]).
+Update schematic nets from the form A0 to A[0]. This allows us to use gschem's
+auto text numbering (which doesn't work with A[0]) and also benfit from bus
+netlisting (which needs A[0]).
 
 Also ensure ipad-2.sym have their net's set
 
@@ -74,7 +76,7 @@ def clean_refdes(refdes):
 
 def pad_name_size(label):
     parts = label.split("[")
-    return parts[0], 1+int(parts[1].split(":")[0])
+    return parts[0], 1 + int(parts[1].split(":")[0])
 
 
 def set_attribute(pad, attr, value):
@@ -111,7 +113,7 @@ def pages(filename):
     match = re.search(r"_([0-9]+).sch$", filename)
     if match:
         num = match.groups()[0]
-        wildcard = filename.replace("_"+num, "_[0-9]")
+        wildcard = filename.replace("_" + num, "_[0-9]")
         return num, len(glob.glob(wildcard))
     return 1, 1
 
@@ -119,7 +121,7 @@ def pages(filename):
 def git_info(filename):
     cmd = "git log -1 -- %s" % filename
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    stdout,stderr = proc.communicate()
+    stdout, stderr = proc.communicate()
     if proc.returncode:
         sys.exit(1)
     if not stdout:
@@ -139,7 +141,7 @@ def add_text(schem, name, value, hidden=False):
     size = TITLE_BAR["size"]
     vis = 0 if hidden else 1
     text = schematic.object(
-        "text", x=dx+x, y=dy+y, color=color, size=size, visibility=vis,
+        "text", x=dx + x, y=dy + y, color=color, size=size, visibility=vis,
         show_name_value=1, angle=0, alignment=0, num_lines=1)
     text["text"] = str(value)
     schem.add(text)
