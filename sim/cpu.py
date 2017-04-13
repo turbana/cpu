@@ -397,7 +397,8 @@ class CPU(object):
         def _expand_arg(name, arg):
             if isinstance(arg, asm.tokens.ImmRegister):
                 arg = arg.value
-            if isinstance(arg, asm.tokens.Register) and name != "tgt":
+            lookup = name not in ("tgt", "cr")
+            if isinstance(arg, asm.tokens.Register) and lookup:
                 return self.rget(arg.value)
             return arg.value
         func = lookup_op(tok)
