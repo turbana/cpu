@@ -258,8 +258,7 @@ def lcr(cpu, tgt, cr):
 @op
 def scr(cpu, cr, src):
     def update():
-        value = cpu.rget(src)
-        cpu.crset(cr, value)
+        cpu.crset(cr, src)
         cpu._load_segment(cpu.dsegment)
         cpu._load_segment(cpu.csegment)
     # if we're setting $flags, we need to wait one cycle before it takes effect
@@ -431,6 +430,7 @@ class CPU(object):
         self.reg[R_PC] = self.pic.isr
         # stall
         self.stall(6)
+        return self.pic.irq
 
     @send_listeners
     def fetch(self):
@@ -456,10 +456,9 @@ class CPU(object):
     def mget(self, addr):
         self._check_addr(addr)
         value = self.device_read(addr)
-        if value is not None:
-            return value
-        else:
-            return self.mem[self.dsegment][ADDR_TYPE_D][addr]
+        if value is None:
+            value = self.mem[self.dsegment][ADDR_TYPE_D][addr]
+        return value
 
     @send_listeners
     def mset(self, addr, word):
@@ -642,6 +641,7 @@ class PICDevice(Device):
         else:
             args = (addr, value)
             show("pic error: unexpected write: reg=%d val=0x%02X" % args)
+            sys.exit(1)
 
 
 class KeyboardDevice(Device):
@@ -695,7 +695,7 @@ class NullKeyboardDevice(Device):
 
 class ScreenDevice(Device):
     def write(self, addr, value):
-        sys.stdout.write(chr(value))
+        sys.stdout.write(chr(value & 0x00FF))
 
 
 def load_devices(cpu, keyboard=False):
