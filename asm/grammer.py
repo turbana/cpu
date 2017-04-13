@@ -172,14 +172,21 @@ s14 = number(14, True)
 s15 = number(15, True)
 s16 = number(16, True)
 
+
+def string_format(s, l, t):
+    x = t[0].replace("\\n", "\n")
+    x = x.replace("\\t", "\t")
+    return x.replace("\\r", "\r")
+
+
 label = label_name + colon
 reg = pp.Suppress("$") + pp.Word("01234567").setParseAction(to_int)
 ireg = reg | spec_imm
 creg = pp.Suppress("$cr") + pp.Word("0123").setParseAction(to_int)
 cond = pp.oneOf("eq ne gt gte lt lte ult ulte")("cond")
-string = pp.QuotedString(quoteChar='"', escChar="\\", multiline=False,
-                         unquoteResults=True)
-string.setParseAction(lambda s, l, t: t[0].replace("\\n", "\n"))
+string = pp.dblQuotedString()
+string.addParseAction(pp.removeQuotes)
+string.addParseAction(string_format)
 
 comment = ";" + pp.restOfLine
 
