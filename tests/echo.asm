@@ -7,22 +7,25 @@
 ;
 ; Notes:
 ;  - KB IRQ is 2
-;  - IDT is at 0x0100
-;  - KB data port is 0x30
 ;  - Does not handle key release scancodes
 
 
-	.set	PIC_PORT, 0x10
-	.set	SCR_PORT, 0x20
-	.set	KB_PORT,  0x30
-	.set	EOI,      0xAB
+	.set	UART0,		0xFF90
+	.set	UART1,		0xFFA0
+	.set	PIC_ADDR,	0xFF80
+	.set	KB_ADDR,	UART0
+	.set	SCR_ADDR,	UART1
+	.set	ICW1,		0x0010
+	.set	ICW2,		idt & 0x00F8
+	.set	EOI,		0x0020
 
 
 	.data
 	.align	4
-buf:	.zero	4		; 4 word input buffer
-bstart:	.word	buf
-bend:	.word	buf
+	;; 8 word buffer
+buf:	.ascii 	"echo\n>  "
+bstart:	.word 	buf
+bend:	.word 	buf+7
 	.zero	64
 sbp:
 
@@ -30,51 +33,34 @@ sbp:
 	.text
 	.ldi	$7, sbp		; setup stack
 
-	add	$2, $0, $0	; shut up the simulator's error checker
+	.ldi	$1, PIC_ADDR	; load &PIC
+	.ldi	$2, ICW1	; send ICW1
+	stw	0($1), $2	;
+	.ldi	$2, ICW2	; send ICW2
+	stw	1($1), $2
 
-	lcr	$1, $cr1	; enable interrupts
-	or	$1, $1, 1
-	scr	$cr1, $1
+	.ldi	$2, SCR_ADDR	; screen address
 
-	.ldi	$6, bend
+	lcr	$1, $cr1	; load flags
+	or	$1, $1, 1	; set IE bit
+	scr	$cr1, $1	; enable interrupts
+
+	.ldi	$6, bend	; buffer pointers
 	.ldi	$5, bstart
 
-loop:	ldw	$4, 0($6)
+loop:	ldw	$4, 0($6)	; load buffer pointers
 	ldw	$3, 0($5)
 	s.ne	$3, $4
-	jmp	loop
+	jmp	loop		; loop if pointers are equal (empty buffer)
 
 	ldw	$1, 0($3)	; load character
+	stw	0($2), $1	; write character
 
 	add	$3, $3, 1	; increment and wrap bstart
-	and	$3, $3, 3
+	and	$3, $3, 7
 	stw	0($5), $3
 
-	.ldi	$2, SCR_PORT	; screen port
-	outb	$2, $1		; send character to screen
-
 	jmp	loop		; repeat
-
-
-	;; IDT
-	.org	0x0100
-	jmp	empty		; IRQ 0
-	jmp	empty		; IRQ 1
-	jmp	keyboard	; IRQ 2
-	jmp	empty		; IRQ 3
-	jmp	empty		; IRQ 4
-	jmp	empty		; IRQ 5
-	jmp	empty		; IRQ 6
-empty:	sub	$7, $7, 2	; IRQ 7 (empty handler)
-	stw	1($7), $2
-	stw	0($7), $1
-	.ldi	$1, EOI		; ack IRQ
-	.ldi	$2, PIC_PORT
-	outb	$2, $1
-	ldw	$1, 0($7)	; restore registers
-	ldw	$2, 1($7)
-	add	$7, $7, 2
-	iret
 
 
 	;; Keyboard IRQ Handler
@@ -84,8 +70,8 @@ keyboard:
 	stw	1($7), $2
 	stw	0($7), $1
 
-	.ldi	$2, KB_PORT	; read scancode
-	inb	$1, $2
+	.ldi	$2, KB_ADDR	; read scancode
+	ldw	$1, 0($2)
 
 	.ldi	$3, bend	; load bend
 	ldw	$2, 0($3)
@@ -93,15 +79,43 @@ keyboard:
 	stw	0($2), $1	; store scancode in buffer
 
 	add	$2, $2, 1	; increment and wrap bend
-	and	$2, $2, 3
+	and	$2, $2, 7
 	stw	0($3), $2
 
-	.ldi	$1, EOI		; ack IRQ
-	.ldi	$2, PIC_PORT
-	outb	$2, $1
+	.ldi	$1, PIC_ADDR	; &PIC
+	.ldi	$2, EOI		; EOI
+	stw	0($1), $2	; send EOI
 
 	ldw	$1, 0($7)	; restore registers
 	ldw	$2, 1($7)
 	ldw	$3, 2($7)
 	add	$7, $7, 3
 	iret
+
+
+timer:	sub	$7, $7, 2	; save registers
+	stw	1($7), $2
+	stw	0($7), $1
+
+	.ldi	$1, PIC_ADDR	; &PIC
+	.ldi	$2, EOI		; EOI
+	stw	0($1), $2	; send EOI
+
+	ldw	$1, 0($7)	; restore registers
+	ldw	$2, 1($7)
+	add	$7, $7, 2
+	iret
+
+
+	;; IDT
+	.align 8
+idt:
+irq0:	jmp	error
+irq1:	jmp	error
+irq2:	jmp	error
+irq3:	jmp	keyboard
+irq4:	jmp	error
+irq5:	jmp	error
+irq6:	jmp 	timer
+irq7:
+error:	jmp	0
