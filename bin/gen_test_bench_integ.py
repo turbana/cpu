@@ -69,7 +69,8 @@ def emit_test_bench(stream, all_checks):
     e("      _TB_ERRORS = 0;\n")
     e('      _TB_REGISTER = 0;\n')
     e("      _TB_VALUE = 0;\n")
-    e("      #4000 @(posedge TIM.CLOCK.CLK0)  /* warmup */\n\n")
+    e("      #%d @(posedge TIM.CLOCK.CLK0)  /* warmup */\n\n" % (
+        CLOCK_TICK * 4))
     e("      _TB_CLOCK = -1;\n")
     e("      /* test cases */\n")
     for clock, (reg_name, value) in all_checks:
