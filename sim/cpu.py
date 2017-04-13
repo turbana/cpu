@@ -783,7 +783,7 @@ def load_args(args):
     add("--stop-clock", metavar="CLOCK", dest="stop_clock", type=int,
         help="stop execution upon reaching CLOCK")
     add("--no-randomize", dest="randomize", action="store_false",
-        help="randomize all memory and registers before execution")
+        help="don't randomize all memory and registers before execution")
     add("--no-check-errors", dest="check_errors", action="store_false",
         help="don't check for errors (e.x. mem read before write)")
     add("--no-realistic-clock", dest="real_clock", action="store_false",
