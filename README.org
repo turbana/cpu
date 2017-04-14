@@ -1,5 +1,6 @@
 * TIM-16
-TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips.
+TIM-16 will be a custom designed computer, built from 74 series CMOS logic
+chips.
 
 [[doc/block_diagram.png?raw=true][Block Diagram]]
 [[doc/schematics.pdf?raw=true][Schematics]]
@@ -10,15 +11,18 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - [[#memory][Memory Layout]]
 
 ***** Progress
- - Architecture ~[Done]~ Always reviewing, but mostly static
- - Instruction Set ~[Done]~
- - Assembler ~[Done]~
- - Functional Simulator ~[Done]~
- - Assembler Tests ~[Mostly Done]~ Need to add additional tests
- - Schematic Capture ~[In Progress]~ Currently have a handful of modules complete. Still have the bulk to go
- - Behavioral Simulator ~[Started]~ Fuzz tests for captured schematics. Full simulator will be written once capture is complete.
- - Verification ~[Started]~ Will be able to use assembler tests, but additional tests should be written
- - Construction ~[Not Started]~
+ - Architecture =[Done]= Always reviewing, but mostly static
+ - Instruction Set =[Done]=
+ - Assembler =[Done]=
+ - Functional Simulator =[Done]=
+ - Assembler Tests =[Mostly Done]= Need to add additional tests
+ - Schematic Capture =[In Progress]= Currently have a handful of modules
+   complete. Still have the bulk to go
+ - Behavioral Simulator =[Started]= Fuzz tests for captured schematics.
+   Full simulator will be written once capture is complete.
+ - Verification =[Started]= Will be able to use assembler tests, but
+   additional tests should be written
+ - Construction =[Not Started]=
 
 ** Architecture
  - 5 stage pipelined RISC architecture
@@ -28,20 +32,34 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - System bus is 23 bits wide with word addressing (16MB of memory)
  - Precise external interrupts using an 8259A PIC
  - No support for exceptions or control codes
- - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555 timer with room to expand
+ - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555
+   timer with room to expand
  - User/Supervisor modes
  - Segmentation as a memory protection scheme
  - Separate data and instruction memories
- - 23 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
+ - 23 bit physical addressing divided into 64 segments, each with 64k words of
+   instruction and data memory
 
 ** Instruction Set
-Most instructions are 3 register instructions where the 2nd operand can be replaced with a 4 bit special signed immediate. Non-negative immediate values are added with 1 while negative immediates are unchanged, giving the range [~-8~ - ~-1~, ~1~ - ~8~]. Register ~$0~ is hardwired to return 0.
+Most instructions are 3 register instructions where the 2nd operand can be
+replaced with a 4 bit special signed immediate. Non-negative immediate values
+are added with 1 while negative immediates are unchanged, giving the range [
+=1= -- =-1=, =1= -- =8= ]. Register =$0= is hardwired to return 0.
 
-Effort was made to use relative addressing modes to encourage PC independent code. Two jump instructions support both base + index and PC-relative addressing. Data accesses support base + index and base + offset, while instruction accesses support only base + index. Absolute addressing must first load an address into a register.
+Effort was made to use relative addressing modes to encourage PC independent
+code. Two jump instructions support both base + index and PC-relative
+addressing. Data accesses support base + index and base + offset, while
+instruction accesses support only base + index. Absolute addressing must first
+load an address into a register.
 
-TIM does not have a conditional jump instruction or condition codes. Instead, jumps placed in the shadow of a skip are used for conditional execution.
+TIM does not have a conditional jump instruction or condition codes. Instead,
+jumps placed in the shadow of a skip are used for conditional execution.
 
-Two instructions are required to load a 16 immediate value. ~lui~ is used to load the upper 8 bits of a register followed by an ~addi~ to populate the lower 8 bits. ~addi~ takes a signed number so care must be taken when the high bit of the low order byte is set. The assembler macro ~.ldi~ performs the necessary steps.
+Two instructions are required to load a 16 immediate value. =lui= is used to
+load the upper 8 bits of a register followed by an =addi= to populate the lower
+8 bits. =addi= takes a signed number so care must be taken when the high bit of
+the low order byte is set. The assembler macro =.ldi= performs the necessary
+steps.
 
 | Inst     | Form                  | Meaning                                                           |
 |----------+-----------------------+-------------------------------------------------------------------|
@@ -96,7 +114,9 @@ Two instructions are required to load a 16 immediate value. ~lui~ is used to loa
 | $7       | $sp   | Yes      | Stack Pointer by convention      |
 
 *** Control Registers
-Control Registers can only be accessed with ~lcr~/~scr~ instructions. With the exception of ~$pc~, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
+Control Registers can only be accessed with =lcr= / =scr= instructions. With the
+exception of =$pc=, control registers can only be accessed in supervisor mode.
+Illegal reads and writes are ignored.
 
 | Register | Alias   | Writable | Mode       | Meaning                     |
 |----------+---------+----------+------------+-----------------------------|
@@ -126,7 +146,14 @@ Control Registers can only be accessed with ~lcr~/~scr~ instructions. With the e
 |  15 | DS5  | Data Segment (high bit)                     |
 
 ** Memory
-Segmentation is used for memory protection. The corresponding segment (instruction/data found in ~$flags~) is concatenated with the logical address (and memory type), forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segments can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto data segment 0. To support accessing an arbitrary segment's instruction memory, instruction fetch is hardwired to segment 0 while in supervisor mode.
+Segmentation is used for memory protection. The corresponding segment
+(instruction/data found in =$flags=) is concatenated with the logical address
+(and memory type), forming the physical address that is sent across the bus.
+Each process is assigned it's own code and data segments. Segments can only be
+modified from supervisor mode, isolating processes from one another. Segment 0
+is considered the supervisor's segment and all devices are memory mapped onto
+data segment 0. To support accessing an arbitrary segment's instruction memory,
+instruction fetch is hardwired to segment 0 while in supervisor mode.
 
 *** Data Memory Layout
 | 0x00 0000 | RAM         |
