@@ -10,19 +10,18 @@ chips.
  - [[#registers][Registers]]
  - [[#memory][Memory Layout]]
 
-***** Progress
- - Architecture =[Done]= Always reviewing, but mostly static
- - Instruction Set =[Done]=
- - Assembler =[Done]=
- - Functional Simulator =[Done]=
- - Assembler Tests =[Mostly Done]= Need to add additional tests
- - Schematic Capture =[In Progress]= Currently have a handful of modules
-   complete. Still have the bulk to go
- - Behavioral Simulator =[Started]= Fuzz tests for captured schematics.
-   Full simulator will be written once capture is complete.
- - Verification =[Started]= Will be able to use assembler tests, but
-   additional tests should be written
- - Construction =[Not Started]=
+** Progress
+  - *Architecture* =[Done]= Always reviewing, but mostly static.
+  - *Instruction Set* =[Done]=
+  - *Assembler* =[Done]=
+  - *Functional Simulator* =[Done]=
+  - *Assembler Tests* =[Mostly Done]= Need to add additional tests.
+  - *Schematic Capture* =[Mostly Done]= Devices/interrupts are unfinished.
+  - *Behavioral Simulator* =[In Progress]= Fuzz tests for captured schematics.
+    Full simulator will be written once capture is complete.
+  - *Verification* =[Started]= Will be able to use assembler tests, but
+    additional tests should be written.
+  - *Construction* =[Not Started]=
 
 ** Architecture
  - 5 stage pipelined RISC architecture
@@ -44,7 +43,7 @@ chips.
 Most instructions are 3 register instructions where the 2nd operand can be
 replaced with a 4 bit special signed immediate. Non-negative immediate values
 are added with 1 while negative immediates are unchanged, giving the range [
-=1= -- =-1=, =1= -- =8= ]. Register =$0= is hardwired to return 0.
+=-8= -- =-1=, =1= -- =8= ]. Register =$0= is hardwired to return 0.
 
 Effort was made to use relative addressing modes to encourage PC independent
 code. Two jump instructions support both base + index and PC-relative
