@@ -35,39 +35,39 @@ TIM-16 will be a custom designed computer, built from 74 series CMOS logic chips
  - 23 bit physical addressing divided into 64 segments, each with 64k words of instruction and data memory
 
 ** Instruction Set
-Most instructions are 3 register instructions where the 2nd operand can be replaced with a 4 bit special signed immediate. Non-negative immediate values are added with 1 while negative immediates are unchanged, giving the range [-8 - -1, 1 - 8]. Register $0 is hardwired to return 0.
+Most instructions are 3 register instructions where the 2nd operand can be replaced with a 4 bit special signed immediate. Non-negative immediate values are added with 1 while negative immediates are unchanged, giving the range [~-8~ - ~-1~, ~1~ - ~8~]. Register ~$0~ is hardwired to return 0.
 
 Effort was made to use relative addressing modes to encourage PC independent code. Two jump instructions support both base + index and PC-relative addressing. Data accesses support base + index and base + offset, while instruction accesses support only base + index. Absolute addressing must first load an address into a register.
 
 TIM does not have a conditional jump instruction or condition codes. Instead, jumps placed in the shadow of a skip are used for conditional execution.
 
-Two instructions are required to load a 16 immediate value. lui is used to load the upper 8 bits of a register followed by an addi to populate the lower 8 bits. addi takes a signed number so care must be taken when the high bit of the low order byte is set. The assembler macro .ldi performs the necessary steps.
+Two instructions are required to load a 16 immediate value. ~lui~ is used to load the upper 8 bits of a register followed by an ~addi~ to populate the lower 8 bits. ~addi~ takes a signed number so care must be taken when the high bit of the low order byte is set. The assembler macro ~.ldi~ performs the necessary steps.
 
 | Inst     | Form                  | Meaning                                                           |
 |----------+-----------------------+-------------------------------------------------------------------|
-| add      | r1, r2, [r3\vert{}sp] | r1 := r2 + r3                                                     |
-| sub      | r1, r2, [r3\vert{}sp] | r1 := r2 - r3                                                     |
-| and      | r1, r2, [r3\vert{}sp] | r1 := r2 & r3                                                     |
-| or       | r1, r2, [r3\vert{}sp] | r1 := r2 \vert r3                                                 |
-| xor      | r1, r2, [r3\vert{}sp] | r1 := r2 ^ r3                                                     |
-| shl      | r1, r2, [r3\vert{}sp] | r1 := r2 << r3                                                    |
-| shr      | r1, r2, [r3\vert{}sp] | r1 := r2 >> r3                                                    |
-| sar      | r1, r2, [r3\vert{}sp] | r1 := r2 >>> r3                                                   |
-| as.z     | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 == 0                               |
-| as.nz    | r1, r2, [r3\vert{}sp] | r1 := r2 + r3; skip next if r1 != 0                               |
+| add      | r1, r2, [r3\vert{}sp] | r1 \gets r2 + r3                                                  |
+| sub      | r1, r2, [r3\vert{}sp] | r1 \gets r2 - r3                                                  |
+| and      | r1, r2, [r3\vert{}sp] | r1 \gets r2 & r3                                                  |
+| or       | r1, r2, [r3\vert{}sp] | r1 \gets r2 \vert r3                                              |
+| xor      | r1, r2, [r3\vert{}sp] | r1 \gets r2 ^ r3                                                  |
+| shl      | r1, r2, [r3\vert{}sp] | r1 \gets r2 << r3                                                 |
+| shr      | r1, r2, [r3\vert{}sp] | r1 \gets r2 >> r3                                                 |
+| sar      | r1, r2, [r3\vert{}sp] | r1 \gets r2 >>> r3                                                |
+| as.z     | r1, r2, [r3\vert{}sp] | r1 \gets r2 + r3; skip next if r1 == 0                            |
+| as.nz    | r1, r2, [r3\vert{}sp] | r1 \gets r2 + r3; skip next if r1 != 0                            |
 | s.{cond} | r1, [r2\vert{}sp]     | skip next if (r1 <cond> r2)                                       |
-| jmp      | [r1\vert{}sp](r2)     | pc := r1 + r2                                                     |
-| jmp      | imm11                 | pc := pc + imm                                                    |
-| ldw      | r1, imm7(r2)          | r1 := Md[r2 + imm]                                                |
-| ldw      | r1, [r2\vert{}sp](r3) | r1 := Md[r2 + r3]                                                 |
-| ldiw     | r1, [r2\vert{}sp](r3) | r1 := Mi[r2 + r3]                                                 |
-| stw      | imm7(r1), r2          | Md[r1 + imm] := r2                                                |
-| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] := r3                                                 |
-| stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] := r3                                                 |
-| lui      | r1, uimm8             | r1 := imm << 8                                                    |
-| addi     | r1, imm8              | r1 := r1 + imm (sign extended)                                    |
-| lcr      | r1, cr1               | r1 := cr1                                                         |
-| scr      | cr1, r1               | cr1 := r1                                                         |
+| jmp      | [r1\vert{}sp](r2)     | pc \gets r1 + r2                                                  |
+| jmp      | imm11                 | pc \gets pc + imm                                                 |
+| ldw      | r1, imm7(r2)          | r1 \gets Md[r2 + imm]                                             |
+| ldw      | r1, [r2\vert{}sp](r3) | r1 \gets Md[r2 + r3]                                              |
+| ldiw     | r1, [r2\vert{}sp](r3) | r1 \gets Mi[r2 + r3]                                              |
+| stw      | imm7(r1), r2          | Md[r1 + imm] \gets r2                                             |
+| stw      | [r1\vert{}sp](r2), r3 | Md[r1 + r2] \gets r3                                              |
+| stiw     | [r1\vert{}sp](r2), r3 | Mi[r1 + r2] \gets r3                                              |
+| lui      | r1, uimm8             | r1 \gets imm << 8                                                 |
+| addi     | r1, imm8              | r1 \gets r1 + imm (sign extended)                                 |
+| lcr      | r1, cr1               | r1 \gets cr1                                                      |
+| scr      | cr1, r1               | cr1 \gets r1                                                      |
 | trap     |                       | Enter supervisor mode; disable interrupts; jump to kernel routine |
 | halt     |                       | Execution halts                                                   |
 | iret     |                       | Enter user mode; enable interrupts; jump to $epc                  |
@@ -96,7 +96,7 @@ Two instructions are required to load a 16 immediate value. lui is used to load 
 | $7       | $sp   | Yes      | Stack Pointer by convention      |
 
 *** Control Registers
-Control Registers can only be accessed with LCR/SCR instructions. With the exception of $pc, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
+Control Registers can only be accessed with ~lcr~/~scr~ instructions. With the exception of ~$pc~, control registers can only be accessed in supervisor mode. Illegal reads and writes are ignored.
 
 | Register | Alias   | Writable | Mode       | Meaning                     |
 |----------+---------+----------+------------+-----------------------------|
@@ -126,7 +126,7 @@ Control Registers can only be accessed with LCR/SCR instructions. With the excep
 |  15 | DS5  | Data Segment (high bit)                     |
 
 ** Memory
-Segmentation is used for memory protection. The corresponding segment (instruction/data found in $flags) is concatenated with the logical address (and memory type), forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segments can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto data segment 0. To support accessing an arbitrary segment's instruction memory, instruction fetch is hardwired to segment 0 while in supervisor mode.
+Segmentation is used for memory protection. The corresponding segment (instruction/data found in ~$flags~) is concatenated with the logical address (and memory type), forming the physical address that is sent across the bus. Each process is assigned it's own code and data segments. Segments can only be modified from supervisor mode, isolating processes from one another. Segment 0 is considered the supervisor's segment and all devices are memory mapped onto data segment 0. To support accessing an arbitrary segment's instruction memory, instruction fetch is hardwired to segment 0 while in supervisor mode.
 
 *** Data Memory Layout
 | 0x00 0000 | RAM         |
