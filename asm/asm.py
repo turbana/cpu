@@ -283,7 +283,7 @@ def main(args):
     except (pyparsing.ParseException, pyparsing.ParseFatalException), err:
         print err.line
         print " " * (err.column - 1) + "^"
-        print err
+        print "%s:%d:%d:%s" % (in_filename, err.lineno, err.column, err.msg)
         return 1
 
 

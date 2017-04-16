@@ -1,3 +1,5 @@
+import traceback
+
 import pyparsing as pp
 
 import tokens
@@ -77,8 +79,9 @@ def _build(typ, **kwargs):
         kwargs["name"] = name
         try:
             return typ(*toks, **kwargs)
-        except Exception, e:
-            raise pp.ParseException(s, l, msg=str(e))
+        except Exception:
+            msg = "Fatal Exception\n" + traceback.format_exc()
+            raise pp.ParseFatalException(s, l, msg=msg)
     return _parse_action
 
 
@@ -207,7 +210,7 @@ def parse_ast(syntax):
         print err.line
         print " " * (err.column - 1) + "^"
         print err
-        raise
+        raise err
 
 
 def build_grammer(ast):
