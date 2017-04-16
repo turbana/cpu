@@ -5,39 +5,39 @@ chips.
 [[doc/block_diagram.png?raw=true][Block Diagram]]
 [[doc/schematics.pdf?raw=true][Schematics]]
 
- - [[#architecture][Architecture]]
- - [[#instruction-set][Instruction Set]]
- - [[#registers][Registers]]
- - [[#memory][Memory Layout]]
+- [[#architecture][Architecture]]
+- [[#instruction-set][Instruction Set]]
+- [[#registers][Registers]]
+- [[#memory][Memory Layout]]
 
 ** Progress
-  - *Architecture* =[Done]= Always reviewing, but mostly static.
-  - *Instruction Set* =[Done]=
-  - *Assembler* =[Done]=
-  - *Functional Simulator* =[Done]=
-  - *Assembler Tests* =[Mostly Done]= Need to add additional tests.
-  - *Schematic Capture* =[Mostly Done]= Devices/interrupts are unfinished.
-  - *Behavioral Simulator* =[In Progress]= Fuzz tests for captured schematics.
-    Full simulator will be written once capture is complete.
-  - *Verification* =[Started]= Will be able to use assembler tests, but
-    additional tests should be written.
-  - *Construction* =[Not Started]=
+- *Architecture* =[Done]= Always reviewing, but mostly static.
+- *Instruction Set* =[Done]=
+- *Assembler* =[Done]=
+- *Functional Simulator* =[Done]=
+- *Assembler Tests* =[Mostly Done]= Need to add additional tests.
+- *Schematic Capture* =[Mostly Done]= Devices/interrupts are unfinished.
+- *Behavioral Simulator* =[In Progress]= Fuzz tests for captured schematics.
+  Full simulator will be written once capture is complete.
+- *Verification* =[Started]= Will be able to use assembler tests, but
+  additional tests should be written.
+- *Construction* =[Not Started]=
 
 ** Architecture
- - 5 stage pipelined RISC architecture
- - 16 bit ALU
- - 8x 16 bit general purpose registers
- - 4x control registers
- - System bus is 23 bits wide with word addressing (16MB of memory)
- - Precise external interrupts using an 8259A PIC
- - No support for exceptions or control codes
- - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555
-   timer with room to expand
- - User/Supervisor modes
- - Segmentation as a memory protection scheme
- - Separate data and instruction memories
- - 23 bit physical addressing divided into 64 segments, each with 64k words of
-   instruction and data memory
+- 5 stage pipelined RISC architecture
+- 16 bit ALU
+- 8x 16 bit general purpose registers
+- 4x control registers
+- System bus is 23 bits wide with word addressing (16MB of memory)
+- Precise external interrupts using an 8259A PIC
+- No support for exceptions or control codes
+- Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555
+  timer with room to expand
+- User/Supervisor modes
+- Segmentation as a memory protection scheme
+- Separate data and instruction memories
+- 23 bit physical addressing divided into 64 segments, each with 64k words of
+  instruction and data memory
 
 ** Instruction Set
 Most instructions are 3 register instructions where the 2nd operand can be
@@ -87,7 +87,7 @@ steps.
 | scr      | cr1, r1               | cr1 \gets r1                                                      |
 | trap     |                       | Enter supervisor mode; disable interrupts; jump to kernel routine |
 | halt     |                       | Execution halts                                                   |
-| iret     |                       | Enter user mode; enable interrupts; jump to $epc                  |
+| iret     |                       | Enter user mode; enable interrupts; jump to =$epc=                |
 
 ***** Conditionals
 | s.eq   | ==          |
