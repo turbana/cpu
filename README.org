@@ -24,20 +24,20 @@ chips.
 - *Construction* =[Not Started]=
 
 ** Architecture
-- 5 stage pipelined RISC architecture
-- 16 bit ALU
-- 8x 16 bit general purpose registers
-- 4x control registers
-- System bus is 23 bits wide with word addressing (16MB of memory)
-- Precise external interrupts using an 8259A PIC
-- No support for exceptions or control codes
+- 5 stage pipelined RISC architecture.
+- 16 bit ALU.
+- 8x 16 bit general purpose registers.
+- 4x control registers.
+- System bus is 23 bits wide with word addressing (16MB of memory).
+- Precise external interrupts using an 8259A PIC.
+- No support for exceptions or control codes.
 - Memory mapped IO with support for 2 serial ports, an IDE hard disk, and a 555
-  timer with room to expand
-- User/Supervisor modes
-- Segmentation as a memory protection scheme
-- Separate data and instruction memories
+  timer with room to expand.
+- User/Supervisor modes.
+- Segmentation as a memory protection scheme.
+- Separate data and instruction memories.
 - 23 bit physical addressing divided into 64 segments, each with 64k words of
-  instruction and data memory
+  instruction and data memory.
 
 ** Instruction Set
 Most instructions are 3 register instructions where the 2nd operand can be
@@ -54,7 +54,7 @@ load an address into a register.
 TIM does not have a conditional jump instruction or condition codes. Instead,
 jumps placed in the shadow of a skip are used for conditional execution.
 
-Two instructions are required to load a 16 immediate value. =lui= is used to
+Two instructions are required to load a 16 bit immediate value. =lui= is used to
 load the upper 8 bits of a register followed by an =addi= to populate the lower
 8 bits. =addi= takes a signed number so care must be taken when the high bit of
 the low order byte is set. The assembler macro =.ldi= performs the necessary
@@ -163,7 +163,7 @@ instruction fetch is hardwired to segment 0 while in supervisor mode.
 | 0x00 FF9F |             |
 | 0x00 FFA0 | UART1       |
 | 0x00 FFAF |             |
-| 0x00 FFB0 | 555         |
+| 0x00 FFB0 | 555 timer   |
 | 0x00 FFBF |             |
 | 0x00 FFC0 | IDE         |
 | 0x00 FFCF |             |
