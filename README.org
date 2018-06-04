@@ -2,13 +2,8 @@
 TIM-16 will be a custom designed computer, built from 74 series CMOS logic
 chips.
 
-[[doc/block_diagram.png?raw=true][Block Diagram]]
-[[doc/schematics.pdf?raw=true][Schematics]]
-
-- [[#architecture][Architecture]]
-- [[#instruction-set][Instruction Set]]
-- [[#registers][Registers]]
-- [[#memory][Memory Layout]]
+- [[doc/block_diagram.png?raw=true][Block Diagram]]
+- [[doc/schematics.pdf?raw=true][Schematics]]
 
 ** Progress
 - *Architecture* =[Done]= Always reviewing, but mostly static.
